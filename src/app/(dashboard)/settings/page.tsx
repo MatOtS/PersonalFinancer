@@ -9,6 +9,7 @@ import {
   addFixedExpenseAction,
   addCategoryKeywordAction,
 } from "./actions";
+import { Button } from "@/components/ui/button";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export default async function SettingsPage() {
     <div className="max-w-2xl space-y-8">
       <h2 className="text-lg font-semibold">Ajustes</h2>
 
-      <section className="space-y-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="space-y-3 rounded-lg border border-border p-4">
         <h3 className="text-sm font-semibold">Facturación</h3>
         <form action={updateSettingsAction} className="grid gap-3 sm:grid-cols-2">
           <label className="space-y-1 text-sm">
@@ -32,7 +33,7 @@ export default async function SettingsPage() {
               type="number"
               step="0.01"
               defaultValue={settings.default_irpf_pct}
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
+              className="w-full rounded-md border border-input px-3 py-2 bg-transparent"
             />
           </label>
           <label className="space-y-1 text-sm">
@@ -42,7 +43,7 @@ export default async function SettingsPage() {
               type="number"
               step="0.01"
               defaultValue={settings.default_iva_pct}
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
+              className="w-full rounded-md border border-input px-3 py-2 bg-transparent"
             />
           </label>
           <label className="space-y-1 text-sm">
@@ -51,7 +52,7 @@ export default async function SettingsPage() {
               name="invoice_number_format"
               defaultValue={settings.invoice_number_format}
               placeholder="YYYY-NNN"
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
+              className="w-full rounded-md border border-input px-3 py-2 bg-transparent"
             />
           </label>
           <label className="space-y-1 text-sm">
@@ -61,23 +62,20 @@ export default async function SettingsPage() {
               type="number"
               min="1"
               defaultValue={settings.invoice_number_next}
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
+              className="w-full rounded-md border border-input px-3 py-2 bg-transparent"
             />
           </label>
-          <button
-            type="submit"
-            className="sm:col-span-2 rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
-          >
+          <Button type="submit" className="sm:col-span-2">
             Guardar
-          </button>
+          </Button>
         </form>
       </section>
 
-      <section className="space-y-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="space-y-3 rounded-lg border border-border p-4">
         <h3 className="text-sm font-semibold">Cuentas</h3>
         <ul className="flex flex-wrap gap-2 text-sm">
           {accounts.map((a) => (
-            <li key={a.id} className="rounded-full bg-neutral-100 px-3 py-1 dark:bg-neutral-800">
+            <li key={a.id} className="rounded-full bg-muted px-3 py-1">
               {a.name}
             </li>
           ))}
@@ -87,22 +85,20 @@ export default async function SettingsPage() {
             name="name"
             required
             placeholder="Nueva cuenta"
-            className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="flex-1 rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           />
-          <button className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900">
-            Agregar
-          </button>
+          <Button>Agregar</Button>
         </form>
       </section>
 
-      <section className="space-y-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="space-y-3 rounded-lg border border-border p-4">
         <h3 className="text-sm font-semibold">Categorías y subcategorías</h3>
         <ul className="space-y-2 text-sm">
           {categories.map((c) => (
             <li key={c.id}>
               <span className="font-medium">{c.name}</span>
               {c.subcategories.length > 0 && (
-                <span className="text-neutral-500"> — {c.subcategories.map((s) => s.name).join(", ")}</span>
+                <span className="text-muted-foreground"> — {c.subcategories.map((s) => s.name).join(", ")}</span>
               )}
             </li>
           ))}
@@ -114,18 +110,16 @@ export default async function SettingsPage() {
               name="name"
               required
               placeholder="Nueva categoría"
-              className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="flex-1 rounded-md border border-input px-3 py-2 text-sm bg-transparent"
             />
-            <button className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900">
-              +
-            </button>
+            <Button>+</Button>
           </form>
 
           <form action={addSubcategoryAction} className="flex gap-2">
             <select
               name="category_id"
               required
-              className="rounded-md border border-neutral-300 px-2 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="rounded-md border border-input px-2 py-2 text-sm bg-transparent"
             >
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -137,18 +131,16 @@ export default async function SettingsPage() {
               name="name"
               required
               placeholder="Nueva subcategoría"
-              className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="flex-1 rounded-md border border-input px-3 py-2 text-sm bg-transparent"
             />
-            <button className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900">
-              +
-            </button>
+            <Button>+</Button>
           </form>
         </div>
       </section>
 
-      <section className="space-y-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="space-y-3 rounded-lg border border-border p-4">
         <h3 className="text-sm font-semibold">Palabras clave para autocategorización</h3>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted-foreground">
           Si la descripción de un movimiento importado contiene la palabra, se le asigna la categoría automáticamente.
         </p>
         <form action={addCategoryKeywordAction} className="flex flex-wrap gap-2">
@@ -156,12 +148,12 @@ export default async function SettingsPage() {
             name="keyword"
             required
             placeholder="ej. netflix"
-            className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="flex-1 rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           />
           <select
             name="category_id"
             required
-            className="rounded-md border border-neutral-300 px-2 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="rounded-md border border-input px-2 py-2 text-sm bg-transparent"
           >
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
@@ -169,20 +161,18 @@ export default async function SettingsPage() {
               </option>
             ))}
           </select>
-          <button className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900">
-            Agregar
-          </button>
+          <Button>Agregar</Button>
         </form>
       </section>
 
-      <section className="space-y-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="space-y-3 rounded-lg border border-border p-4">
         <h3 className="text-sm font-semibold">Gastos fijos</h3>
         <form action={addFixedExpenseAction} className="grid gap-2 sm:grid-cols-2">
           <input
             name="name"
             required
             placeholder="Nombre (ej. Alquiler)"
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           />
           <input
             name="amount"
@@ -190,11 +180,11 @@ export default async function SettingsPage() {
             step="0.01"
             required
             placeholder="Monto"
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           />
           <select
             name="frequency"
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           >
             <option value="monthly">Mensual</option>
             <option value="bimonthly">Bimestral</option>
@@ -203,7 +193,7 @@ export default async function SettingsPage() {
           </select>
           <select
             name="account_id"
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           >
             <option value="">Sin cuenta</option>
             {accounts.map((a) => (
@@ -214,7 +204,7 @@ export default async function SettingsPage() {
           </select>
           <select
             name="category_id"
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900 sm:col-span-2"
+            className="rounded-md border border-input px-3 py-2 text-sm bg-transparent sm:col-span-2"
           >
             <option value="">Sin categoría</option>
             {categories.map((c) => (
@@ -223,9 +213,7 @@ export default async function SettingsPage() {
               </option>
             ))}
           </select>
-          <button className="sm:col-span-2 rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900">
-            Agregar gasto fijo
-          </button>
+          <Button className="sm:col-span-2">Agregar gasto fijo</Button>
         </form>
       </section>
     </div>

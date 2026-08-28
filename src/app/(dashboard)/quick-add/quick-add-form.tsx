@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { todayISO } from "@/lib/format";
 import type { MovementType } from "@/lib/supabase/types";
+import { Button } from "@/components/ui/button";
 
 interface Category {
   id: string;
@@ -73,7 +74,7 @@ export function QuickAddForm({ accounts, categories }: Props) {
           inputMode="decimal"
           value={form.amount}
           onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-          className="w-full rounded-md border border-neutral-300 px-3 py-3 text-lg dark:border-neutral-700 dark:bg-neutral-900"
+          className="w-full rounded-md border border-input px-3 py-3 text-lg bg-transparent"
         />
       </div>
 
@@ -83,7 +84,7 @@ export function QuickAddForm({ accounts, categories }: Props) {
           required
           value={form.description}
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
         />
       </div>
 
@@ -92,7 +93,7 @@ export function QuickAddForm({ accounts, categories }: Props) {
         <select
           value={form.accountId}
           onChange={(e) => setForm((f) => ({ ...f, accountId: e.target.value }))}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
         >
           {accounts.map((a) => (
             <option key={a.id} value={a.id}>
@@ -108,7 +109,7 @@ export function QuickAddForm({ accounts, categories }: Props) {
           <select
             value={form.categoryId}
             onChange={(e) => setForm((f) => ({ ...f, categoryId: e.target.value, subcategoryId: "" }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           >
             <option value="">Sin categoría</option>
             {categories.map((c) => (
@@ -124,7 +125,7 @@ export function QuickAddForm({ accounts, categories }: Props) {
             value={form.subcategoryId}
             onChange={(e) => setForm((f) => ({ ...f, subcategoryId: e.target.value }))}
             disabled={!selectedCategory}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-md border border-input px-3 py-2 text-sm disabled:opacity-50 bg-transparent"
           >
             <option value="">-</option>
             {selectedCategory?.subcategories.map((s) => (
@@ -163,13 +164,9 @@ export function QuickAddForm({ accounts, categories }: Props) {
         </label>
       </div>
 
-      <button
-        type="submit"
-        disabled={saving}
-        className="w-full rounded-md bg-neutral-900 px-3 py-3 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
-      >
+      <Button type="submit" disabled={saving} size="lg" className="w-full">
         {saving ? "Guardando..." : "Guardar gasto"}
-      </button>
+      </Button>
 
       {message && <p className="text-center text-sm">{message}</p>}
     </form>

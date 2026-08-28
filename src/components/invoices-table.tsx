@@ -20,9 +20,9 @@ function one<T>(v: T | T[] | null): T | null {
 
 export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800">
+    <div className="overflow-x-auto rounded-lg border border-border">
       <table className="w-full text-sm">
-        <thead className="bg-neutral-50 text-left text-xs text-neutral-500 dark:bg-neutral-900">
+        <thead className="bg-muted text-left text-xs text-muted-foreground">
           <tr>
             <th className="px-4 py-2 font-medium">Cliente</th>
             <th className="px-4 py-2 font-medium">Fecha</th>
@@ -37,7 +37,7 @@ export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
         </thead>
         <tbody>
           {invoices.map((inv) => (
-            <tr key={inv.id} className="border-t border-neutral-100 dark:border-neutral-900">
+            <tr key={inv.id} className="border-t border-border">
               <td className="whitespace-nowrap px-4 py-2">{one(inv.client)?.name ?? "-"}</td>
               <td className="whitespace-nowrap px-4 py-2">{formatDate(inv.issue_date)}</td>
               <td className="whitespace-nowrap px-4 py-2">{inv.invoice_number}</td>
@@ -55,7 +55,7 @@ export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
           ))}
           {invoices.length === 0 && (
             <tr>
-              <td colSpan={9} className="px-4 py-6 text-center text-neutral-400">
+              <td colSpan={9} className="px-4 py-6 text-center text-muted-foreground">
                 Sin facturas todavía
               </td>
             </tr>

@@ -7,6 +7,7 @@ import { parseCsvFile, parseAmount, parseDate, type ParsedCsv } from "@/lib/csv/
 import { matchCategory } from "@/lib/csv/categorize";
 import { formatCurrency } from "@/lib/format";
 import type { MovementType } from "@/lib/supabase/types";
+import { Button } from "@/components/ui/button";
 
 interface Category {
   id: string;
@@ -164,7 +165,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
             value={bankName}
             onChange={(e) => setBankName(e.target.value)}
             placeholder="BBVA, Santander, Wise, MyInvestor..."
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           />
           <datalist id="bank-profiles">
             {profiles.map((p) => (
@@ -178,7 +179,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
           <select
             value={accountId}
             onChange={(e) => setAccountId(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           >
             {accounts.map((a) => (
               <option key={a.id} value={a.id}>
@@ -193,7 +194,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
           <select
             value={type}
             onChange={(e) => setType(e.target.value as MovementType)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           >
             <option value="personal">Personal</option>
             <option value="freelance">Freelance</option>
@@ -212,20 +213,20 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
       </div>
 
       {csv && !existingProfile && (
-        <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+        <div className="rounded-lg border border-border p-4">
           <p className="mb-3 text-sm font-medium">
             Primera vez con este banco: indicá qué columna del CSV corresponde a cada campo.
           </p>
           <div className="grid gap-3 sm:grid-cols-3">
             {(["date", "description", "amount"] as const).map((field) => (
               <div key={field} className="space-y-1">
-                <label className="text-xs font-medium uppercase text-neutral-500">
+                <label className="text-xs font-medium uppercase text-muted-foreground">
                   {field === "date" ? "Fecha" : field === "description" ? "Descripción" : "Monto"}
                 </label>
                 <select
                   value={mapping[field]}
                   onChange={(e) => setMapping((m) => ({ ...m, [field]: e.target.value }))}
-                  className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+                  className="w-full rounded-md border border-input px-2 py-1 text-sm bg-transparent"
                 >
                   {csv.headers.map((h) => (
                     <option key={h} value={h}>
@@ -240,24 +241,23 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
       )}
 
       {csv && (
-        <button
+        <Button
           onClick={buildPreview}
           disabled={loading || !mapping.date || !mapping.description || !mapping.amount}
-          className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
         >
           Previsualizar
-        </button>
+        </Button>
       )}
 
       {preview && (
         <div className="space-y-3">
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-muted-foreground">
             {preview.length} movimientos encontrados · {preview.filter((r) => r.duplicate).length} posibles
             duplicados (desmarcados por defecto).
           </p>
-          <div className="max-h-96 overflow-y-auto rounded-lg border border-neutral-200 dark:border-neutral-800">
+          <div className="max-h-96 overflow-y-auto rounded-lg border border-border">
             <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-neutral-50 text-left text-xs text-neutral-500 dark:bg-neutral-900">
+              <thead className="sticky top-0 bg-muted text-left text-xs text-muted-foreground">
                 <tr>
                   <th className="px-3 py-2">Incluir</th>
                   <th className="px-3 py-2">Fecha</th>
@@ -270,7 +270,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
                 {preview.map((row, i) => (
                   <tr
                     key={i}
-                    className={`border-t border-neutral-100 dark:border-neutral-900 ${
+                    className={`border-t border-border ${
                       row.duplicate ? "opacity-50" : ""
                     }`}
                   >
@@ -290,7 +290,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
                       <select
                         value={row.category_id ?? ""}
                         onChange={(e) => updateRow(i, { category_id: e.target.value || null, subcategory_id: null })}
-                        className="rounded-md border border-neutral-300 px-1 py-0.5 text-xs dark:border-neutral-700 dark:bg-neutral-900"
+                        className="rounded-md border border-input px-1 py-0.5 text-xs bg-transparent"
                       >
                         <option value="">Sin categorizar</option>
                         {categories.map((c) => (
@@ -306,13 +306,9 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
             </table>
           </div>
 
-          <button
-            onClick={confirmImport}
-            disabled={loading}
-            className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
-          >
+          <Button onClick={confirmImport} disabled={loading}>
             {loading ? "Importando..." : "Confirmar importación"}
-          </button>
+          </Button>
         </div>
       )}
 

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getClients, getUserSettings, nextInvoiceNumber } from "@/lib/queries/invoices";
 import { InvoiceForm } from "./invoice-form";
 import { createClientAction } from "./actions";
+import { Button } from "@/components/ui/button";
 
 export default async function NewInvoicePage() {
   const supabase = await createClient();
@@ -18,21 +19,16 @@ export default async function NewInvoicePage() {
         nextInvoiceNumber={nextInvoiceNumber(settings.invoice_number_format, settings.invoice_number_next)}
       />
 
-      <details className="max-w-md rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+      <details className="max-w-md rounded-lg border border-border p-4">
         <summary className="cursor-pointer text-sm font-medium">Agregar cliente nuevo</summary>
         <form action={createClientAction} className="mt-3 flex gap-2">
           <input
             name="name"
             required
             placeholder="Nombre del cliente"
-            className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="flex-1 rounded-md border border-input px-3 py-2 text-sm bg-transparent"
           />
-          <button
-            type="submit"
-            className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
-          >
-            Agregar
-          </button>
+          <Button type="submit">Agregar</Button>
         </form>
       </details>
     </div>

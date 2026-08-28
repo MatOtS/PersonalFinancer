@@ -31,8 +31,8 @@ export function NavLinks({
             ? "rounded-md px-3 py-2 text-sm font-medium"
             : "flex flex-col items-center gap-0.5 rounded-md px-2 py-1 text-[11px] font-medium";
         const state = active
-          ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-          : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800";
+          ? "bg-primary text-primary-foreground"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground";
 
         return (
           <Link key={link.href} href={link.href} onClick={onNavigate} className={`${base} ${state}`}>
@@ -55,7 +55,7 @@ export function SignOutButton() {
         router.push("/login");
         router.refresh();
       }}
-      className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+      className="text-sm text-muted-foreground hover:text-foreground"
     >
       Cerrar sesión
     </button>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,17 +42,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-neutral-50 px-4 dark:bg-neutral-950">
+    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <h1 className="text-xl font-semibold">Finanzas</h1>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-muted-foreground">
             {mode === "sign-in" ? "Iniciá sesión para continuar" : "Creá tu cuenta"}
           </p>
         </div>
 
         {signUpDone ? (
-          <p className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900">
+          <p className="rounded-md bg-muted p-4 text-sm">
             Revisá tu email para confirmar la cuenta y luego iniciá sesión.
           </p>
         ) : (
@@ -66,7 +67,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+                className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
               />
             </div>
             <div className="space-y-1">
@@ -80,19 +81,15 @@ export default function LoginPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+                className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-destructive">{error}</p>}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
-            >
+            <Button type="submit" disabled={loading} size="lg" className="w-full">
               {loading ? "..." : mode === "sign-in" ? "Iniciar sesión" : "Registrarse"}
-            </button>
+            </Button>
           </form>
         )}
 
@@ -103,7 +100,7 @@ export default function LoginPage() {
             setSignUpDone(false);
             setError(null);
           }}
-          className="w-full text-center text-sm text-neutral-500 underline underline-offset-2"
+          className="w-full text-center text-sm text-muted-foreground underline underline-offset-2"
         >
           {mode === "sign-in" ? "Crear una cuenta nueva" : "Ya tengo cuenta"}
         </button>

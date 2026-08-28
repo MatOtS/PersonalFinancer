@@ -28,7 +28,7 @@ export function IncomeExpenseLineChart({
   return (
     <ResponsiveContainer width="100%" height={260}>
       <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200 dark:stroke-neutral-800" />
+        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
         <XAxis dataKey="date" tick={{ fontSize: 12 }} />
         <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => formatCurrency(v)} width={80} />
         <Tooltip formatter={(v) => formatCurrency(Number(v))} />
@@ -46,7 +46,7 @@ export function CategoryBarChart({ data }: { data: { name: string; value: number
   return (
     <ResponsiveContainer width="100%" height={Math.max(200, data.length * 36)}>
       <BarChart data={data} layout="vertical" margin={{ left: 24 }}>
-        <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200 dark:stroke-neutral-800" />
+        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
         <XAxis type="number" tick={{ fontSize: 12 }} tickFormatter={(v) => formatCurrency(v)} />
         <YAxis type="category" dataKey="name" tick={{ fontSize: 12 }} width={140} />
         <Tooltip formatter={(v) => formatCurrency(Number(v))} />
@@ -62,7 +62,7 @@ export function ClientIncomeBarChart({ data }: { data: { name: string; value: nu
   return (
     <ResponsiveContainer width="100%" height={Math.max(200, data.length * 36)}>
       <BarChart data={data} layout="vertical" margin={{ left: 24 }}>
-        <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200 dark:stroke-neutral-800" />
+        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
         <XAxis type="number" tick={{ fontSize: 12 }} tickFormatter={(v) => formatCurrency(v)} />
         <YAxis type="category" dataKey="name" tick={{ fontSize: 12 }} width={140} />
         <Tooltip formatter={(v) => formatCurrency(Number(v))} />
@@ -74,7 +74,7 @@ export function ClientIncomeBarChart({ data }: { data: { name: string; value: nu
 
 function EmptyState() {
   return (
-    <div className="flex h-[200px] items-center justify-center text-sm text-neutral-400">
+    <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground">
       Sin datos en este periodo
     </div>
   );

@@ -17,13 +17,13 @@ export function MovementsTable({ movements }: { movements: MovementRow[] }) {
   const expenses = movements.filter((m) => m.amount < 0);
 
   return (
-    <details className="rounded-lg border border-neutral-200 dark:border-neutral-800" open>
+    <details className="rounded-lg border border-border" open>
       <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
         Gastos del periodo ({expenses.length})
       </summary>
-      <div className="max-h-72 overflow-y-auto border-t border-neutral-200 dark:border-neutral-800">
+      <div className="max-h-72 overflow-y-auto border-t border-border">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-neutral-50 text-left text-xs text-neutral-500 dark:bg-neutral-900">
+          <thead className="sticky top-0 bg-muted text-left text-xs text-muted-foreground">
             <tr>
               <th className="px-4 py-2 font-medium">Fecha</th>
               <th className="px-4 py-2 font-medium">Descripción</th>
@@ -34,19 +34,19 @@ export function MovementsTable({ movements }: { movements: MovementRow[] }) {
           </thead>
           <tbody>
             {expenses.map((m) => (
-              <tr key={m.id} className="border-t border-neutral-100 dark:border-neutral-900">
+              <tr key={m.id} className="border-t border-border">
                 <td className="whitespace-nowrap px-4 py-2">{formatDate(m.date)}</td>
                 <td className="px-4 py-2">{m.description}</td>
                 <td className="whitespace-nowrap px-4 py-2">{one(m.account)?.name ?? "-"}</td>
                 <td className="whitespace-nowrap px-4 py-2">{one(m.subcategory)?.name ?? "-"}</td>
-                <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-red-600 dark:text-red-400">
+                <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-destructive">
                   {formatCurrency(m.amount)}
                 </td>
               </tr>
             ))}
             {expenses.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-neutral-400">
+                <td colSpan={5} className="px-4 py-6 text-center text-muted-foreground">
                   Sin gastos en este periodo
                 </td>
               </tr>

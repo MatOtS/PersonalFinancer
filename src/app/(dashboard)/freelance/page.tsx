@@ -45,11 +45,11 @@ export default async function FreelancePage({
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+        <div className="rounded-lg border border-border p-4">
           <p className="mb-2 text-sm font-medium">Gastos freelance por categoría</p>
           <CategoryBarChart data={categoryTotals} />
         </div>
-        <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+        <div className="rounded-lg border border-border p-4">
           <p className="mb-2 text-sm font-medium">Ingresos por cliente</p>
           <ClientIncomeBarChart data={incomeByClient} />
         </div>

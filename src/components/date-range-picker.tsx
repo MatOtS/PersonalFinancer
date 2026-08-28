@@ -22,7 +22,7 @@ export function DateRangePicker({ from, to }: { from: string; to: string }) {
           value={from}
           max={to}
           onChange={(e) => update("from", e.target.value)}
-          className="rounded-md border border-neutral-300 px-2 py-1 dark:border-neutral-700 dark:bg-neutral-900"
+          className="rounded-md border border-input px-2 py-1 bg-transparent"
         />
       </label>
       <label className="flex items-center gap-1">
@@ -32,7 +32,7 @@ export function DateRangePicker({ from, to }: { from: string; to: string }) {
           value={to}
           min={from}
           onChange={(e) => update("to", e.target.value)}
-          className="rounded-md border border-neutral-300 px-2 py-1 dark:border-neutral-700 dark:bg-neutral-900"
+          className="rounded-md border border-input px-2 py-1 bg-transparent"
         />
       </label>
     </div>
