@@ -24,17 +24,23 @@ import { createClient } from "@/lib/supabase/client";
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
-  const supabase = createClient();
   const [email, setEmail] = useState<string | null>(null);
 
+  // The Supabase client is created inside the effect, never during render:
+  // this component is part of the shell that Next prerenders at build time,
+  // and createClient() throws when the env vars are absent from the build
+  // environment.
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
-  }, [supabase]);
+    createClient()
+      .auth.getUser()
+      .then(({ data }) => setEmail(data.user?.email ?? null))
+      .catch(() => setEmail(null));
+  }, []);
 
   const displayName = email?.split("@")[0] ?? "Cuenta";
 
   async function signOut() {
-    await supabase.auth.signOut();
+    await createClient().auth.signOut();
     router.push("/login");
     router.refresh();
   }

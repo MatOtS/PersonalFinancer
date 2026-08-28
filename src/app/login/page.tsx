@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +19,7 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
+    const supabase = createClient();
     const { error } =
       mode === "sign-in"
         ? await supabase.auth.signInWithPassword({ email, password })

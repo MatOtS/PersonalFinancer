@@ -44,7 +44,6 @@ function guessHeader(headers: string[], candidates: string[]) {
 
 export function ImportWizard({ accounts, categories, keywords, profiles }: Props) {
   const router = useRouter();
-  const supabase = createClient();
 
   const [bankName, setBankName] = useState("");
   const [accountId, setAccountId] = useState(accounts[0]?.id ?? "");
@@ -88,7 +87,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
     const to = dates[dates.length - 1];
 
     const { data: existing } = from
-      ? await supabase.from("movements").select("date, description, amount").gte("date", from).lte("date", to)
+      ? await createClient().from("movements").select("date, description, amount").gte("date", from).lte("date", to)
       : { data: [] };
 
     const existingKeys = new Set((existing ?? []).map((m) => `${m.date}|${m.description}|${m.amount}`));
@@ -134,7 +133,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
       }));
 
     if (rowsToInsert.length > 0) {
-      const { error } = await supabase.from("movements").insert(rowsToInsert);
+      const { error } = await createClient().from("movements").insert(rowsToInsert);
       if (error) {
         setMessage(`Error al importar: ${error.message}`);
         setLoading(false);
@@ -143,7 +142,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
     }
 
     if (bankName.trim() && !existingProfile) {
-      await supabase
+      await createClient()
         .from("csv_import_profiles")
         .upsert({ bank_name: bankName.trim(), column_mapping: mapping }, { onConflict: "user_id,bank_name" });
     }

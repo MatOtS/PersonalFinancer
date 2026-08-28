@@ -10,7 +10,19 @@ export interface PeriodFilter {
 }
 
 export async function getAccountBalances(supabase: Client) {
-  const { data, error } = await supabase.from("account_balances").select("*").order("name");
+  // account_balances is a view. Migration 0003 makes it security_invoker so RLS
+  // applies, but the view has no policies of its own, so the user filter is
+  // also applied here rather than relying on that setting alone.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const { data, error } = await supabase
+    .from("account_balances")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("name");
   if (error) throw error;
   return data;
 }

@@ -28,7 +28,6 @@ const initialState = (accounts: Props["accounts"]) => ({
 });
 
 export function QuickAddForm({ accounts, categories }: Props) {
-  const supabase = createClient();
   const [form, setForm] = useState(initialState(accounts));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -40,7 +39,7 @@ export function QuickAddForm({ accounts, categories }: Props) {
     setSaving(true);
     setMessage(null);
 
-    const { error } = await supabase.from("movements").insert({
+    const { error } = await createClient().from("movements").insert({
       date: todayISO(),
       description: form.description,
       account_id: form.accountId,
