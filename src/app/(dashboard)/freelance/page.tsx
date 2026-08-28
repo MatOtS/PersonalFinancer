@@ -1,14 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
-import {
-  getMovements,
-  summarize,
-  groupByCategory,
-  getIncomeByClient,
-} from "@/lib/queries/dashboard";
+import { getMovements, summarize, groupByDate, getIncomeByClient } from "@/lib/queries/dashboard";
 import { getInvoices } from "@/lib/queries/invoices";
 import { DateRangePicker } from "@/components/date-range-picker";
-import { KpiCard } from "@/components/kpi-card";
-import { CategoryBarChart, ClientIncomeBarChart } from "@/components/charts";
+import { DashboardGrid, DashboardHeading } from "@/components/dashboard-layout";
+import { DashboardStats } from "@/components/stats";
+import { CashflowChart } from "@/components/cashflow-chart";
+import { CategoryBreakdown } from "@/components/category-breakdown";
+import { DashboardInvoices } from "@/components/dashboard-invoices";
 import { InvoicesTable } from "@/components/invoices-table";
 import { formatCurrency, monthAgoISO, todayISO } from "@/lib/format";
 
@@ -29,36 +27,52 @@ export default async function FreelancePage({
   ]);
 
   const totals = summarize(movements);
-  const categoryTotals = groupByCategory(movements);
+  const timeSeries = groupByDate(movements);
+  const pendingInvoices = invoices.filter((i) => !i.paid);
+  const pendingAmount = pendingInvoices.reduce((sum, i) => sum + i.net_amount, 0);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">Freelance</h2>
-        <DateRangePicker from={from} to={to} />
-      </div>
+    <div className="flex flex-1 flex-col gap-6 py-6">
+      <DashboardHeading
+        title="Freelance"
+        subtitle="Ingresos por cliente y estado de tu facturación."
+        actions={<DateRangePicker from={from} to={to} />}
+      />
 
-      <div className="grid grid-cols-3 gap-3">
-        <KpiCard label="Entradas" value={formatCurrency(totals.income)} tone="up" />
-        <KpiCard label="Salidas" value={formatCurrency(totals.expense)} tone="down" />
-        <KpiCard label="Balance" value={formatCurrency(totals.balance)} tone={totals.balance >= 0 ? "up" : "down"} />
-      </div>
+      <DashboardGrid>
+        <DashboardStats
+          stats={[
+            { label: "Entradas", value: formatCurrency(totals.income) },
+            { label: "Salidas", value: formatCurrency(totals.expense) },
+            { label: "Balance", value: formatCurrency(totals.balance) },
+          ]}
+        />
+        <CashflowChart
+          data={timeSeries}
+          description="Movimientos freelance del periodo seleccionado."
+        />
+      </DashboardGrid>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-lg border border-border p-4">
-          <p className="mb-2 text-sm font-medium">Gastos freelance por categoría</p>
-          <CategoryBarChart data={categoryTotals} />
-        </div>
-        <div className="rounded-lg border border-border p-4">
-          <p className="mb-2 text-sm font-medium">Ingresos por cliente</p>
-          <ClientIncomeBarChart data={incomeByClient} />
-        </div>
-      </div>
+      <DashboardGrid className="lg:grid-cols-2">
+        <DashboardStats
+          stats={[
+            { label: "Facturas pendientes de cobro", value: String(pendingInvoices.length) },
+            { label: "Importe pendiente", value: formatCurrency(pendingAmount) },
+          ]}
+        />
+      </DashboardGrid>
 
-      <div className="space-y-2">
-        <p className="text-sm font-medium">Facturación</p>
-        <InvoicesTable invoices={invoices} />
-      </div>
+      <DashboardGrid className="lg:grid-cols-2">
+        <CategoryBreakdown
+          data={incomeByClient}
+          description="Cobros freelance del periodo seleccionado."
+          emptyLabel="Sin ingresos por cliente en este periodo"
+          title="Ingresos por cliente"
+        />
+        <DashboardInvoices invoices={invoices} />
+      </DashboardGrid>
+
+      <InvoicesTable invoices={invoices} />
     </div>
   );
 }

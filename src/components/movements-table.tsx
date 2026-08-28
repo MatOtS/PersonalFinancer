@@ -1,3 +1,19 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { formatCurrency, formatDate } from "@/lib/format";
 
 interface MovementRow {
@@ -17,43 +33,55 @@ export function MovementsTable({ movements }: { movements: MovementRow[] }) {
   const expenses = movements.filter((m) => m.amount < 0);
 
   return (
-    <details className="rounded-lg border border-border" open>
-      <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
-        Gastos del periodo ({expenses.length})
-      </summary>
-      <div className="max-h-72 overflow-y-auto border-t border-border">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-muted text-left text-xs text-muted-foreground">
-            <tr>
-              <th className="px-4 py-2 font-medium">Fecha</th>
-              <th className="px-4 py-2 font-medium">Descripción</th>
-              <th className="px-4 py-2 font-medium">Cuenta</th>
-              <th className="px-4 py-2 font-medium">Subcategoría</th>
-              <th className="px-4 py-2 text-right font-medium">Monto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map((m) => (
-              <tr key={m.id} className="border-t border-border">
-                <td className="whitespace-nowrap px-4 py-2">{formatDate(m.date)}</td>
-                <td className="px-4 py-2">{m.description}</td>
-                <td className="whitespace-nowrap px-4 py-2">{one(m.account)?.name ?? "-"}</td>
-                <td className="whitespace-nowrap px-4 py-2">{one(m.subcategory)?.name ?? "-"}</td>
-                <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-destructive">
-                  {formatCurrency(m.amount)}
-                </td>
-              </tr>
-            ))}
-            {expenses.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-muted-foreground">
-                  Sin gastos en este periodo
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </details>
+    <Card className="rounded-none bg-background shadow-none ring ring-border">
+      <CardHeader>
+        <CardTitle>Gastos del periodo</CardTitle>
+        <CardDescription>
+          {expenses.length} {expenses.length === 1 ? "movimiento" : "movimientos"}.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="px-0 pb-2">
+        <div className="max-h-96 overflow-y-auto">
+          <Table className="border-t">
+            <TableCaption className="sr-only">
+              Gastos del periodo con fecha, descripción, cuenta, subcategoría e importe.
+            </TableCaption>
+            <TableHeader className="sticky top-0 bg-background">
+              <TableRow>
+                <TableHead className="pl-6">Fecha</TableHead>
+                <TableHead>Descripción</TableHead>
+                <TableHead>Cuenta</TableHead>
+                <TableHead>Subcategoría</TableHead>
+                <TableHead className="pr-6 text-right">Importe</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {expenses.map((m) => (
+                <TableRow key={m.id}>
+                  <TableCell className="whitespace-nowrap pl-6 text-muted-foreground tabular-nums">
+                    {formatDate(m.date)}
+                  </TableCell>
+                  <TableCell className="max-w-64 truncate font-medium">{m.description}</TableCell>
+                  <TableCell className="whitespace-nowrap">{one(m.account)?.name ?? "—"}</TableCell>
+                  <TableCell className="whitespace-nowrap text-muted-foreground">
+                    {one(m.subcategory)?.name ?? "—"}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap pr-6 text-right tabular-nums">
+                    {formatCurrency(m.amount)}
+                  </TableCell>
+                </TableRow>
+              ))}
+              {expenses.length === 0 && (
+                <TableRow>
+                  <TableCell className="h-24 text-center text-muted-foreground" colSpan={5}>
+                    Sin gastos en este periodo
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

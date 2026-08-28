@@ -8,11 +8,13 @@ import {
   groupByDate,
 } from "@/lib/queries/dashboard";
 import { DateRangePicker } from "@/components/date-range-picker";
-import { KpiCard } from "@/components/kpi-card";
+import { DashboardGrid, DashboardHeading } from "@/components/dashboard-layout";
+import { DashboardStats } from "@/components/stats";
+import { CashflowChart } from "@/components/cashflow-chart";
 import { AccountBalanceCards } from "@/components/account-balance-cards";
 import { MovementsTable } from "@/components/movements-table";
 import { FixedExpensesList } from "@/components/fixed-expenses-list";
-import { IncomeExpenseLineChart, CategoryBarChart } from "@/components/charts";
+import { CategoryBreakdown } from "@/components/category-breakdown";
 import { formatCurrency, monthAgoISO, todayISO } from "@/lib/format";
 
 export default async function HomePage({
@@ -36,37 +38,41 @@ export default async function HomePage({
   const timeSeries = groupByDate(movements);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">Home</h2>
-        <DateRangePicker from={from} to={to} />
-      </div>
+    <div className="flex flex-1 flex-col gap-6 py-6">
+      <DashboardHeading
+        title="Finanzas personales"
+        subtitle="Entradas, salidas y saldo de tus cuentas."
+        actions={<DateRangePicker from={from} to={to} />}
+      />
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-        <KpiCard label="Entradas" value={formatCurrency(totals.income)} tone="up" />
-        <KpiCard label="Salidas" value={formatCurrency(totals.expense)} tone="down" />
-        <KpiCard label="Balance" value={formatCurrency(totals.balance)} tone={totals.balance >= 0 ? "up" : "down"} />
-        <KpiCard label="Prom. ingresos" value={formatCurrency(totals.avgIncome)} />
-        <KpiCard label="Prom. gastos" value={formatCurrency(totals.avgExpense)} />
-      </div>
+      <DashboardGrid>
+        <DashboardStats
+          stats={[
+            { label: "Entradas", value: formatCurrency(totals.income) },
+            { label: "Salidas", value: formatCurrency(totals.expense) },
+            { label: "Balance", value: formatCurrency(totals.balance) },
+          ]}
+        />
+        <CashflowChart data={timeSeries} />
+      </DashboardGrid>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-lg border border-border p-4">
-          <p className="mb-2 text-sm font-medium">Ingresos vs. gastos</p>
-          <IncomeExpenseLineChart data={timeSeries} />
-        </div>
-        <div className="rounded-lg border border-border p-4">
-          <p className="mb-2 text-sm font-medium">Gastos por categoría</p>
-          <CategoryBarChart data={categoryTotals} />
-        </div>
-      </div>
+      <DashboardGrid className="lg:grid-cols-2">
+        <DashboardStats
+          stats={[
+            { label: "Promedio de ingresos", value: formatCurrency(totals.avgIncome) },
+            { label: "Promedio de gastos", value: formatCurrency(totals.avgExpense) },
+          ]}
+        />
+      </DashboardGrid>
 
       <AccountBalanceCards accounts={accounts} />
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <MovementsTable movements={movements} />
+      <DashboardGrid className="lg:grid-cols-2">
+        <CategoryBreakdown data={categoryTotals} />
         <FixedExpensesList items={fixedExpenses} />
-      </div>
+      </DashboardGrid>
+
+      <MovementsTable movements={movements} />
     </div>
   );
 }

@@ -1,3 +1,11 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/format";
 
 const FREQUENCY_LABEL: Record<string, string> = {
@@ -13,24 +21,29 @@ export function FixedExpensesList({
   items: { id: string; name: string; amount: number; frequency: string }[];
 }) {
   return (
-    <div className="rounded-lg border border-border">
-      <p className="border-b border-border px-4 py-3 text-sm font-medium">
-        Gastos fijos
-      </p>
-      <ul className="divide-y divide-border">
+    <Card className="rounded-none bg-background shadow-none ring-0">
+      <CardHeader>
+        <CardTitle>Gastos fijos</CardTitle>
+        <CardDescription>Recurrentes configurados en Ajustes.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3">
         {items.map((item) => (
-          <li key={item.id} className="flex items-center justify-between px-4 py-2 text-sm">
-            <div>
-              <p>{item.name}</p>
-              <p className="text-xs text-muted-foreground">{FREQUENCY_LABEL[item.frequency] ?? item.frequency}</p>
+          <div key={item.id} className="flex items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="truncate font-medium">{item.name}</span>
+              <Badge variant="outline">
+                {FREQUENCY_LABEL[item.frequency] ?? item.frequency}
+              </Badge>
             </div>
-            <span className="tabular-nums">{formatCurrency(item.amount)}</span>
-          </li>
+            <span className="shrink-0 tabular-nums">{formatCurrency(item.amount)}</span>
+          </div>
         ))}
         {items.length === 0 && (
-          <li className="px-4 py-6 text-center text-sm text-muted-foreground">Sin gastos fijos configurados</li>
+          <p className="py-6 text-center text-muted-foreground">
+            Sin gastos fijos configurados
+          </p>
         )}
-      </ul>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

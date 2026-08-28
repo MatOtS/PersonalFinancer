@@ -1,115 +1,54 @@
-import { SquaresFourIcon, ChartBarIcon, BriefcaseIcon, UsersIcon, PlugIcon, KeyIcon, GearIcon, PaperPlaneTiltIcon, QuestionIcon, BookOpenIcon } from "@phosphor-icons/react";
+import type { ReactNode } from "react";
+import {
+  HouseIcon,
+  BriefcaseIcon,
+  PlusCircleIcon,
+  ReceiptIcon,
+  UploadSimpleIcon,
+  GearIcon,
+} from "@phosphor-icons/react";
 
 export type SidebarNavItem = {
-	title: string;
-	url: string;
-	icon: React.ReactNode;
-	isActive?: boolean;
+  title: string;
+  url: string;
+  icon: ReactNode;
 };
 
 export type SidebarNavGroup = {
-	label?: string;
-	items: SidebarNavItem[];
+  label?: string;
+  items: SidebarNavItem[];
 };
 
 export const navGroups: SidebarNavGroup[] = [
-	{
-		label: "Product",
-		items: [
-			{
-				title: "Dashboard",
-				url: "#/overview",
-				icon: (
-					<SquaresFourIcon
-					/>
-				),
-				isActive: true,
-			},
-			{
-				title: "Analytics",
-				url: "#/analytics",
-				icon: (
-					<ChartBarIcon
-					/>
-				),
-			},
-			{
-				title: "Projects",
-				url: "#/projects",
-				icon: (
-					<BriefcaseIcon
-					/>
-				),
-			},
-			{
-				title: "Team",
-				url: "#/team",
-				icon: (
-					<UsersIcon
-					/>
-				),
-			},
-			{
-				title: "Integrations",
-				url: "#/integrations",
-				icon: (
-					<PlugIcon
-					/>
-				),
-			},
-			{
-				title: "API Keys",
-				url: "#/api-keys",
-				icon: (
-					<KeyIcon
-					/>
-				),
-			},
-		],
-	},
-	{
-		label: "Administration",
-		items: [
-			{
-				title: "Settings",
-				url: "#/settings",
-				icon: (
-					<GearIcon
-					/>
-				),
-			},
-		],
-	},
+  {
+    label: "Finanzas",
+    items: [
+      { title: "Home", url: "/home", icon: <HouseIcon /> },
+      { title: "Freelance", url: "/freelance", icon: <BriefcaseIcon /> },
+    ],
+  },
+  {
+    label: "Registrar",
+    items: [
+      { title: "Gasto rápido", url: "/quick-add", icon: <PlusCircleIcon /> },
+      { title: "Emitir factura", url: "/invoices/new", icon: <ReceiptIcon /> },
+      { title: "Importar CSV", url: "/import", icon: <UploadSimpleIcon /> },
+    ],
+  },
+  {
+    label: "Administración",
+    items: [{ title: "Ajustes", url: "/settings", icon: <GearIcon /> }],
+  },
 ];
 
-export const footerNavLinks: SidebarNavItem[] = [
-	{
-		title: "Feedback",
-		url: "#/feedback",
-		icon: (
-			<PaperPlaneTiltIcon data-icon="inline-start" />
-		),
-	},
-	{
-		title: "Help Center",
-		url: "#/help",
-		icon: (
-			<QuestionIcon
-			/>
-		),
-	},
+export const navLinks: SidebarNavItem[] = navGroups.flatMap((group) => group.items);
 
-	{
-		title: "Documentation",
-		url: "#/documentation",
-		icon: (
-			<BookOpenIcon
-			/>
-		),
-	},
-];
-
-export const navLinks: SidebarNavItem[] = [
-	...navGroups.flatMap((group) => group.items),
-	...footerNavLinks,
-];
+/**
+ * Longest-prefix match so nested routes (e.g. /invoices/new) still highlight
+ * their nav entry, without /home matching every path.
+ */
+export function findActiveNavItem(pathname: string): SidebarNavItem | undefined {
+  return navLinks
+    .filter((item) => pathname === item.url || pathname.startsWith(`${item.url}/`))
+    .sort((a, b) => b.url.length - a.url.length)[0];
+}

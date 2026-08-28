@@ -1,5 +1,22 @@
-import { formatCurrency, formatDate } from "@/lib/format";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { MarkPaidButton } from "@/components/mark-paid-button";
+import { formatCurrency, formatDate, formatPercent } from "@/lib/format";
 
 interface InvoiceRow {
   id: string;
@@ -20,48 +37,79 @@ function one<T>(v: T | T[] | null): T | null {
 
 export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
-      <table className="w-full text-sm">
-        <thead className="bg-muted text-left text-xs text-muted-foreground">
-          <tr>
-            <th className="px-4 py-2 font-medium">Cliente</th>
-            <th className="px-4 py-2 font-medium">Fecha</th>
-            <th className="px-4 py-2 font-medium">N.º factura</th>
-            <th className="px-4 py-2 text-right font-medium">Importe</th>
-            <th className="px-4 py-2 text-center font-medium">Emitida</th>
-            <th className="px-4 py-2 text-center font-medium">Cobrada</th>
-            <th className="px-4 py-2 text-right font-medium">Monto neto</th>
-            <th className="px-4 py-2 text-right font-medium">IRPF</th>
-            <th className="px-4 py-2 text-right font-medium">IVA</th>
-          </tr>
-        </thead>
-        <tbody>
-          {invoices.map((inv) => (
-            <tr key={inv.id} className="border-t border-border">
-              <td className="whitespace-nowrap px-4 py-2">{one(inv.client)?.name ?? "-"}</td>
-              <td className="whitespace-nowrap px-4 py-2">{formatDate(inv.issue_date)}</td>
-              <td className="whitespace-nowrap px-4 py-2">{inv.invoice_number}</td>
-              <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums">{formatCurrency(inv.amount)}</td>
-              <td className="px-4 py-2 text-center">{inv.issued ? "Sí" : "No"}</td>
-              <td className="px-4 py-2 text-center">
-                {inv.paid ? "Sí" : <MarkPaidButton invoiceId={inv.id} />}
-              </td>
-              <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums">
-                {formatCurrency(inv.net_amount)}
-              </td>
-              <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums">{inv.irpf_pct}%</td>
-              <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums">{inv.iva_pct}%</td>
-            </tr>
-          ))}
-          {invoices.length === 0 && (
-            <tr>
-              <td colSpan={9} className="px-4 py-6 text-center text-muted-foreground">
-                Sin facturas todavía
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+    <Card className="rounded-none bg-background shadow-none ring ring-border">
+      <CardHeader>
+        <CardTitle>Facturación</CardTitle>
+        <CardDescription>Todas tus facturas emitidas.</CardDescription>
+      </CardHeader>
+      <CardContent className="px-0 pb-2">
+        <div className="overflow-x-auto">
+          <Table className="border-t">
+            <TableCaption className="sr-only">
+              Facturas con cliente, fecha, número, importe, IRPF, IVA y estado.
+            </TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-6">Cliente</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>N.º factura</TableHead>
+                <TableHead className="text-right">Importe</TableHead>
+                <TableHead className="text-right">IRPF</TableHead>
+                <TableHead className="text-right">IVA</TableHead>
+                <TableHead className="text-right">Neto</TableHead>
+                <TableHead className="text-center">Emitida</TableHead>
+                <TableHead className="pr-6 text-right">Cobrada</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {invoices.map((inv) => (
+                <TableRow key={inv.id}>
+                  <TableCell className="max-w-40 truncate pl-6 font-medium">
+                    {one(inv.client)?.name ?? "—"}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-muted-foreground tabular-nums">
+                    {formatDate(inv.issue_date)}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap tabular-nums">
+                    {inv.invoice_number}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-right tabular-nums">
+                    {formatCurrency(inv.amount)}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-right tabular-nums text-muted-foreground">
+                    {formatPercent(inv.irpf_pct)}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-right tabular-nums text-muted-foreground">
+                    {formatPercent(inv.iva_pct)}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-right font-medium tabular-nums">
+                    {formatCurrency(inv.net_amount)}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant={inv.issued ? "secondary" : "outline"}>
+                      {inv.issued ? "Sí" : "No"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="pr-6 text-right">
+                    {inv.paid ? (
+                      <Badge variant="secondary">Cobrada</Badge>
+                    ) : (
+                      <MarkPaidButton invoiceId={inv.id} />
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+              {invoices.length === 0 && (
+                <TableRow>
+                  <TableCell className="h-24 text-center text-muted-foreground" colSpan={9}>
+                    Sin facturas todavía
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

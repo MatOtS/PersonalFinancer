@@ -1,3 +1,5 @@
+import { DashboardGrid } from "@/components/dashboard-layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/format";
 
 export function AccountBalanceCards({
@@ -6,13 +8,23 @@ export function AccountBalanceCards({
   accounts: { account_id: string; name: string; current_balance: number }[];
 }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+    <DashboardGrid className="sm:grid-cols-3 lg:grid-cols-5">
       {accounts.map((a) => (
-        <div key={a.account_id} className="rounded-lg border border-border p-3">
-          <p className="text-xs font-medium text-muted-foreground">{a.name}</p>
-          <p className="mt-1 text-sm font-semibold tabular-nums">{formatCurrency(a.current_balance)}</p>
-        </div>
+        <Card
+          key={a.account_id}
+          className="rounded-none bg-background shadow-none ring-0"
+          size="sm"
+        >
+          <CardHeader>
+            <CardTitle className="font-normal text-muted-foreground text-xs tracking-wide">
+              {a.name}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="font-medium tabular-nums">{formatCurrency(a.current_balance)}</p>
+          </CardContent>
+        </Card>
       ))}
-    </div>
+    </DashboardGrid>
   );
 }
