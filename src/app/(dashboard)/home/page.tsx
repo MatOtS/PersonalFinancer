@@ -53,6 +53,13 @@ export default async function HomePage({
             { label: "Balance", value: formatCurrency(totals.balance) },
           ]}
         />
+      </DashboardGrid>
+
+      <DashboardGrid className="lg:grid-cols-1">
+        <CategoryBreakdown data={categoryTotals} />
+      </DashboardGrid>
+
+      <DashboardGrid className="lg:grid-cols-1">
         <CashflowChart data={timeSeries} />
       </DashboardGrid>
 
@@ -67,8 +74,7 @@ export default async function HomePage({
 
       <AccountBalanceCards accounts={accounts} />
 
-      <DashboardGrid className="lg:grid-cols-2">
-        <CategoryBreakdown data={categoryTotals} />
+      <DashboardGrid className="lg:grid-cols-1">
         <FixedExpensesList items={fixedExpenses} />
       </DashboardGrid>
 
