@@ -6,6 +6,10 @@ import { todayISO } from "@/lib/format";
 import type { CategoryKind, MovementType } from "@/lib/supabase/types";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  SubcategoryCombobox,
+  type SubcategoryOption,
+} from "@/components/subcategory-combobox";
 
 interface Category {
   id: string;
@@ -43,6 +47,21 @@ export function QuickAddForm({ accounts, categories }: Props) {
     [categories, form.kind]
   );
   const selectedCategory = visibleCategories.find((c) => c.id === form.categoryId);
+
+  // Flattened so the picker can search across every subcategory at once rather
+  // than only those under an already-chosen category.
+  const subcategoryOptions = useMemo<SubcategoryOption[]>(
+    () =>
+      visibleCategories.flatMap((c) =>
+        c.subcategories.map((s) => ({
+          id: s.id,
+          name: s.name,
+          categoryId: c.id,
+          categoryName: c.name,
+        }))
+      ),
+    [visibleCategories]
+  );
 
   function setKind(kind: CategoryKind) {
     // The previously chosen category belongs to the other side of the ledger.
@@ -162,7 +181,27 @@ export function QuickAddForm({ accounts, categories }: Props) {
         </select>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1">
+          <label className="text-sm font-medium" htmlFor="qa-subcategory">
+            Subcategoría
+          </label>
+          <SubcategoryCombobox
+            disabled={subcategoryOptions.length === 0}
+            id="qa-subcategory"
+            onSelect={(option) =>
+              setForm((f) => ({
+                ...f,
+                subcategoryId: option?.id ?? "",
+                // Picking a subcategory decides the category, so it is filled
+                // in rather than asked for.
+                categoryId: option?.categoryId ?? f.categoryId,
+              }))
+            }
+            options={subcategoryOptions}
+            value={form.subcategoryId}
+          />
+        </div>
         <div className="space-y-1">
           <label className="text-sm font-medium" htmlFor="qa-category">
             Categoría
@@ -182,25 +221,11 @@ export function QuickAddForm({ accounts, categories }: Props) {
               </option>
             ))}
           </select>
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="qa-subcategory">
-            Subcategoría
-          </label>
-          <select
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm disabled:opacity-50"
-            disabled={!selectedCategory?.subcategories.length}
-            id="qa-subcategory"
-            onChange={(e) => setForm((f) => ({ ...f, subcategoryId: e.target.value }))}
-            value={form.subcategoryId}
-          >
-            <option value="">-</option>
-            {selectedCategory?.subcategories.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          {selectedCategory && form.subcategoryId && (
+            <p className="text-muted-foreground text-xs">
+              Rellenada desde la subcategoría.
+            </p>
+          )}
         </div>
       </div>
 
