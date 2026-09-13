@@ -14,7 +14,7 @@ import { CashflowChart } from "@/components/cashflow-chart";
 import { AccountBalanceCards } from "@/components/account-balance-cards";
 import { MovementsTable } from "@/components/movements-table";
 import { FixedExpensesList } from "@/components/fixed-expenses-list";
-import { CategoryBreakdown } from "@/components/category-breakdown";
+import { CategoryDonut } from "@/components/category-donut";
 import { formatCurrency, monthAgoISO, todayISO } from "@/lib/format";
 
 export default async function HomePage({
@@ -56,7 +56,12 @@ export default async function HomePage({
       </DashboardGrid>
 
       <DashboardGrid className="lg:grid-cols-1">
-        <CategoryBreakdown data={categoryTotals} />
+        <CategoryDonut
+          data={categoryTotals}
+          description="Reparto del gasto en el periodo seleccionado."
+          emptyLabel="Sin gastos en este periodo"
+          title="Gastos por categoría"
+        />
       </DashboardGrid>
 
       <DashboardGrid className="lg:grid-cols-1">

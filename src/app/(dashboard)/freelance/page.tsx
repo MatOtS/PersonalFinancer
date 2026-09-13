@@ -5,7 +5,7 @@ import { DateRangePicker } from "@/components/date-range-picker";
 import { DashboardGrid, DashboardHeading } from "@/components/dashboard-layout";
 import { DashboardStats } from "@/components/stats";
 import { CashflowChart } from "@/components/cashflow-chart";
-import { CategoryBreakdown } from "@/components/category-breakdown";
+import { CategoryDonut } from "@/components/category-donut";
 import { DashboardInvoices } from "@/components/dashboard-invoices";
 import { InvoicesTable } from "@/components/invoices-table";
 import { formatCurrency, monthAgoISO, todayISO } from "@/lib/format";
@@ -63,7 +63,7 @@ export default async function FreelancePage({
       </DashboardGrid>
 
       <DashboardGrid className="lg:grid-cols-2">
-        <CategoryBreakdown
+        <CategoryDonut
           data={incomeByClient}
           description="Cobros freelance del periodo seleccionado."
           emptyLabel="Sin ingresos por cliente en este periodo"
