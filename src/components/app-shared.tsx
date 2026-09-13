@@ -30,7 +30,7 @@ export const navGroups: SidebarNavGroup[] = [
   {
     label: "Registrar",
     items: [
-      { title: "Gasto rápido", url: "/quick-add", icon: <PlusCircleIcon /> },
+      { title: "Registro rápido", url: "/quick-add", icon: <PlusCircleIcon /> },
       { title: "Emitir factura", url: "/invoices/new", icon: <ReceiptIcon /> },
       { title: "Importar CSV", url: "/import", icon: <UploadSimpleIcon /> },
     ],

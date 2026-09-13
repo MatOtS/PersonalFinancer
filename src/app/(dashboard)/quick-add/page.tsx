@@ -11,7 +11,7 @@ export default async function QuickAddPage() {
 
   return (
     <div className="mx-auto max-w-md space-y-6">
-      <h2 className="text-lg font-semibold">Registrar gasto rápido</h2>
+      <h2 className="text-lg font-semibold">Registro rápido</h2>
       <QuickAddForm accounts={accounts} categories={categories} />
     </div>
   );

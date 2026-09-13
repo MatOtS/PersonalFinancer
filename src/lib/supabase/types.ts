@@ -5,6 +5,7 @@
 // exact shape or type inference silently collapses to `never`.
 
 export type MovementType = "personal" | "freelance";
+export type CategoryKind = "expense" | "income";
 export type FixedExpenseFrequency = "monthly" | "bimonthly" | "quarterly" | "annual";
 export type MovementSource = "manual" | "csv_import";
 
@@ -18,8 +19,8 @@ export interface Database {
         Relationships: [];
       };
       categories: {
-        Row: { id: string; user_id: string; name: string };
-        Insert: { id?: string; user_id?: string; name: string };
+        Row: { id: string; user_id: string; name: string; kind: CategoryKind };
+        Insert: { id?: string; user_id?: string; name: string; kind?: CategoryKind };
         Update: Partial<Database["public"]["Tables"]["categories"]["Insert"]>;
         Relationships: [];
       };

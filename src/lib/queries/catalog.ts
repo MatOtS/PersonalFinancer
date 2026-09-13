@@ -12,7 +12,7 @@ export async function getAccounts(supabase: Client) {
 export async function getCategoriesWithSubcategories(supabase: Client) {
   const { data, error } = await supabase
     .from("categories")
-    .select("id, name, subcategories(id, name)")
+    .select("id, name, kind, subcategories(id, name)")
     .order("name");
   if (error) throw error;
   return data;
