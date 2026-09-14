@@ -28,8 +28,11 @@ export default async function FreelancePage({
 
   const totals = summarize(movements);
   const timeSeries = groupByDate(movements);
-  const pendingInvoices = invoices.filter((i) => !i.paid);
+  // Only issued invoices are money actually owed to you; a draft has not been
+  // sent to anyone yet.
+  const pendingInvoices = invoices.filter((i) => i.status === "issued");
   const pendingAmount = pendingInvoices.reduce((sum, i) => sum + i.net_amount, 0);
+  const draftCount = invoices.filter((i) => i.status === "draft").length;
 
   return (
     <div className="flex flex-1 flex-col gap-6 py-6">
@@ -58,6 +61,7 @@ export default async function FreelancePage({
           stats={[
             { label: "Facturas pendientes de cobro", value: String(pendingInvoices.length) },
             { label: "Importe pendiente", value: formatCurrency(pendingAmount) },
+            { label: "Borradores", value: String(draftCount) },
           ]}
         />
       </DashboardGrid>

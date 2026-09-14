@@ -8,6 +8,7 @@ export type MovementType = "personal" | "freelance";
 export type CategoryKind = "expense" | "income";
 export type FixedExpenseFrequency = "monthly" | "bimonthly" | "quarterly" | "annual";
 export type MovementSource = "manual" | "csv_import";
+export type InvoiceStatus = "draft" | "issued" | "paid";
 
 export interface Database {
   public: {
@@ -66,7 +67,7 @@ export interface Database {
           user_id: string;
           client_id: string;
           issue_date: string;
-          invoice_number: string;
+          invoice_number: string | null;
           amount: number;
           irpf_pct: number;
           iva_pct: number;
@@ -74,6 +75,8 @@ export interface Database {
           issued: boolean;
           paid: boolean;
           paid_date: string | null;
+          status: InvoiceStatus;
+          due_date: string | null;
           created_at: string;
         };
         Insert: {
@@ -81,14 +84,16 @@ export interface Database {
           user_id?: string;
           client_id: string;
           issue_date?: string;
-          invoice_number: string;
-          amount: number;
+          invoice_number?: string | null;
+          amount?: number;
           irpf_pct?: number;
           iva_pct?: number;
-          net_amount: number;
+          net_amount?: number;
           issued?: boolean;
           paid?: boolean;
           paid_date?: string | null;
+          status?: InvoiceStatus;
+          due_date?: string | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["invoices"]["Insert"]>;
@@ -98,6 +103,36 @@ export interface Database {
             columns: ["client_id"];
             isOneToOne: false;
             referencedRelation: "clients";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      invoice_lines: {
+        Row: {
+          id: string;
+          user_id: string;
+          invoice_id: string;
+          position: number;
+          description: string;
+          quantity: number;
+          unit_price: number;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string;
+          invoice_id: string;
+          position?: number;
+          description: string;
+          quantity?: number;
+          unit_price?: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["invoice_lines"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "invoice_lines_invoice_id_fkey";
+            columns: ["invoice_id"];
+            isOneToOne: false;
+            referencedRelation: "invoices";
             referencedColumns: ["id"];
           },
         ];
