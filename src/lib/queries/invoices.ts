@@ -15,7 +15,10 @@ export async function getInvoices(supabase: Client) {
 }
 
 export async function getClients(supabase: Client) {
-  const { data, error } = await supabase.from("clients").select("id, name").order("name");
+  const { data, error } = await supabase
+    .from("clients")
+    .select("id, name, tax_id, address, email")
+    .order("name");
   if (error) throw error;
   return data;
 }

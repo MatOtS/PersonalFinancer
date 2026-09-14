@@ -24,6 +24,55 @@ export async function updateSettingsAction(formData: FormData) {
   revalidatePath("/settings");
 }
 
+/** Blank inputs are stored as NULL so the PDF can tell "not set" from "empty". */
+function optional(formData: FormData, key: string) {
+  const value = String(formData.get(key) ?? "").trim();
+  return value === "" ? null : value;
+}
+
+export async function updateIssuerAction(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase
+    .from("user_settings")
+    .update({
+      issuer_name: optional(formData, "issuer_name"),
+      issuer_tax_id: optional(formData, "issuer_tax_id"),
+      issuer_address: optional(formData, "issuer_address"),
+      issuer_email: optional(formData, "issuer_email"),
+      issuer_phone: optional(formData, "issuer_phone"),
+      issuer_iban: optional(formData, "issuer_iban"),
+      payment_method: String(formData.get("payment_method") ?? "").trim() || "Transferencia bancaria",
+      default_due_days: Number(formData.get("default_due_days")) || 30,
+    })
+    .eq("user_id", user.id);
+
+  revalidatePath("/settings");
+}
+
+export async function updateClientAction(formData: FormData) {
+  const supabase = await createClient();
+  const id = String(formData.get("id"));
+  if (!id) return;
+
+  await supabase
+    .from("clients")
+    .update({
+      name: String(formData.get("name")).trim(),
+      tax_id: optional(formData, "tax_id"),
+      address: optional(formData, "address"),
+      email: optional(formData, "email"),
+    })
+    .eq("id", id);
+
+  revalidatePath("/settings");
+  revalidatePath("/invoices/new");
+}
+
 export async function addAccountAction(formData: FormData) {
   const supabase = await createClient();
   const name = String(formData.get("name")).trim();

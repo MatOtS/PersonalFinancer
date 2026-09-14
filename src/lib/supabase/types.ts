@@ -39,8 +39,24 @@ export interface Database {
         ];
       };
       clients: {
-        Row: { id: string; user_id: string; name: string; created_at: string };
-        Insert: { id?: string; user_id?: string; name: string; created_at?: string };
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          tax_id: string | null;
+          address: string | null;
+          email: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string;
+          name: string;
+          tax_id?: string | null;
+          address?: string | null;
+          email?: string | null;
+          created_at?: string;
+        };
         Update: Partial<Database["public"]["Tables"]["clients"]["Insert"]>;
         Relationships: [];
       };
@@ -225,6 +241,15 @@ export interface Database {
           default_iva_pct: number;
           invoice_number_format: string;
           invoice_number_next: number;
+          issuer_name: string | null;
+          issuer_tax_id: string | null;
+          issuer_address: string | null;
+          issuer_email: string | null;
+          issuer_phone: string | null;
+          issuer_iban: string | null;
+          payment_method: string;
+          logo_path: string | null;
+          default_due_days: number;
         };
         Insert: {
           user_id?: string;
@@ -232,6 +257,15 @@ export interface Database {
           default_iva_pct?: number;
           invoice_number_format?: string;
           invoice_number_next?: number;
+          issuer_name?: string | null;
+          issuer_tax_id?: string | null;
+          issuer_address?: string | null;
+          issuer_email?: string | null;
+          issuer_phone?: string | null;
+          issuer_iban?: string | null;
+          payment_method?: string;
+          logo_path?: string | null;
+          default_due_days?: number;
         };
         Update: Partial<Database["public"]["Tables"]["user_settings"]["Insert"]>;
         Relationships: [];
