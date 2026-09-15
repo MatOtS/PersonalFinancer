@@ -240,13 +240,13 @@ export interface Database {
           id: string;
           user_id: string;
           bank_name: string;
-          column_mapping: { date: string; description: string; amount: string; account?: string };
+          column_mapping: { date: string; description: string; amount: string; sign?: string };
         };
         Insert: {
           id?: string;
           user_id?: string;
           bank_name: string;
-          column_mapping: { date: string; description: string; amount: string; account?: string };
+          column_mapping: { date: string; description: string; amount: string; sign?: string };
         };
         Update: Partial<Database["public"]["Tables"]["csv_import_profiles"]["Insert"]>;
         Relationships: [];
