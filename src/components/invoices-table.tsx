@@ -15,19 +15,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MarkPaidButton } from "@/components/mark-paid-button";
+import { InvoiceActions } from "@/components/invoice-actions";
 import { formatCurrency, formatDate, formatPercent } from "@/lib/format";
+import type { InvoiceStatus } from "@/lib/supabase/types";
 
 interface InvoiceRow {
   id: string;
-  invoice_number: string;
+  invoice_number: string | null;
   issue_date: string;
+  due_date: string | null;
   amount: number;
   irpf_pct: number;
   iva_pct: number;
   net_amount: number;
-  issued: boolean;
-  paid: boolean;
+  status: InvoiceStatus;
   client: { name: string } | { name: string }[] | null;
 }
 
@@ -35,18 +36,40 @@ function one<T>(v: T | T[] | null): T | null {
   return Array.isArray(v) ? v[0] ?? null : v;
 }
 
+export const STATUS_LABEL: Record<InvoiceStatus, string> = {
+  draft: "Borrador",
+  issued: "Emitida",
+  paid: "Cobrada",
+};
+
+/**
+ * "Emitida" is the state that needs attention (sent, not collected yet), so it
+ * carries the loudest badge; a draft is quiet and a cobrada is settled.
+ */
+const STATUS_VARIANT: Record<InvoiceStatus, "outline" | "secondary" | "default"> = {
+  draft: "outline",
+  issued: "default",
+  paid: "secondary",
+};
+
+export function InvoiceStatusBadge({ status }: { status: InvoiceStatus }) {
+  return <Badge variant={STATUS_VARIANT[status]}>{STATUS_LABEL[status]}</Badge>;
+}
+
 export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
   return (
     <Card className="rounded-none bg-background shadow-none ring ring-border">
       <CardHeader>
         <CardTitle>Facturación</CardTitle>
-        <CardDescription>Todas tus facturas emitidas.</CardDescription>
+        <CardDescription>
+          Borradores, facturas emitidas y cobradas. El PDF está disponible desde que se emite.
+        </CardDescription>
       </CardHeader>
       <CardContent className="px-0 pb-2">
         <div className="overflow-x-auto">
           <Table className="border-t">
             <TableCaption className="sr-only">
-              Facturas con cliente, fecha, número, importe, IRPF, IVA y estado.
+              Facturas con cliente, fechas, número, base imponible, IRPF, IVA, total y estado.
             </TableCaption>
             <TableHeader>
               <TableRow>
@@ -54,11 +77,11 @@ export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
                 <TableHead>Fecha</TableHead>
                 <TableHead>N.º factura</TableHead>
                 <TableHead className="text-right">Importe</TableHead>
-                <TableHead className="text-right">IRPF</TableHead>
                 <TableHead className="text-right">IVA</TableHead>
-                <TableHead className="text-right">Neto</TableHead>
-                <TableHead className="text-center">Emitida</TableHead>
-                <TableHead className="pr-6 text-right">Cobrada</TableHead>
+                <TableHead className="text-right">IRPF</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead className="pr-6 text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -68,34 +91,31 @@ export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
                     {one(inv.client)?.name ?? "—"}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-muted-foreground tabular-nums">
-                    {formatDate(inv.issue_date)}
+                    <span className="block">{formatDate(inv.issue_date)}</span>
+                    {inv.due_date && (
+                      <span className="block text-[0.9em]">Vence {formatDate(inv.due_date)}</span>
+                    )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap tabular-nums">
-                    {inv.invoice_number}
+                    {inv.invoice_number ?? <span className="text-muted-foreground">Sin asignar</span>}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-right tabular-nums">
                     {formatCurrency(inv.amount)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-right tabular-nums text-muted-foreground">
-                    {formatPercent(inv.irpf_pct)}
+                    {formatPercent(inv.iva_pct)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-right tabular-nums text-muted-foreground">
-                    {formatPercent(inv.iva_pct)}
+                    {formatPercent(inv.irpf_pct)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-right font-medium tabular-nums">
                     {formatCurrency(inv.net_amount)}
                   </TableCell>
-                  <TableCell className="text-center">
-                    <Badge variant={inv.issued ? "secondary" : "outline"}>
-                      {inv.issued ? "Sí" : "No"}
-                    </Badge>
+                  <TableCell>
+                    <InvoiceStatusBadge status={inv.status} />
                   </TableCell>
-                  <TableCell className="pr-6 text-right">
-                    {inv.paid ? (
-                      <Badge variant="secondary">Cobrada</Badge>
-                    ) : (
-                      <MarkPaidButton invoiceId={inv.id} />
-                    )}
+                  <TableCell className="whitespace-nowrap pr-6 text-right">
+                    <InvoiceActions id={inv.id} status={inv.status} />
                   </TableCell>
                 </TableRow>
               ))}

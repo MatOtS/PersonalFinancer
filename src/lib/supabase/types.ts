@@ -5,8 +5,10 @@
 // exact shape or type inference silently collapses to `never`.
 
 export type MovementType = "personal" | "freelance";
+export type CategoryKind = "expense" | "income";
 export type FixedExpenseFrequency = "monthly" | "bimonthly" | "quarterly" | "annual";
 export type MovementSource = "manual" | "csv_import";
+export type InvoiceStatus = "draft" | "issued" | "paid";
 
 export interface Database {
   public: {
@@ -18,8 +20,8 @@ export interface Database {
         Relationships: [];
       };
       categories: {
-        Row: { id: string; user_id: string; name: string };
-        Insert: { id?: string; user_id?: string; name: string };
+        Row: { id: string; user_id: string; name: string; kind: CategoryKind };
+        Insert: { id?: string; user_id?: string; name: string; kind?: CategoryKind };
         Update: Partial<Database["public"]["Tables"]["categories"]["Insert"]>;
         Relationships: [];
       };
@@ -38,8 +40,24 @@ export interface Database {
         ];
       };
       clients: {
-        Row: { id: string; user_id: string; name: string; created_at: string };
-        Insert: { id?: string; user_id?: string; name: string; created_at?: string };
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          tax_id: string | null;
+          address: string | null;
+          email: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string;
+          name: string;
+          tax_id?: string | null;
+          address?: string | null;
+          email?: string | null;
+          created_at?: string;
+        };
         Update: Partial<Database["public"]["Tables"]["clients"]["Insert"]>;
         Relationships: [];
       };
@@ -49,7 +67,7 @@ export interface Database {
           user_id: string;
           client_id: string;
           issue_date: string;
-          invoice_number: string;
+          invoice_number: string | null;
           amount: number;
           irpf_pct: number;
           iva_pct: number;
@@ -57,6 +75,8 @@ export interface Database {
           issued: boolean;
           paid: boolean;
           paid_date: string | null;
+          status: InvoiceStatus;
+          due_date: string | null;
           created_at: string;
         };
         Insert: {
@@ -64,14 +84,16 @@ export interface Database {
           user_id?: string;
           client_id: string;
           issue_date?: string;
-          invoice_number: string;
-          amount: number;
+          invoice_number?: string | null;
+          amount?: number;
           irpf_pct?: number;
           iva_pct?: number;
-          net_amount: number;
+          net_amount?: number;
           issued?: boolean;
           paid?: boolean;
           paid_date?: string | null;
+          status?: InvoiceStatus;
+          due_date?: string | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["invoices"]["Insert"]>;
@@ -81,6 +103,36 @@ export interface Database {
             columns: ["client_id"];
             isOneToOne: false;
             referencedRelation: "clients";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      invoice_lines: {
+        Row: {
+          id: string;
+          user_id: string;
+          invoice_id: string;
+          position: number;
+          description: string;
+          quantity: number;
+          unit_price: number;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string;
+          invoice_id: string;
+          position?: number;
+          description: string;
+          quantity?: number;
+          unit_price?: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["invoice_lines"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "invoice_lines_invoice_id_fkey";
+            columns: ["invoice_id"];
+            isOneToOne: false;
+            referencedRelation: "invoices";
             referencedColumns: ["id"];
           },
         ];
@@ -188,13 +240,13 @@ export interface Database {
           id: string;
           user_id: string;
           bank_name: string;
-          column_mapping: { date: string; description: string; amount: string; account?: string };
+          column_mapping: { date: string; description: string; amount: string; sign?: string };
         };
         Insert: {
           id?: string;
           user_id?: string;
           bank_name: string;
-          column_mapping: { date: string; description: string; amount: string; account?: string };
+          column_mapping: { date: string; description: string; amount: string; sign?: string };
         };
         Update: Partial<Database["public"]["Tables"]["csv_import_profiles"]["Insert"]>;
         Relationships: [];
@@ -224,6 +276,15 @@ export interface Database {
           default_iva_pct: number;
           invoice_number_format: string;
           invoice_number_next: number;
+          issuer_name: string | null;
+          issuer_tax_id: string | null;
+          issuer_address: string | null;
+          issuer_email: string | null;
+          issuer_phone: string | null;
+          issuer_iban: string | null;
+          payment_method: string;
+          logo_path: string | null;
+          default_due_days: number;
         };
         Insert: {
           user_id?: string;
@@ -231,6 +292,15 @@ export interface Database {
           default_iva_pct?: number;
           invoice_number_format?: string;
           invoice_number_next?: number;
+          issuer_name?: string | null;
+          issuer_tax_id?: string | null;
+          issuer_address?: string | null;
+          issuer_email?: string | null;
+          issuer_phone?: string | null;
+          issuer_iban?: string | null;
+          payment_method?: string;
+          logo_path?: string | null;
+          default_due_days?: number;
         };
         Update: Partial<Database["public"]["Tables"]["user_settings"]["Insert"]>;
         Relationships: [];

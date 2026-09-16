@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -15,14 +14,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { InvoiceStatusBadge } from "@/components/invoices-table";
 import { formatCurrency, formatDate } from "@/lib/format";
+import type { InvoiceStatus } from "@/lib/supabase/types";
 
 export interface DashboardInvoiceRow {
   id: string;
-  invoice_number: string;
+  invoice_number: string | null;
   issue_date: string;
   net_amount: number;
-  paid: boolean;
+  status: InvoiceStatus;
   client: { name: string } | { name: string }[] | null;
 }
 
@@ -65,16 +66,14 @@ export function DashboardInvoices({
                   {one(inv.client)?.name ?? "—"}
                 </TableCell>
                 <TableCell className="whitespace-nowrap text-muted-foreground tabular-nums">
-                  <span className="block">{inv.invoice_number}</span>
+                  <span className="block">{inv.invoice_number ?? "Borrador"}</span>
                   <span className="block text-[0.9em]">{formatDate(inv.issue_date)}</span>
                 </TableCell>
                 <TableCell className="whitespace-nowrap text-right tabular-nums">
                   {formatCurrency(inv.net_amount)}
                 </TableCell>
                 <TableCell className="pr-6 text-right">
-                  <Badge variant={inv.paid ? "secondary" : "outline"}>
-                    {inv.paid ? "Cobrada" : "Pendiente"}
-                  </Badge>
+                  <InvoiceStatusBadge status={inv.status} />
                 </TableCell>
               </TableRow>
             ))}

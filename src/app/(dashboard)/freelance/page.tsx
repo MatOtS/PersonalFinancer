@@ -5,7 +5,7 @@ import { DateRangePicker } from "@/components/date-range-picker";
 import { DashboardGrid, DashboardHeading } from "@/components/dashboard-layout";
 import { DashboardStats } from "@/components/stats";
 import { CashflowChart } from "@/components/cashflow-chart";
-import { CategoryBreakdown } from "@/components/category-breakdown";
+import { CategoryDonut } from "@/components/category-donut";
 import { DashboardInvoices } from "@/components/dashboard-invoices";
 import { InvoicesTable } from "@/components/invoices-table";
 import { formatCurrency, monthAgoISO, todayISO } from "@/lib/format";
@@ -28,8 +28,11 @@ export default async function FreelancePage({
 
   const totals = summarize(movements);
   const timeSeries = groupByDate(movements);
-  const pendingInvoices = invoices.filter((i) => !i.paid);
+  // Only issued invoices are money actually owed to you; a draft has not been
+  // sent to anyone yet.
+  const pendingInvoices = invoices.filter((i) => i.status === "issued");
   const pendingAmount = pendingInvoices.reduce((sum, i) => sum + i.net_amount, 0);
+  const draftCount = invoices.filter((i) => i.status === "draft").length;
 
   return (
     <div className="flex flex-1 flex-col gap-6 py-6">
@@ -58,12 +61,13 @@ export default async function FreelancePage({
           stats={[
             { label: "Facturas pendientes de cobro", value: String(pendingInvoices.length) },
             { label: "Importe pendiente", value: formatCurrency(pendingAmount) },
+            { label: "Borradores", value: String(draftCount) },
           ]}
         />
       </DashboardGrid>
 
       <DashboardGrid className="lg:grid-cols-2">
-        <CategoryBreakdown
+        <CategoryDonut
           data={incomeByClient}
           description="Cobros freelance del periodo seleccionado."
           emptyLabel="Sin ingresos por cliente en este periodo"

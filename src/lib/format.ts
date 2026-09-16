@@ -58,3 +58,34 @@ export function monthAgoISO() {
   d.setMonth(d.getMonth() - 1);
   return d.toISOString().slice(0, 10);
 }
+
+export type PeriodPreset = "week" | "month" | "quarter";
+
+export const PERIOD_PRESETS: { id: PeriodPreset; label: string }[] = [
+  { id: "week", label: "Última semana" },
+  { id: "month", label: "Último mes" },
+  { id: "quarter", label: "Último trimestre" },
+];
+
+/**
+ * Rolling windows counted back from today, matching how `monthAgoISO` already
+ * builds the default range. Month arithmetic is calendar-based, so a preset
+ * fired on the 31st lands on the nearest valid day of the earlier month.
+ */
+export function presetRange(preset: PeriodPreset): { from: string; to: string } {
+  const d = new Date();
+  if (preset === "week") d.setDate(d.getDate() - 7);
+  if (preset === "month") d.setMonth(d.getMonth() - 1);
+  if (preset === "quarter") d.setMonth(d.getMonth() - 3);
+  return { from: d.toISOString().slice(0, 10), to: todayISO() };
+}
+
+/** Which preset, if any, the current range corresponds to. */
+export function matchPreset(from: string, to: string): PeriodPreset | null {
+  return (
+    PERIOD_PRESETS.find((p) => {
+      const r = presetRange(p.id);
+      return r.from === from && r.to === to;
+    })?.id ?? null
+  );
+}

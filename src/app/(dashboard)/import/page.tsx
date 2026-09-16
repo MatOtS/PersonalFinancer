@@ -13,7 +13,7 @@ export default async function ImportPage() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-semibold">Importar movimientos (CSV)</h2>
+      <h2 className="text-lg font-semibold">Importar movimientos</h2>
       <ImportWizard
         accounts={accounts}
         categories={categories}

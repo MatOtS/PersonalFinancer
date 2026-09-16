@@ -12,8 +12,20 @@ export default async function NewInvoicePage() {
     <div className="space-y-8">
       <h2 className="text-lg font-semibold">Emitir factura</h2>
 
+      {!settings.issuer_tax_id && (
+        <p className="max-w-3xl rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm">
+          Todavía no cargaste tus datos de emisor (NIF, dirección, IBAN). La factura se genera
+          igual, pero el PDF saldrá incompleto: completalos en{" "}
+          <a className="underline" href="/settings">
+            Ajustes
+          </a>
+          .
+        </p>
+      )}
+
       <InvoiceForm
         clients={clients}
+        defaultDueDays={settings.default_due_days}
         defaultIrpf={settings.default_irpf_pct}
         defaultIva={settings.default_iva_pct}
         nextInvoiceNumber={nextInvoiceNumber(settings.invoice_number_format, settings.invoice_number_next)}

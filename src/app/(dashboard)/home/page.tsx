@@ -14,7 +14,7 @@ import { CashflowChart } from "@/components/cashflow-chart";
 import { AccountBalanceCards } from "@/components/account-balance-cards";
 import { MovementsTable } from "@/components/movements-table";
 import { FixedExpensesList } from "@/components/fixed-expenses-list";
-import { CategoryBreakdown } from "@/components/category-breakdown";
+import { CategoryDonut } from "@/components/category-donut";
 import { formatCurrency, monthAgoISO, todayISO } from "@/lib/format";
 
 export default async function HomePage({
@@ -53,6 +53,18 @@ export default async function HomePage({
             { label: "Balance", value: formatCurrency(totals.balance) },
           ]}
         />
+      </DashboardGrid>
+
+      <DashboardGrid className="lg:grid-cols-1">
+        <CategoryDonut
+          data={categoryTotals}
+          description="Reparto del gasto en el periodo seleccionado."
+          emptyLabel="Sin gastos en este periodo"
+          title="Gastos por categoría"
+        />
+      </DashboardGrid>
+
+      <DashboardGrid className="lg:grid-cols-1">
         <CashflowChart data={timeSeries} />
       </DashboardGrid>
 
@@ -67,8 +79,7 @@ export default async function HomePage({
 
       <AccountBalanceCards accounts={accounts} />
 
-      <DashboardGrid className="lg:grid-cols-2">
-        <CategoryBreakdown data={categoryTotals} />
+      <DashboardGrid className="lg:grid-cols-1">
         <FixedExpensesList items={fixedExpenses} />
       </DashboardGrid>
 
