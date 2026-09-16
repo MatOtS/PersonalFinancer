@@ -177,4 +177,17 @@
   html {
     @apply font-mono;
   }
+
+  /*
+   * The form controls carry `bg-transparent`, which leaves the native select
+   * popup without a background of its own: the browser falls back to the
+   * system white while the options inherit the page's near-white text, so in
+   * dark mode the list renders white on white. Options are not reachable from
+   * a utility class on the select, so they are colored here instead.
+   */
+  select option,
+  select optgroup {
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+  }
 }
