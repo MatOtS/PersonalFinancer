@@ -41,7 +41,7 @@ export function DashboardInvoices({
   const rows = invoices.slice(0, limit);
 
   return (
-    <Card className="rounded-none bg-background shadow-none ring-0">
+    <Card>
       <CardHeader>
         <CardTitle>Facturas recientes</CardTitle>
         <CardDescription>Importe neto y estado de cobro.</CardDescription>
