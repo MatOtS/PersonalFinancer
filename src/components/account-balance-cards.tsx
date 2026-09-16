@@ -12,7 +12,7 @@ export function AccountBalanceCards({
     <DashboardGrid className="sm:grid-cols-3 lg:grid-cols-5">
       {accounts.map((a) => (
         <Card
-          className="gap-1 rounded-none bg-background shadow-none ring-0"
+          className="gap-1"
           key={a.account_id}
           size="sm"
         >

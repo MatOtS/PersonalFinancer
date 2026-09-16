@@ -21,7 +21,7 @@ export function FixedExpensesList({
   items: { id: string; name: string; amount: number; frequency: string }[];
 }) {
   return (
-    <Card className="rounded-none bg-background shadow-none ring-0">
+    <Card>
       <CardHeader>
         <CardTitle>Gastos fijos</CardTitle>
         <CardDescription>Recurrentes configurados en Ajustes.</CardDescription>

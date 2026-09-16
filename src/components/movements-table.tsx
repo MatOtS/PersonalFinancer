@@ -33,7 +33,7 @@ export function MovementsTable({ movements }: { movements: MovementRow[] }) {
   const expenses = movements.filter((m) => m.amount < 0);
 
   return (
-    <Card className="rounded-none bg-background shadow-none ring ring-border">
+    <Card className="ring ring-border">
       <CardHeader>
         <CardTitle>Gastos del periodo</CardTitle>
         <CardDescription>

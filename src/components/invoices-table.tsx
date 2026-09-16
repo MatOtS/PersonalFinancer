@@ -58,7 +58,7 @@ export function InvoiceStatusBadge({ status }: { status: InvoiceStatus }) {
 
 export function InvoicesTable({ invoices }: { invoices: InvoiceRow[] }) {
   return (
-    <Card className="rounded-none bg-background shadow-none ring ring-border">
+    <Card className="ring ring-border">
       <CardHeader>
         <CardTitle>Facturación</CardTitle>
         <CardDescription>

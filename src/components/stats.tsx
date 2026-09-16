@@ -44,7 +44,7 @@ function StatCard({
   return (
     <Card
       className={cn(
-        "relative gap-0 rounded-none bg-background pt-5 shadow-none ring-0",
+        "relative gap-0 pt-5",
         className
       )}
       {...props}

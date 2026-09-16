@@ -71,7 +71,7 @@ export function CategoryDonut({
 
   if (slices.length === 0 || total === 0) {
     return (
-      <Card className="rounded-none bg-background shadow-none ring-0">
+      <Card>
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -84,7 +84,7 @@ export function CategoryDonut({
   }
 
   return (
-    <Card className="rounded-none bg-background shadow-none ring-0">
+    <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
