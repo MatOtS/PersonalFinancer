@@ -11,6 +11,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { field } from "@/lib/ui";
 
 export interface SubcategoryOption {
   id: string;
@@ -47,7 +48,7 @@ export function SubcategoryCombobox({
   return (
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger
-        className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-left text-sm disabled:opacity-50"
+        className={`${field} flex items-center justify-between gap-2 text-left`}
         disabled={disabled}
         id={id}
       >

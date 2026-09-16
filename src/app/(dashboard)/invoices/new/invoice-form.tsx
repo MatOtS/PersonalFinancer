@@ -6,6 +6,7 @@ import { createInvoiceAction } from "./actions";
 import { invoiceTotals } from "@/lib/queries/invoices";
 import { formatCurrency, todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
+import { field, microLabel } from "@/lib/ui";
 
 interface ClientOption {
   id: string;
@@ -21,8 +22,6 @@ interface Line {
 }
 
 const emptyLine = (): Line => ({ description: "", quantity: "1", unit_price: "" });
-
-const field = "w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm";
 
 function addDays(iso: string, days: number) {
   const date = new Date(`${iso}T00:00:00`);
@@ -149,11 +148,11 @@ export function InvoiceForm({
       <fieldset className="space-y-3">
         <legend className="font-medium text-sm">Conceptos</legend>
 
-        <div className="hidden gap-3 px-1 text-muted-foreground text-xs sm:grid sm:grid-cols-[1fr_5rem_7rem_7rem_2.25rem]">
-          <span>Descripción</span>
-          <span className="text-right">Cantidad</span>
-          <span className="text-right">Precio</span>
-          <span className="text-right">Importe</span>
+        <div className="hidden gap-3 px-1 sm:grid sm:grid-cols-[1fr_5rem_7rem_7rem_2.25rem]">
+          <span className={microLabel}>Descripción</span>
+          <span className={`${microLabel} text-right`}>Cantidad</span>
+          <span className={`${microLabel} text-right`}>Precio</span>
+          <span className={`${microLabel} text-right`}>Importe</span>
           <span />
         </div>
 

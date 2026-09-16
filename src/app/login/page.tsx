@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { field, fieldLabel } from "@/lib/ui";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -42,11 +43,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-xl font-semibold">Finanzas</h1>
-          <p className="text-sm text-muted-foreground">
+    <div className="flex min-h-dvh items-center justify-center bg-background px-4 py-10">
+      <div className="w-full max-w-sm space-y-8">
+        <div className="space-y-2">
+          <h1 className="font-semibold text-2xl tracking-tight">Finanzas</h1>
+          <p className="text-muted-foreground text-sm">
             {mode === "sign-in" ? "Iniciá sesión para continuar" : "Creá tu cuenta"}
           </p>
         </div>
@@ -56,36 +57,34 @@ export default function LoginPage() {
             Revisá tu email para confirmar la cuenta y luego iniciá sesión.
           </p>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-1">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
+          <form className="space-y-5 rounded-lg border border-border bg-card p-6" onSubmit={handleSubmit}>
+            <label className={fieldLabel} htmlFor="email">
+              Email
               <input
+                autoComplete="email"
+                className={field}
                 id="email"
-                type="email"
-                required
-                value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
-              />
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="password" className="text-sm font-medium">
-                Contraseña
-              </label>
-              <input
-                id="password"
-                type="password"
                 required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-md border border-input px-3 py-2 text-sm bg-transparent"
+                type="email"
+                value={email}
               />
-            </div>
+            </label>
+            <label className={fieldLabel} htmlFor="password">
+              Contraseña
+              <input
+                autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
+                className={field}
+                id="password"
+                minLength={6}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                type="password"
+                value={password}
+              />
+            </label>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p className="text-destructive text-sm">{error}</p>}
 
             <Button type="submit" disabled={loading} size="lg" className="w-full">
               {loading ? "..." : mode === "sign-in" ? "Iniciar sesión" : "Registrarse"}

@@ -3,6 +3,8 @@ import { getClients, getUserSettings, nextInvoiceNumber } from "@/lib/queries/in
 import { InvoiceForm } from "./invoice-form";
 import { createClientAction } from "./actions";
 import { Button } from "@/components/ui/button";
+import { field } from "@/lib/ui";
+import { DashboardHeading } from "@/components/dashboard-layout";
 
 export default async function NewInvoicePage() {
   const supabase = await createClient();
@@ -10,7 +12,11 @@ export default async function NewInvoicePage() {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-lg font-semibold">Emitir factura</h2>
+      <DashboardHeading
+        eyebrow="Registrar"
+        subtitle="Los conceptos, el IVA y el IRPF de la factura."
+        title="Emitir factura"
+      />
 
       {!settings.issuer_tax_id && (
         <p className="max-w-3xl rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm">
@@ -38,7 +44,7 @@ export default async function NewInvoicePage() {
             name="name"
             required
             placeholder="Nombre del cliente"
-            className="flex-1 rounded-md border border-input px-3 py-2 text-sm bg-transparent"
+            className={`${field} flex-1`}
           />
           <Button type="submit">Agregar</Button>
         </form>

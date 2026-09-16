@@ -10,6 +10,7 @@ import {
   SubcategoryCombobox,
   type SubcategoryOption,
 } from "@/components/subcategory-combobox";
+import { field } from "@/lib/ui";
 
 interface Category {
   id: string;
@@ -120,11 +121,11 @@ export function QuickAddForm({ accounts, categories }: Props) {
       </ToggleGroup>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium" htmlFor="qa-amount">
+        <label className="font-medium text-sm" htmlFor="qa-amount">
           Monto
         </label>
         <input
-          className="w-full rounded-md border border-input bg-transparent px-3 py-3 text-lg"
+          className={`${field} px-3 py-3 text-lg`}
           id="qa-amount"
           inputMode="decimal"
           min="0"
@@ -137,11 +138,11 @@ export function QuickAddForm({ accounts, categories }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium" htmlFor="qa-date">
+        <label className="font-medium text-sm" htmlFor="qa-date">
           Fecha
         </label>
         <input
-          className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+          className={field}
           id="qa-date"
           onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
           required
@@ -151,11 +152,11 @@ export function QuickAddForm({ accounts, categories }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium" htmlFor="qa-description">
+        <label className="font-medium text-sm" htmlFor="qa-description">
           Descripción
         </label>
         <input
-          className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+          className={field}
           id="qa-description"
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           required
@@ -164,11 +165,11 @@ export function QuickAddForm({ accounts, categories }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium" htmlFor="qa-account">
+        <label className="font-medium text-sm" htmlFor="qa-account">
           Cuenta
         </label>
         <select
-          className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+          className={field}
           id="qa-account"
           onChange={(e) => setForm((f) => ({ ...f, accountId: e.target.value }))}
           value={form.accountId}
@@ -183,7 +184,7 @@ export function QuickAddForm({ accounts, categories }: Props) {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="qa-subcategory">
+          <label className="font-medium text-sm" htmlFor="qa-subcategory">
             Subcategoría
           </label>
           <SubcategoryCombobox
@@ -203,11 +204,11 @@ export function QuickAddForm({ accounts, categories }: Props) {
           />
         </div>
         <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="qa-category">
+          <label className="font-medium text-sm" htmlFor="qa-category">
             Categoría
           </label>
           <select
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+            className={field}
             id="qa-category"
             onChange={(e) =>
               setForm((f) => ({ ...f, categoryId: e.target.value, subcategoryId: "" }))
