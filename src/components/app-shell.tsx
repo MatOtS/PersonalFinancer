@@ -6,7 +6,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 export function AppShell({ children }: { children: React.ReactNode }) {
 	return (
 		<div className="overflow-hidden">
-			<SidebarProvider className="relative mx-auto h-svh w-full max-w-5xl lg:border-x">
+			<SidebarProvider className="relative h-svh w-full lg:border-x">
 				<FullWidthDivider className="top-14 z-60 -translate-y-px" />
 				<AppSidebar />
 				<SidebarInset>
