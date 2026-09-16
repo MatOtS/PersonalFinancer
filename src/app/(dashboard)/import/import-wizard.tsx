@@ -9,6 +9,7 @@ import { matchCategory } from "@/lib/import/categorize";
 import { formatCurrency, formatDate } from "@/lib/format";
 import type { MovementType } from "@/lib/supabase/types";
 import { Button } from "@/components/ui/button";
+import { field, fieldCompact } from "@/lib/ui";
 
 interface Category {
   id: string;
@@ -127,8 +128,6 @@ function guessTextColumn(headers: string[], candidates: string[], fallbackToFirs
   }
   return fallbackToFirst ? headers[0] ?? NO_COLUMN : NO_COLUMN;
 }
-
-const selectClass = "w-full rounded-md border border-input bg-transparent px-2 py-1 text-sm";
 
 export function ImportWizard({ accounts, categories, keywords, profiles }: Props) {
   const router = useRouter();
@@ -302,11 +301,11 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
     <div className="max-w-3xl space-y-6">
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="bank">
+          <label className="font-medium text-sm" htmlFor="bank">
             Banco
           </label>
           <input
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+            className={field}
             id="bank"
             list="bank-profiles"
             onChange={(e) => setBankName(e.target.value)}
@@ -324,11 +323,11 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="account">
+          <label className="font-medium text-sm" htmlFor="account">
             Cuenta destino
           </label>
           <select
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+            className={field}
             id="account"
             onChange={(e) => setAccountId(e.target.value)}
             value={accountId}
@@ -342,11 +341,11 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="movement-type">
+          <label className="font-medium text-sm" htmlFor="movement-type">
             Tipo
           </label>
           <select
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+            className={field}
             id="movement-type"
             onChange={(e) => setType(e.target.value as MovementType)}
             value={type}
@@ -357,7 +356,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="file">
+          <label className="font-medium text-sm" htmlFor="file">
             Archivo del banco
           </label>
           <input
@@ -398,7 +397,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
                   {FIELD_LABELS[field]}
                 </label>
                 <select
-                  className={selectClass}
+                  className={fieldCompact}
                   id={`map-${field}`}
                   onChange={(e) => setMapping((m) => ({ ...m, [field]: e.target.value }))}
                   value={mapping[field]}
@@ -477,7 +476,7 @@ export function ImportWizard({ accounts, categories, keywords, profiles }: Props
                     <td className="px-3 py-1.5">
                       <select
                         aria-label={`Categoría de ${row.description}`}
-                        className="rounded-md border border-input bg-transparent px-1 py-0.5 text-xs"
+                        className={`${fieldCompact} w-auto py-0.5 text-xs`}
                         onChange={(e) =>
                           updateRow(i, { category_id: e.target.value || null, subcategory_id: null })
                         }

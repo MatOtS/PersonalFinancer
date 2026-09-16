@@ -40,6 +40,7 @@ export default async function HomePage({
   return (
     <div className="flex flex-1 flex-col gap-6 py-6">
       <DashboardHeading
+        eyebrow="Finanzas"
         title="Finanzas personales"
         subtitle="Entradas, salidas y saldo de tus cuentas."
         actions={<DateRangePicker from={from} to={to} />}

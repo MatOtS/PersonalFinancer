@@ -37,6 +37,7 @@ export default async function FreelancePage({
   return (
     <div className="flex flex-1 flex-col gap-6 py-6">
       <DashboardHeading
+        eyebrow="Finanzas"
         title="Freelance"
         subtitle="Ingresos por cliente y estado de tu facturación."
         actions={<DateRangePicker from={from} to={to} />}

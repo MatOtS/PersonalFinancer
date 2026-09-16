@@ -26,23 +26,30 @@ export function FixedExpensesList({
         <CardTitle>Gastos fijos</CardTitle>
         <CardDescription>Recurrentes configurados en Ajustes.</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-3">
-        {items.map((item) => (
-          <div key={item.id} className="flex items-center justify-between gap-2">
-            <div className="flex min-w-0 items-center gap-2">
-              <span className="truncate font-medium">{item.name}</span>
-              <Badge variant="outline">
-                {FREQUENCY_LABEL[item.frequency] ?? item.frequency}
-              </Badge>
-            </div>
-            <span className="shrink-0 tabular-nums">{formatCurrency(item.amount)}</span>
-          </div>
-        ))}
-        {items.length === 0 && (
-          <p className="py-6 text-center text-muted-foreground">
-            Sin gastos fijos configurados
-          </p>
-        )}
+      <CardContent className="px-0">
+        <ul className="divide-y divide-border border-border border-t">
+          {items.map((item) => (
+            <li
+              className="flex items-center justify-between gap-3 px-5 py-2.5"
+              key={item.id}
+            >
+              <div className="flex min-w-0 items-center gap-2.5">
+                <span className="truncate font-medium text-sm">{item.name}</span>
+                <Badge className="shrink-0" variant="outline">
+                  {FREQUENCY_LABEL[item.frequency] ?? item.frequency}
+                </Badge>
+              </div>
+              <span className="shrink-0 font-medium text-sm tabular-nums">
+                {formatCurrency(item.amount)}
+              </span>
+            </li>
+          ))}
+          {items.length === 0 && (
+            <li className="px-5 py-8 text-center text-muted-foreground text-sm">
+              Sin gastos fijos configurados
+            </li>
+          )}
+        </ul>
       </CardContent>
     </Card>
   );

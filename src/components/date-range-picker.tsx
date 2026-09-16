@@ -8,6 +8,7 @@ import {
   presetRange,
   type PeriodPreset,
 } from "@/lib/format";
+import { fieldCompact, microLabel } from "@/lib/ui";
 
 export function DateRangePicker({ from, to }: { from: string; to: string }) {
   const router = useRouter();
@@ -42,20 +43,20 @@ export function DateRangePicker({ from, to }: { from: string; to: string }) {
       </ToggleGroup>
 
       <div className="flex flex-wrap items-center gap-2">
-        <label className="flex items-center gap-1">
-          Desde
+        <label className="flex items-center gap-1.5">
+          <span className={microLabel}>Desde</span>
           <input
-            className="rounded-md border border-input bg-transparent px-2 py-1"
+            className={`${fieldCompact} w-auto`}
             max={to}
             onChange={(e) => push({ from: e.target.value })}
             type="date"
             value={from}
           />
         </label>
-        <label className="flex items-center gap-1">
-          Hasta
+        <label className="flex items-center gap-1.5">
+          <span className={microLabel}>Hasta</span>
           <input
-            className="rounded-md border border-input bg-transparent px-2 py-1"
+            className={`${fieldCompact} w-auto`}
             min={from}
             onChange={(e) => push({ to: e.target.value })}
             type="date"
