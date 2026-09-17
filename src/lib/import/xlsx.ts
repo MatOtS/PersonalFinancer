@@ -1,12 +1,23 @@
 import { readZip, entryText, type ZipEntries } from "./zip";
 import { excelSerialToISO, isDateFormat, type Grid } from "./table";
 
-/** "B7" -> 1 (zero-based column index). */
+/*
+ * Los límites reales de una hoja de Excel. Las referencias de fila y columna
+ * vienen del archivo, y alimentan bucles que reservan memoria: sin tope, un
+ * `r="999999999"` fabricado a mano cuelga la pestaña antes de que nadie vea
+ * nada. Fuera de estos márgenes la celda se descarta.
+ */
+const MAX_ROWS = 1_048_576;
+const MAX_COLUMNS = 16_384;
+
+/** "B7" -> 1 (zero-based column index). Devuelve -1 si la referencia no sirve. */
 function columnIndex(ref: string): number {
   const letters = ref.match(/^[A-Z]+/)?.[0] ?? "A";
+  // Más de tres letras ya se sale de la hoja; el bucle no necesita verlas.
+  if (letters.length > 3) return -1;
   let index = 0;
   for (const char of letters) index = index * 26 + (char.charCodeAt(0) - 64);
-  return index - 1;
+  return index <= MAX_COLUMNS ? index - 1 : -1;
 }
 
 function parseXml(xml: string): Document {
@@ -93,6 +104,7 @@ export async function readXlsx(buffer: ArrayBuffer): Promise<Grid> {
     for (const cell of Array.from(row.getElementsByTagName("c"))) {
       const ref = cell.getAttribute("r");
       const index = ref ? columnIndex(ref) : cells.length;
+      if (index < 0 || index >= MAX_COLUMNS) continue;
       const type = cell.getAttribute("t");
 
       let value = "";
@@ -119,6 +131,7 @@ export async function readXlsx(buffer: ArrayBuffer): Promise<Grid> {
     }
 
     const rowIndex = Number(row.getAttribute("r") ?? grid.length + 1) - 1;
+    if (!Number.isInteger(rowIndex) || rowIndex < 0 || rowIndex >= MAX_ROWS) continue;
     while (grid.length < rowIndex) grid.push([]);
     grid[rowIndex] = cells;
   }
