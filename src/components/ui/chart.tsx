@@ -81,6 +81,23 @@ function ChartContainer({
   )
 }
 
+/*
+ * Personalizado respecto a lo que genera shadcn.
+ *
+ * Este bloque construye CSS a mano y lo inyecta con `dangerouslySetInnerHTML`,
+ * y las claves de `config` son nombres de categoría y de cliente que vienen de
+ * la base de datos. Un nombre como `x } </style><script>…` cerraba la etiqueta
+ * y, como esto se renderiza en el servidor, lo ejecutaba el parser del
+ * navegador. El nombre se convierte en un identificador CSS válido y el color
+ * se descarta si no tiene forma de color; en ningún caso puede salirse de la
+ * declaración.
+ *
+ * Si algún día se regenera este archivo con el CLI, hay que volver a aplicarlo.
+ */
+const UNSAFE_IN_NAME = /[^\p{L}\p{N}_-]/gu
+const SAFE_COLOR =
+  /^(#[0-9A-Fa-f]{3,8}|(rgb|rgba|hsl|hsla|oklch|oklab|color)\([^;{}<>]*\)|var\(--[A-Za-z0-9_-]+\)|[A-Za-z]+)$/
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme ?? config.color
@@ -102,7 +119,13 @@ ${colorConfig
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ??
       itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
+    // El nombre se sanea en lugar de descartarse, para no perder las
+    // categorías con tilde: las letras Unicode valen en un identificador CSS,
+    // lo demás pasa a guion.
+    const name = key.replace(UNSAFE_IN_NAME, "-")
+    return color && SAFE_COLOR.test(color.trim())
+      ? `  --color-${name}: ${color.trim()};`
+      : null
   })
   .join("\n")}
 }
