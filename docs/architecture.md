@@ -127,7 +127,7 @@ CI rules are in `docs/deploy.md`.
 | Purpose | Command |
 |---|---|
 | Development | `npm run dev` (needs `npm run db:start` first) |
-| Local database | `npm run db:start`, `npm run db:stop`, `npm run db:reset` (reapply migrations + seed) |
+| Local database | `npm run db:start` (minimal stack), `npm run db:studio` (adds the Studio UI), `npm run db:stop`, `npm run db:reset` (reapply migrations + seed) |
 | Generate DB types | `npm run db:types` |
 | Unit tests | `npm test` (Vitest) |
 | Database tests | `npm run test:db` (pgTAP, `supabase test db`) |
@@ -151,7 +151,8 @@ CI rules are in `docs/deploy.md`.
 | 07 | Own components with Tailwind; Base UI only for primitives with complex accessibility | shadcn (copies thousands of lines into the repo) | Every component is written and understood by the maintainer (constitution 1); Base UI covers focus trapping and keyboard handling that are easy to get wrong. |
 | 08 | Three test levels: Vitest (domain), pgTAP (RLS), Playwright (browser) | Legacy's mock HTTP server + manual browser runs | Legacy bugs only appeared in the browser and isolation was never tested. Each level checks what the others can't. |
 | 09 | TypeScript 5.x | TypeScript 7.0 (latest) | 7.0 is a new native compiler; compatibility with the Next.js 16 toolchain is not confirmed. Revisit when Next supports it officially. |
-| 10 | Manrope self-hosted through `next/font` | Loading from Google Fonts at runtime | No request to Google from the user's browser (privacy, simpler CSP). Tabular figures must be verified in the foundation; if Manrope lacks them, change the font. |
+| 10 | Manrope self-hosted through `next/font` | Loading from Google Fonts at runtime | No request to Google from the user's browser (privacy, simpler CSP). Tabular figures verified in the foundation (2026-10-06): with `tabular-nums`, `1111111` and `8888888` render at the same width. |
 | 11 | Prettier | Lint rules only | Consistent formatting makes AI-written code easier to review. |
 | 12 | Vercel Hobby + Supabase Free, reusing the legacy project | Supabase Pro; local only | 0 €. Accepted limits: the free project pauses after a week without use and has no downloadable backups. Legacy stops working against it once its schema is dropped (approved). |
 | 13 | Sign-up closed, accounts created by the maintainer | Open sign-up; magic link | Private app; no email service needed; the model still supports more users. |
+| 14 | Minimal local Supabase stack: only `db`, `kong`, `auth` and `rest` by default; Studio on demand (`db:studio`). Analytics, realtime, edge functions, email testing and storage disabled in `config.toml` | The full stack (12 containers, about 2 GB of RAM) | The app uses none of the disabled services yet; the minimal stack uses about 180 MB. Each service is re-enabled by the spec that needs it (storage with the invoice logo). |

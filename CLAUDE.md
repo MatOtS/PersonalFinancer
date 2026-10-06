@@ -5,12 +5,12 @@ Private web app to manage personal finances and freelance invoicing, for a singl
 ## Stack
 Next.js 16 (App Router) + React 19, TypeScript 5, Supabase (Postgres, Auth, RLS, Storage) with a local stack through the Supabase CLI, Tailwind CSS 4, Base UI for complex accessible primitives, Vitest + pgTAP + Playwright. Hosting: Vercel Hobby + Supabase Free. Details and ADRs in `docs/architecture.md`.
 
-Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middleware.ts`): read the guide in `node_modules/next/dist/docs/` before using any Next API.
+Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middleware.ts`): read the guide in `node_modules/next/dist/docs/` before using any Next API. The block at the end of this file is managed by `next dev`; keep it as is.
 
 ## Commands
-- Development: `npm run db:start`, then `npm run dev`
-- Tests: `npm run check` (lint, typecheck, unit tests); `npm run test:db` and `npm run test:e2e` once added
-- Linter: `npm run lint`, `npm run format`
+- Development: `npm run db:start` (minimal local stack: db, kong, auth, rest; needs Docker running), then `npm run dev`. `npm run db:studio` adds the Studio web UI (needs the repo path shared in Docker Desktop: Settings → Resources → File sharing)
+- Tests: `npm run check` (lint, typecheck, format, unit tests); `npm run test:db` (pgTAP, needs the local database); `npm run test:e2e` once Playwright is added
+- Linter: `npm run lint`, `npm run format` (Prettier, code only: Markdown is excluded)
 - Build: `npm run build`
 - Database: `npm run db:reset` (reapply migrations and seed), `npm run db:types` (regenerate types after every migration)
 
@@ -32,3 +32,13 @@ Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middlewa
 - Schema changes: new migration in `supabase/migrations/`, then `npm run db:types`. Never edit an applied migration.
 - Components use design tokens from `docs/design.md`, never raw colors.
 - Every new dependency needs an ADR in `docs/architecture.md`.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

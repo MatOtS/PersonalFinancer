@@ -1,0 +1,8 @@
+legacy/
+prototype/
+.next/
+node_modules/
+package-lock.json
+supabase/.temp/
+# Docs are prose written by the SDD flow; formatting them adds noise to reviews.
+*.md
