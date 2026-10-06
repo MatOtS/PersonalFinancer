@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PersonalFinancer · Design system prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Static prototype of docs/design.md. Not app code. */
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#F5F6F7, #0E1113);
+  --surface: light-dark(#FFFFFF, #161A1D);
+  --raised: light-dark(#FFFFFF, #1D2226);
+  --border: light-dark(#DDE2E6, #2A3035);
+  --control-border: light-dark(#7A858D, #66717A);
+  --text: light-dark(#11161A, #ECEFF1);
+  --text-muted: light-dark(#5B6670, #8B959C);
+  --accent: light-dark(#087F5B, #2EE6A0);
+  --on-accent: light-dark(#FFFFFF, #06281B);
+  --accent-soft: light-dark(rgb(8 127 91 / 10%), rgb(46 230 160 / 12%));
+  --positive: light-dark(#087F5B, #2EE6A0);
+  --negative: light-dark(#C2362F, #F87171);
+  --negative-soft: light-dark(rgb(194 54 47 / 10%), rgb(248 113 113 / 12%));
+  --info: light-dark(#1A6FA0, #5CC8F2);
+  --warning: light-dark(#8A5A00, #F5B544);
+  --warning-soft: light-dark(rgb(138 90 0 / 10%), rgb(245 181 68 / 12%));
+  --shadow-card: light-dark(0 1px 2px rgb(16 24 32 / 6%), none);
+  --shadow-raised: light-dark(0 8px 24px rgb(16 24 32 / 12%), 0 8px 24px rgb(0 0 0 / 40%));
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
+  --gutter: 32px; --card-pad: 24px; --gap: 16px;
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+@media (max-width: 639px) { :root { --gutter: 16px; --card-pad: 16px; --gap: 12px; } }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/22px Manrope, system-ui, sans-serif; }
+.num, table { font-variant-numeric: tabular-nums; }
+h1, h2, h3, p { margin: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+.brand { font-weight: 700; font-size: 17px; padding: 0 12px 24px; display: flex; gap: 10px; align-items: center; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--r-md); color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px; }
+.nav-item:hover { color: var(--text); background: var(--accent-soft); }
+.nav-item[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+.sidebar-foot { margin-top: auto; border-top: 1px solid var(--border); padding-top: 16px; }
+main { padding: 24px var(--gutter) 96px; max-width: 1280px; width: 100%; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+.bottom-nav { display: none; }
+@media (max-width: 1023px) { .app { grid-template-columns: 72px 1fr; } .sidebar .label-text, .brand span { display: none; } }
+@media (max-width: 639px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .bottom-nav { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); z-index: 10; }
+  .bottom-nav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 52px; color: var(--text-muted); font-size: 11px; font-weight: 600; text-decoration: none; }
+  .bottom-nav a[aria-current="page"] { color: var(--accent); }
+  .bottom-nav .fab { align-self: center; justify-self: center; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: var(--on-accent); }
+}
+
+/* Type */
+.label { font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.h1 { font-size: 28px; line-height: 34px; font-weight: 700; }
+.h2 { font-size: 20px; line-height: 28px; font-weight: 600; }
+.display { font-size: 40px; line-height: 44px; font-weight: 700; }
+.figure { font-size: 24px; line-height: 30px; font-weight: 700; }
+.small { font-size: 13px; line-height: 18px; }
+.muted { color: var(--text-muted); }
+.dec { font-size: .6em; color: var(--text-muted); font-weight: 600; }
+.pos { color: var(--positive); } .neg { color: var(--negative); }
+@media (max-width: 639px) { .display { font-size: 32px; line-height: 36px; } .h1 { font-size: 24px; line-height: 30px; } }
+
+/* Sections */
+section { margin-bottom: 48px; }
+section > .h2 { margin-bottom: 4px; }
+section > .section-sub { margin-bottom: 16px; }
+.grid { display: grid; gap: var(--gap); }
+.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cols-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 1023px) { .cols-4, .cols-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 639px) { .cols-4, .cols-3, .cols-2 { grid-template-columns: 1fr; } }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+/* Components */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: var(--card-pad); box-shadow: var(--shadow-card); }
+:root:not([data-theme="light"]) .card.gradient { background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 70%, var(--bg))); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .card.gradient { background: var(--surface); } }
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.tile { width: 36px; height: 36px; border-radius: var(--r-md); background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; }
+.tile.neutral { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text-muted); }
+
+.btn { font: inherit; font-weight: 600; font-size: 14px; height: 36px; padding: 0 16px; border-radius: var(--r-md); border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+@media (pointer: coarse) { .btn { height: 44px; } }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--control-border); }
+.btn-ghost { background: transparent; color: var(--accent); }
+.btn-destructive { background: var(--negative); color: light-dark(#FFFFFF, #2A0B0B); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 600; }
+.input { font: inherit; height: 40px; padding: 0 12px; border-radius: var(--r-sm); background: var(--surface); color: var(--text); border: 1px solid var(--control-border); }
+@media (pointer: coarse) { .input { height: 44px; } }
+.input.amount { text-align: right; font-variant-numeric: tabular-nums; }
+.field.error .input { border-color: var(--negative); }
+.field .help { font-size: 13px; color: var(--text-muted); }
+.field.error .help { color: var(--negative); }
+
+.segmented { display: inline-flex; background: var(--raised); border: 1px solid var(--border); border-radius: 999px; padding: 4px; gap: 2px; }
+.segmented button { font: inherit; font-weight: 600; font-size: 13px; border: 0; background: transparent; color: var(--text-muted); padding: 6px 14px; border-radius: 999px; cursor: pointer; min-height: 32px; }
+.segmented button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; line-height: 20px; white-space: nowrap; flex: none; }
+.badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge.ok { background: var(--accent-soft); color: var(--accent); }
+.badge.bad { background: var(--negative-soft); color: var(--negative); }
+.badge.warn { background: var(--warning-soft); color: var(--warning); }
+
+.progress { height: 8px; border-radius: 999px; background: var(--border); overflow: hidden; }
+.progress > span { display: block; height: 100%; border-radius: 999px; background: var(--accent); }
+.progress.info > span { background: var(--info); }
+.progress.warn > span { background: var(--warning); }
+
+.swatch { border-radius: var(--r-md); border: 1px solid var(--border); overflow: hidden; background: var(--surface); }
+.swatch .chip { height: 56px; }
+.swatch .meta { padding: 8px 12px; font-size: 12px; line-height: 16px; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; padding: 0 12px 10px; }
+td { padding: 14px 12px; border-top: 1px solid var(--border); }
+th.r, td.r { text-align: right; }
+@media (max-width: 639px) {
+  table, tbody, tr, td { display: block; } thead { display: none; }
+  tr { border-top: 1px solid var(--border); padding: 12px 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
+  td { border: 0; padding: 0; }
+  td.cat { grid-column: 1; color: var(--text-muted); font-size: 13px; }
+  td.r { grid-row: 1; grid-column: 2; }
+  td.status { grid-column: 2; text-align: right; }
+}
+
+.skeleton { border-radius: var(--r-sm); background: linear-gradient(90deg, var(--border) 0%, color-mix(in srgb, var(--border) 50%, var(--surface)) 50%, var(--border) 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite linear; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+.empty { text-align: center; padding: 32px 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+dialog { border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--raised); color: var(--text); box-shadow: var(--shadow-raised); padding: 24px; width: min(440px, calc(100% - 32px)); }
+dialog::backdrop { background: rgb(0 0 0 / 50%); }
+@media (max-width: 639px) { dialog { margin: auto 0 0; width: 100%; max-width: 100%; border-radius: var(--r-lg) var(--r-lg) 0 0; } }
+
+.toast { position: fixed; right: 24px; bottom: 24px; background: var(--raised); border: 1px solid var(--border); box-shadow: var(--shadow-raised); border-radius: var(--r-md); padding: 12px 16px; display: none; align-items: center; gap: 12px; z-index: 20; }
+.toast.show { display: flex; }
+@media (max-width: 639px) { .toast { left: 16px; right: 16px; bottom: 80px; } }
+.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M7 9l5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+</svg>
+
+<div class="app">
+  <nav class="sidebar" aria-label="Principal">
+    <div class="brand"><span class="tile"><svg class="icon"><use href="#i-wallet"/></svg></span><span>PersonalFinancer</span></div>
+    <a class="nav-item" href="#" aria-current="page"><svg class="icon"><use href="#i-home"/></svg><span class="label-text">Inicio</span></a>
+    <a class="nav-item" href="#"><svg class="icon"><use href="#i-briefcase"/></svg><span class="label-text">Freelance</span></a>
+    <a class="nav-item" href="#"><svg class="icon"><use href="#i-file"/></svg><span class="label-text">Facturas</span></a>
+    <a class="nav-item" href="#"><svg class="icon"><use href="#i-upload"/></svg><span class="label-text">Importar</span></a>
+    <a class="nav-item" href="#"><svg class="icon"><use href="#i-gear"/></svg><span class="label-text">Ajustes</span></a>
+    <div class="sidebar-foot">
+      <button class="nav-item btn-ghost" style="border:0;width:100%;cursor:pointer;font:inherit;font-weight:600" id="themeBtn"><svg class="icon"><use href="#i-moon"/></svg><span class="label-text" id="themeLabel">Tema: sistema</span></button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="topbar">
+      <div>
+        <div class="label">Prototipo del sistema visual</div>
+        <h1 class="h1">Design system</h1>
+      </div>
+      <div class="row">
+        <div class="segmented" role="group" aria-label="Tema">
+          <button data-theme-set="system" aria-pressed="true">Sistema</button>
+          <button data-theme-set="dark" aria-pressed="false">Oscuro</button>
+          <button data-theme-set="light" aria-pressed="false">Claro</button>
+        </div>
+        <button class="btn btn-primary" onclick="document.getElementById('dlg').showModal()"><svg class="icon"><use href="#i-plus"/></svg>Nuevo movimiento</button>
+      </div>
+    </div>
+
+    <section>
+      <h2 class="h2">Ejemplo de composición</h2>
+      <p class="small muted section-sub">Datos ficticios. Solo muestra cómo combinan tokens y componentes.</p>
+      <div class="grid cols-4">
+        <div class="card gradient">
+          <div class="card-head"><span class="label">Saldo total</span><span class="tile"><svg class="icon"><use href="#i-wallet"/></svg></span></div>
+          <div class="figure num">12.480<span class="dec">,35 €</span></div>
+          <p class="small muted">En 4 cuentas</p>
+        </div>
+        <div class="card gradient">
+          <div class="card-head"><span class="label">Ingresos del mes</span><span class="badge ok">+8,2 %</span></div>
+          <div class="figure num pos">+3.250<span class="dec">,00 €</span></div>
+          <p class="small muted">vs. mes anterior</p>
+        </div>
+        <div class="card gradient">
+          <div class="card-head"><span class="label">Gastos del mes</span><span class="badge bad">+12,4 %</span></div>
+          <div class="figure num neg">−1.874<span class="dec">,60 €</span></div>
+          <p class="small muted">vs. mes anterior</p>
+        </div>
+        <div class="card gradient">
+          <div class="card-head"><span class="label">Facturas pendientes</span><span class="tile neutral"><svg class="icon"><use href="#i-file"/></svg></span></div>
+          <div class="figure num">2.420<span class="dec">,00 €</span></div>
+          <div class="progress warn" style="margin-top:12px" aria-label="Cobrado 40 %"><span style="width:40%"></span></div>
+          <p class="small muted" style="margin-top:8px">3 facturas · 1 vencida</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="h2">Colores</h2>
+      <p class="small muted section-sub">Cambiá el tema para ver ambos valores.</p>
+      <div class="grid cols-4" id="swatches"></div>
+    </section>
+
+    <section>
+      <h2 class="h2">Tipografía</h2>
+      <p class="small muted section-sub">Manrope con cifras tabulares.</p>
+      <div class="card grid" style="gap:20px">
+        <div><div class="label">display · 40/44 · 700</div><div class="display num">24.310<span class="dec">,75 €</span></div></div>
+        <div><div class="label">h1 · 28/34 · 700</div><div class="h1">Título de página</div></div>
+        <div><div class="label">h2 · 20/28 · 600</div><div class="h2">Título de tarjeta</div></div>
+        <div><div class="label">figure · 24/30 · 700</div><div class="figure num">1.234<span class="dec">,56 €</span></div></div>
+        <div><div class="label">body · 15/22 · 400</div><p>Texto por defecto para descripciones y contenido de formularios.</p></div>
+        <div><div class="label">small · 13/18 · 400</div><p class="small muted">Texto secundario, metadatos de tabla, fecha 05/10/2026.</p></div>
+        <div><div class="label">label · 11/16 · 600 · mayúsculas</div><div class="label">Etiqueta sobre una cifra</div></div>
+        <div><div class="label">Cifras tabulares alineadas</div>
+          <div class="num" style="display:grid;justify-items:end;width:max-content">
+            <span>1.111,11 €</span><span>888,88 €</span><span>−20.000,00 €</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="h2">Botones e insignias</h2>
+      <p class="small muted section-sub">Un solo botón primario por vista.</p>
+      <div class="card grid" style="gap:20px">
+        <div class="row">
+          <button class="btn btn-primary">Primario</button>
+          <button class="btn btn-secondary">Secundario</button>
+          <button class="btn btn-ghost">Terciario</button>
+          <button class="btn btn-destructive">Eliminar</button>
+          <button class="btn btn-primary" disabled>Deshabilitado</button>
+        </div>
+        <div class="row">
+          <span class="badge ok">Cobrada</span>
+          <span class="badge warn">Pendiente</span>
+          <span class="badge bad">Vencida</span>
+        </div>
+        <div class="row">
+          <div class="segmented" role="group" aria-label="Periodo">
+            <button aria-pressed="true">Mes</button><button aria-pressed="false">Trimestre</button><button aria-pressed="false">Año</button>
+          </div>
+        </div>
+        <div class="grid cols-3">
+          <div><div class="small muted">Acento</div><div class="progress"><span style="width:64%"></span></div></div>
+          <div><div class="small muted">Info</div><div class="progress info"><span style="width:38%"></span></div></div>
+          <div><div class="small muted">Aviso</div><div class="progress warn"><span style="width:82%"></span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="h2">Formularios</h2>
+      <p class="small muted section-sub">Etiqueta siempre visible; error con borde y mensaje.</p>
+      <div class="card grid cols-3">
+        <div class="field"><label for="f1">Concepto</label><input id="f1" class="input" value="Material de oficina"><span class="help">Aparece en la lista de movimientos.</span></div>
+        <div class="field"><label for="f2">Importe</label><input id="f2" class="input amount" value="45,90 €" inputmode="decimal"><span class="help">Usá coma para los decimales.</span></div>
+        <div class="field error"><label for="f3">Fecha</label><input id="f3" class="input" value="31/02/2026" aria-invalid="true" aria-describedby="f3e"><span class="help" id="f3e">La fecha no existe.</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="h2">Tabla</h2>
+      <p class="small muted section-sub">Por debajo de 640 px cada fila pasa a ser una tarjeta.</p>
+      <div class="card">
+        <table>
+          <thead><tr><th>Concepto</th><th>Categoría</th><th>Estado</th><th class="r">Importe</th></tr></thead>
+          <tbody>
+            <tr><td>Supermercado</td><td class="cat">Alimentación</td><td class="status"><span class="badge ok">Conciliado</span></td><td class="r num neg">−64,20 €</td></tr>
+            <tr><td>Factura 2026-014</td><td class="cat">Freelance</td><td class="status"><span class="badge ok">Cobrada</span></td><td class="r num pos">+1.210,00 €</td></tr>
+            <tr><td>Suscripción software</td><td class="cat">Herramientas</td><td class="status"><span class="badge warn">Pendiente</span></td><td class="r num neg">−11,99 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="h2">Estados obligatorios</h2>
+      <p class="small muted section-sub">Vacío, carga, error y éxito.</p>
+      <div class="grid cols-4">
+        <div class="card"><div class="label">Vacío</div>
+          <div class="empty"><span class="tile neutral"><svg class="icon"><use href="#i-upload"/></svg></span><p class="small muted">Todavía no hay movimientos.</p><button class="btn btn-secondary">Importá tu primer extracto</button></div>
+        </div>
+        <div class="card" aria-busy="true"><div class="label">Carga</div>
+          <div style="display:grid;gap:10px;padding-top:24px"><div class="skeleton" style="height:12px;width:40%"></div><div class="skeleton" style="height:28px;width:70%"></div><div class="skeleton" style="height:12px;width:55%"></div></div>
+        </div>
+        <div class="card"><div class="label">Error</div>
+          <div class="empty"><span class="tile" style="background:var(--negative-soft);color:var(--negative)">!</span><p class="small">No pudimos cargar los movimientos.</p><button class="btn btn-secondary">Reintentar</button></div>
+        </div>
+        <div class="card"><div class="label">Éxito</div>
+          <div class="empty"><span class="tile"><svg class="icon"><use href="#i-check"/></svg></span><p class="small">Movimiento guardado.</p><button class="btn btn-secondary" id="toastBtn">Ver toast</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<nav class="bottom-nav" aria-label="Principal móvil">
+  <a href="#" aria-current="page"><svg class="icon"><use href="#i-home"/></svg>Inicio</a>
+  <a href="#"><svg class="icon"><use href="#i-briefcase"/></svg>Freelance</a>
+  <a href="#" class="fab" aria-label="Registro rápido" onclick="document.getElementById('dlg').showModal();return false"><svg class="icon"><use href="#i-plus"/></svg></a>
+  <a href="#"><svg class="icon"><use href="#i-file"/></svg>Facturas</a>
+  <a href="#"><svg class="icon"><use href="#i-gear"/></svg>Ajustes</a>
+</nav>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <h2 class="h2" id="dlgTitle" style="margin-bottom:16px">Nuevo movimiento</h2>
+  <div class="grid">
+    <div class="field"><label for="d1">Importe</label><input id="d1" class="input amount" inputmode="decimal" placeholder="0,00 €"></div>
+    <div class="field"><label for="d2">Concepto</label><input id="d2" class="input"></div>
+  </div>
+  <div class="row" style="justify-content:flex-end;margin-top:24px">
+    <button class="btn btn-secondary" onclick="document.getElementById('dlg').close()">Cancelar</button>
+    <button class="btn btn-primary" onclick="document.getElementById('dlg').close();showToast()">Guardar</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"><span class="pos"><svg class="icon"><use href="#i-check"/></svg></span><span>Movimiento guardado</span><button class="btn btn-ghost" onclick="hideToast()">Deshacer</button></div>
+
+<script>
+const tokens = [
+  ['bg','Fondo de página'],['surface','Tarjetas, sidebar'],['raised','Popovers, modales'],['border','Bordes decorativos'],
+  ['control-border','Bordes de controles'],['text','Texto'],['text-muted','Texto secundario'],['accent','Acción, activo, foco'],
+  ['accent-soft','Fondo de insignias'],['positive','Ingresos'],['negative','Gastos, destructivo'],['info','Segunda serie'],['warning','Pendiente, aviso'],['on-accent','Texto sobre acento']
+];
+const sw = document.getElementById('swatches');
+for (const [t, use] of tokens) {
+  sw.insertAdjacentHTML('beforeend', `<div class="swatch"><div class="chip" style="background:var(--${t})"></div><div class="meta"><strong>${t}</strong><br><span class="muted">${use}</span><br><span class="muted num" data-token="${t}"></span></div></div>`);
+}
+function paintValues() {
+  for (const el of document.querySelectorAll('[data-token]')) {
+    const probe = document.createElement('div');
+    probe.style.color = `var(--${el.dataset.token})`; document.body.appendChild(probe);
+    el.textContent = getComputedStyle(probe).color; probe.remove();
+  }
+}
+const labels = { system: 'Tema: sistema', dark: 'Tema: oscuro', light: 'Tema: claro' };
+function setTheme(t) {
+  if (t === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+  for (const b of document.querySelectorAll('[data-theme-set]')) b.setAttribute('aria-pressed', String(b.dataset.themeSet === t));
+  document.getElementById('themeLabel').textContent = labels[t];
+  try { localStorage.setItem('pf-theme', t); } catch {}
+  paintValues();
+}
+for (const b of document.querySelectorAll('[data-theme-set]')) b.addEventListener('click', () => setTheme(b.dataset.themeSet));
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const cur = document.documentElement.dataset.theme || 'system';
+  setTheme({ system: 'dark', dark: 'light', light: 'system' }[cur]);
+});
+for (const g of document.querySelectorAll('.segmented:not([aria-label="Tema"])')) {
+  g.addEventListener('click', e => { if (e.target.tagName !== 'BUTTON') return; for (const b of g.children) b.setAttribute('aria-pressed', String(b === e.target)); });
+}
+let toastTimer;
+function showToast() { const t = document.getElementById('toast'); t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, 5000); }
+function hideToast() { document.getElementById('toast').classList.remove('show'); }
+document.getElementById('toastBtn').addEventListener('click', showToast);
+let saved = 'system'; try { saved = localStorage.getItem('pf-theme') || 'system'; } catch {}
+setTheme(saved);
+</script>
+</body>
+</html>

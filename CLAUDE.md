@@ -3,22 +3,32 @@
 Private web app to manage personal finances and freelance invoicing, for a single user.
 
 ## Stack
-[PENDING: /sdd-architecture]
+Next.js 16 (App Router) + React 19, TypeScript 5, Supabase (Postgres, Auth, RLS, Storage) with a local stack through the Supabase CLI, Tailwind CSS 4, Base UI for complex accessible primitives, Vitest + pgTAP + Playwright. Hosting: Vercel Hobby + Supabase Free. Details and ADRs in `docs/architecture.md`.
+
+Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middleware.ts`): read the guide in `node_modules/next/dist/docs/` before using any Next API.
 
 ## Commands
-- Development: [PENDING]
-- Tests: [PENDING]
-- Linter: [PENDING]
-- Build: [PENDING]
+- Development: `npm run db:start`, then `npm run dev`
+- Tests: `npm run check` (lint, typecheck, unit tests); `npm run test:db` and `npm run test:e2e` once added
+- Linter: `npm run lint`, `npm run format`
+- Build: `npm run build`
+- Database: `npm run db:reset` (reapply migrations and seed), `npm run db:types` (regenerate types after every migration)
 
 ## Verification
-- After every change, run tests and linter.
-- Visual changes: verify with the Chrome DevTools MCP (desktop and 375 px), check the console.
+- After every change, run `npm run check`.
+- Visual changes: verify with the Chrome DevTools MCP at 1280 px, light and dark, and check the console. 375 px from phase 2.
 
 ## Rules
 - Read `STATUS.md`, `docs/constitution.md` and the active spec before touching code.
 - Follow the `sdd` skill.
 - `legacy/` is the previous app, kept as read-only reference. Never modify it, and never copy code from it unless an approved spec or plan says so.
+- `legacy/SESSION-CONTEXT.md` is the export of the session that built the previous app: decisions, security fixes and pitfalls. Read it, together with the relevant `legacy/` code, when writing each spec and plan.
+- The repository is public: follow the collaboration rules in `docs/architecture.md`. Never commit real financial data, credentials or personal data.
 
 ## Conventions
-[PENDING: /sdd-architecture]
+- Folders: `src/app` routes only; `src/domain` pure business rules with tests next to them; `src/data` the only code that talks to the database; `src/components/ui` design system. `domain` imports nothing from the other folders.
+- Money as integer cents everywhere; format to `1.234,56 €` only at the edges.
+- Every table: `user_id`, RLS with `using` and `with check`, a pgTAP isolation test. Views with `security_invoker = on`. No `security definer` without an ADR.
+- Schema changes: new migration in `supabase/migrations/`, then `npm run db:types`. Never edit an applied migration.
+- Components use design tokens from `docs/design.md`, never raw colors.
+- Every new dependency needs an ADR in `docs/architecture.md`.
