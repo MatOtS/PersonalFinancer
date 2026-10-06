@@ -127,7 +127,7 @@ CI rules are in `docs/deploy.md`.
 | Purpose | Command |
 |---|---|
 | Development | `npm run dev` (needs `npm run db:start` first) |
-| Local database | `npm run db:start`, `npm run db:stop`, `npm run db:reset` (reapply migrations + seed) |
+| Local database | `npm run db:start` (minimal stack), `npm run db:studio` (adds the Studio UI), `npm run db:stop`, `npm run db:reset` (reapply migrations + seed) |
 | Generate DB types | `npm run db:types` |
 | Unit tests | `npm test` (Vitest) |
 | Database tests | `npm run test:db` (pgTAP, `supabase test db`) |
@@ -155,3 +155,4 @@ CI rules are in `docs/deploy.md`.
 | 11 | Prettier | Lint rules only | Consistent formatting makes AI-written code easier to review. |
 | 12 | Vercel Hobby + Supabase Free, reusing the legacy project | Supabase Pro; local only | 0 €. Accepted limits: the free project pauses after a week without use and has no downloadable backups. Legacy stops working against it once its schema is dropped (approved). |
 | 13 | Sign-up closed, accounts created by the maintainer | Open sign-up; magic link | Private app; no email service needed; the model still supports more users. |
+| 14 | Minimal local Supabase stack: only `db`, `kong`, `auth` and `rest` by default; Studio on demand (`db:studio`). Analytics, realtime, edge functions, email testing and storage disabled in `config.toml` | The full stack (12 containers, about 2 GB of RAM) | The app uses none of the disabled services yet; the minimal stack uses about 180 MB. Each service is re-enabled by the spec that needs it (storage with the invoice logo). |

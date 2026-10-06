@@ -37,6 +37,7 @@ Last updated: 2026-10-06
 - Backlog impacts are `[PENDING]` on purpose: they are proposed and reviewed when choosing the first spec, after the project phases.
 - `legacy/SESSION-CONTEXT.md` (export of the session that built legacy, in Spanish) is a reference at the same level as `legacy/`. Carry its security lessons (section 8) into `/sdd-constitution` and `/sdd-architecture`, and its testing pain (no automated tests, bugs only found in the browser) into the test strategy.
 - `legacy/CLAUDE.md` documents the old app: stack, invoice lifecycle (Spanish fiscal numbering), bank statement import, known pitfalls. Main reference for each spec's scope; decisions are still made per spec.
-- Supabase Studio fails to start until `/mnt/Repositories` is shared in Docker Desktop (File sharing); the rest of the local stack works.
+- Local Supabase runs a minimal stack (ADR-14). Studio, on demand with `npm run db:studio`, needs the repo path shared in Docker Desktop.
+- Storage is disabled in `supabase/config.toml`: re-enable it in the invoice spec (logo).
 - Before the first spec: propose backlog impacts and the order of specs (`Access and authentication` is the natural first one).
 - The old app still runs from `legacy/` (`cd legacy && npm run dev`); its `node_modules` and `.env.local` were moved there locally.

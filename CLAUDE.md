@@ -8,7 +8,7 @@ Next.js 16 (App Router) + React 19, TypeScript 5, Supabase (Postgres, Auth, RLS,
 Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middleware.ts`): read the guide in `node_modules/next/dist/docs/` before using any Next API. The block at the end of this file is managed by `next dev`; keep it as is.
 
 ## Commands
-- Development: `npm run db:start` (needs Docker running), then `npm run dev`. Supabase Studio needs the repo path shared in Docker Desktop (Settings → Resources → File sharing); without it, start with `npx supabase start -x studio`
+- Development: `npm run db:start` (minimal local stack: db, kong, auth, rest; needs Docker running), then `npm run dev`. `npm run db:studio` adds the Studio web UI (needs the repo path shared in Docker Desktop: Settings → Resources → File sharing)
 - Tests: `npm run check` (lint, typecheck, format, unit tests); `npm run test:db` (pgTAP, needs the local database); `npm run test:e2e` once Playwright is added
 - Linter: `npm run lint`, `npm run format` (Prettier, code only: Markdown is excluded)
 - Build: `npm run build`
