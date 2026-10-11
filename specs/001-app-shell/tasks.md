@@ -6,7 +6,7 @@
 - [x] **T2. Theme preference on the server.** FR-29, FR-31, FR-32, edge case
   - `parseThemePreference` with unit tests; root layout reads the `theme` cookie and sets `data-theme` (omitted for "Sistema"), `lang="es"`.
   - Done when: unit tests green; with the cookie set to `dark` the HTML returned by the server already has `data-theme="dark"`; without the cookie it has no attribute and the page follows the OS setting.
-- [ ] **T3. Base components: button, segmented control, empty state.** FR-14, FR-27, FR-28
+- [x] **T3. Base components: button, segmented control, empty state.** FR-14, FR-27, FR-28
   - `button` (primary, secondary, ghost, destructive), `segmented-control` (native radios styled as pills), `empty-state` (icon tile, text, optional action), all with tokens only.
   - Done when: each component renders correctly in light and dark on a temporary page (removed after checking), keyboard focus is visible, and the segmented control moves with arrow keys.
 - [ ] **T4. Theme control.** FR-28, FR-29, FR-30

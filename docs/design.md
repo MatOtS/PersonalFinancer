@@ -79,6 +79,8 @@ Base 4 px. Scale: `4, 8, 12, 16, 24, 32, 48, 64`.
 
 ## Base components
 - **Buttons**: `primary` (accent fill, `on-accent` text), `secondary` (transparent, `control-border`), `ghost` (text only, for tertiary actions), `destructive` (`negative`). Sizes 36 px desktop and 44 px on touch. One primary button per view.
+  - Decided in 001 T3 (2026-10-11): `ghost` uses the normal `text` color, not `accent`, so the accent stays for the main action (visual principle 2). Known gap: without a hover state it can be mistaken for plain text (see backlog).
+  - Decided in 001 T3 (2026-10-11): `destructive` text uses `surface`. There is no `on-negative` token; `surface` on `negative` gives 5.44:1 (light) and 6.33:1 (dark), AA in both, while `text` on `negative` fails (3.35:1 and 2.40:1).
 - **Inputs**: `surface` background, `control-border`, `sm` radius, visible label above (never placeholder as label), help or error text below. Amount inputs right aligned with tabular figures. Error state: `negative` border and message.
 - **Segmented control**: pill container in `raised`; active option in `accent` fill. For switching views or periods, never for actions.
 - **Cards**: `surface`, `lg` radius, `border`. Structure: `label` + optional icon tile at the top, main figure, supporting line. A card answers one question.

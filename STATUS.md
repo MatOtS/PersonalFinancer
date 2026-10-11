@@ -5,12 +5,12 @@ Last updated: 2026-10-06
 ## Status
 - Project phase: development
 - Active spec: 001-app-shell
-- Next step: `/sdd-implement 001` (T3)
+- Next step: 001 T4 (theme control)
 
 ## Specs
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
-| 001 | app-shell | approved | 2/8 |
+| 001 | app-shell | approved | 3/8 |
 | 002 | access | approved | 0/8 (owner implements it with the learn-* commands) |
 
 ## Key decisions
@@ -36,6 +36,7 @@ Last updated: 2026-10-06
 - 2026-10-07 Plan 001 approved (`specs/001-access/plan.md`), including two new dependencies: `@phosphor-icons/react` (ADR-15) and `@playwright/test` (ADR-08). ADR-16 (theme cookie) and ADR-17 (per-tab expired-session flag) to be added to `docs/architecture.md` during implementation.
 - 2026-10-07 Spec 001-access split in two, keeping the original FR numbers: `001-app-shell` (8 tasks) and `002-access` (8 tasks, starts after 001 is merged). Branch `feat/001-app-shell` created.
 - 2026-10-08 001 T2 implemented by the owner in learn mode (learn-* commands, switched automatically by task state).
+- 2026-10-11 001 T3 implemented by the owner in learn mode. Button decisions (ghost color, text on destructive) documented in `docs/design.md`; follow-ups in backlog #19 and #20.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.
