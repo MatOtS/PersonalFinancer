@@ -20,7 +20,7 @@ export const SegmentedControl = ({
       {options.map((option) => (
         <label
           key={option.value}
-          className="rounded-full px-3.5 py-1.5 text-small font-semibold text-text-muted cursor-pointer has-[:checked]:bg-accent has-[:checked]:text-on-accent has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent has-[:focus-visible]:outline-offset-2"
+          className="rounded-full px-2 py-1.5 text-small font-semibold text-text-muted cursor-pointer has-[:checked]:bg-accent has-[:checked]:text-on-accent has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent has-[:focus-visible]:outline-offset-2"
         >
           {option.label}
           <input

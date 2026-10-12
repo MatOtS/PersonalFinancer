@@ -12,7 +12,7 @@
 - [x] **T4. Theme control.** FR-28, FR-29, FR-30
   - Client component using the segmented control: "Sistema", "Claro", "Oscuro"; on change updates `data-theme` and the cookie, no reload.
   - Done when: picking each option changes the theme instantly, the cookie holds the right value (or is deleted for "Sistema"), and a reload keeps the choice without a flash.
-- [ ] **T5. Shell and Home.** FR-23, FR-24, FR-25, FR-27
+- [x] **T5. Shell and Home.** FR-23, FR-24, FR-25, FR-27
   - Install `@phosphor-icons/react` (ADR-15 in `docs/architecture.md`); `(app)` route group with layout, sidebar (brand, nav, footer with the theme control), nav item with active state; Home with the exact texts and empty state; delete `src/app/page.tsx`.
   - Done when: `/` shows Home inside the shell with "Inicio" active, the exact Spanish texts, no figures, and the theme control at the bottom of the sidebar.
 - [ ] **T6. Not-found inside the shell.** FR-14
