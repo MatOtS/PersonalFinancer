@@ -5,12 +5,12 @@ Last updated: 2026-10-06
 ## Status
 - Project phase: development
 - Active spec: 001-app-shell
-- Next step: 001 T4 (theme control)
+- Next step: 001 T5 (shell and Home)
 
 ## Specs
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
-| 001 | app-shell | approved | 3/8 |
+| 001 | app-shell | approved | 4/8 |
 | 002 | access | approved | 0/8 (owner implements it with the learn-* commands) |
 
 ## Key decisions
@@ -37,6 +37,7 @@ Last updated: 2026-10-06
 - 2026-10-07 Spec 001-access split in two, keeping the original FR numbers: `001-app-shell` (8 tasks) and `002-access` (8 tasks, starts after 001 is merged). Branch `feat/001-app-shell` created.
 - 2026-10-08 001 T2 implemented by the owner in learn mode (learn-* commands, switched automatically by task state).
 - 2026-10-11 001 T3 implemented by the owner in learn mode. Button decisions (ghost color, text on destructive) documented in `docs/design.md`; follow-ups in backlog #19 and #20.
+- 2026-10-12 001 T4 implemented by the owner in learn mode. The theme cookie name and lifetime live in `src/domain/theme.ts` (`THEME_COOKIE`, `ONE_YEAR_SECONDS`), shared by the root layout and the theme control.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.
