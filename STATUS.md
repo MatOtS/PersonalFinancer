@@ -4,12 +4,14 @@ Last updated: 2026-10-06
 
 ## Status
 - Project phase: development
-- Active spec: none
-- Next step: owner merges the `chore/technical-foundation` PR; then choose the first spec from the backlog and run `/sdd-spec`
+- Active spec: 001-app-shell
+- Next step: `/sdd-implement 001` (T6)
 
 ## Specs
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
+| 001 | app-shell | approved | 5/8 |
+| 002 | access | approved | 0/8 (owner implements it with the learn-* commands) |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
@@ -29,6 +31,14 @@ Last updated: 2026-10-06
 - 2026-10-06 Architecture approved (`docs/architecture.md`, 13 ADRs). Repo stays public (portfolio): collaboration rules in `docs/architecture.md`, CI rules in `docs/deploy.md`.
 - 2026-10-06 Everything up to architecture ships in the `chore/sdd-setup` PR; the technical foundation (install, linter, test runner) goes in a separate PR after it is merged.
 - 2026-10-06 Technical foundation ready: Next 16.3, TypeScript 5.9, Tailwind 4, ESLint 9, Prettier (code only), Vitest 5 with one example test, Supabase CLI with sign-up closed (verified locally). Manrope tabular figures verified.
+- 2026-10-06 Backlog ordered with impacts (approved). Spec 001-access may be split in two (app shell / access) if it exceeds 10 tasks (approved).
+- 2026-10-07 Spec 001-access approved after clarify (19 points resolved, 32 FRs). Backlog items 16 to 18 added during clarify.
+- 2026-10-07 Plan 001 approved (`specs/001-access/plan.md`), including two new dependencies: `@phosphor-icons/react` (ADR-15) and `@playwright/test` (ADR-08). ADR-16 (theme cookie) and ADR-17 (per-tab expired-session flag) to be added to `docs/architecture.md` during implementation.
+- 2026-10-07 Spec 001-access split in two, keeping the original FR numbers: `001-app-shell` (8 tasks) and `002-access` (8 tasks, starts after 001 is merged). Branch `feat/001-app-shell` created.
+- 2026-10-08 001 T2 implemented by the owner in learn mode (learn-* commands, switched automatically by task state).
+- 2026-10-11 001 T3 implemented by the owner in learn mode. Button decisions (ghost color, text on destructive) documented in `docs/design.md`; follow-ups in backlog #19 and #20.
+- 2026-10-12 001 T4 implemented by the owner in learn mode. The theme cookie name and lifetime live in `src/domain/theme.ts` (`THEME_COOKIE`, `ONE_YEAR_SECONDS`), shared by the root layout and the theme control.
+- 2026-10-12 001 T5 implemented with `/sdd-implement`: `(app)` shell, sidebar, Home, `@phosphor-icons/react` (ADR-15). Theme control pills narrowed (`px-2`) to fit the 240 px sidebar. `npm audit` advisory on the dev tooling chain recorded in backlog #21.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.
@@ -39,5 +49,4 @@ Last updated: 2026-10-06
 - `legacy/CLAUDE.md` documents the old app: stack, invoice lifecycle (Spanish fiscal numbering), bank statement import, known pitfalls. Main reference for each spec's scope; decisions are still made per spec.
 - Local Supabase runs a minimal stack (ADR-14). Studio, on demand with `npm run db:studio`, needs the repo path shared in Docker Desktop.
 - Storage is disabled in `supabase/config.toml`: re-enable it in the invoice spec (logo).
-- Before the first spec: propose backlog impacts and the order of specs (`Access and authentication` is the natural first one).
 - The old app still runs from `legacy/` (`cd legacy && npm run dev`); its `node_modules` and `.env.local` were moved there locally.
