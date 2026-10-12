@@ -1,4 +1,4 @@
-import { House, Wallet } from "@phosphor-icons/react/ssr";
+import { HouseIcon, WalletIcon } from "@phosphor-icons/react/ssr";
 import type { ThemePreference } from "@/domain/theme";
 import { NavItem } from "./nav-item";
 import { ThemeControl } from "./theme-control";
@@ -13,13 +13,13 @@ export const Sidebar = ({ themePreference }: SidebarProps) => {
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-border bg-surface px-4 py-6">
       <div className="flex items-center gap-2.5 px-3 pb-6">
         <span className="grid size-9 place-items-center rounded-md bg-accent-soft text-accent">
-          <Wallet size={20} />
+          <WalletIcon size={20} />
         </span>
         <span className="text-body font-bold">PersonalFinancer</span>
       </div>
 
       <nav aria-label="Principal" className="flex flex-col gap-1">
-        <NavItem href="/" label="Inicio" icon={<House size={20} />} />
+        <NavItem href="/" label="Inicio" icon={<HouseIcon size={20} />} />
       </nav>
 
       <div className="mt-auto border-t border-border pt-4">

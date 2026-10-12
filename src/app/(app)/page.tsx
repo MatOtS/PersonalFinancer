@@ -1,4 +1,4 @@
-import { ChartLineUp } from "@phosphor-icons/react/ssr";
+import { ChartLineUpIcon } from "@phosphor-icons/react/ssr";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export default function HomePage() {
@@ -13,7 +13,7 @@ export default function HomePage() {
           a later spec (see spec 001-app-shell, FR-27). */}
       <div className="mt-6 rounded-lg border border-border bg-surface shadow-card">
         <EmptyState
-          icon={<ChartLineUp size={20} />}
+          icon={<ChartLineUpIcon size={20} />}
           text="Aún no hay datos. El resumen aparecerá aquí cuando añadas tus cuentas y movimientos."
         />
       </div>
