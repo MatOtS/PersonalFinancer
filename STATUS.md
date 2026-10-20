@@ -1,16 +1,22 @@
 # Project status
 
-Last updated: 2026-10-06
+Last updated: 2026-10-20
 
 ## Status
 - Project phase: development
 - Active spec: 001-app-shell
-- Next step: `/sdd-implement 001` (T6)
+- Next step: `/sdd-implement 001` (T7)
+
+## Workflow
+- Ownership: own
+- Mode: manual
+- SDD files: tracked
+- Learning: assist
 
 ## Specs
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
-| 001 | app-shell | approved | 5/8 |
+| 001 | app-shell | approved | 6/8 |
 | 002 | access | approved | 0/8 (owner implements it with the learn-* commands) |
 
 ## Key decisions
@@ -39,6 +45,8 @@ Last updated: 2026-10-06
 - 2026-10-11 001 T3 implemented by the owner in learn mode. Button decisions (ghost color, text on destructive) documented in `docs/design.md`; follow-ups in backlog #19 and #20.
 - 2026-10-12 001 T4 implemented by the owner in learn mode. The theme cookie name and lifetime live in `src/domain/theme.ts` (`THEME_COOKIE`, `ONE_YEAR_SECONDS`), shared by the root layout and the theme control.
 - 2026-10-12 001 T5 implemented with `/sdd-implement`: `(app)` shell, sidebar, Home, `@phosphor-icons/react` (ADR-15). Theme control pills narrowed (`px-2`) to fit the 240 px sidebar. `npm audit` advisory on the dev tooling chain recorded in backlog #21.
+- 2026-10-19 Workflow settings recorded in this file: own, tracked, Learning `assist` (Claude implements at normal speed; the user answers an approach question and 1 to 3 comprehension questions per task). Mode switched to `manual` on 2026-10-19: no branch, commit, push or PR without showing it first and getting an explicit yes.
+- 2026-10-20 001 T6 implemented with `/sdd-implement` (learn-assist): `(app)/[...missing]` catch-all plus `(app)/not-found.tsx`. `button.tsx` now exports `buttonClassName` so the "Volver a Inicio" link reuses the button styles. Next renders 404s of dynamic routes as an error shell with the UI in the flight payload (status 404 is correct); see T8 for the browser tests.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.

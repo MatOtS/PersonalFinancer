@@ -15,7 +15,7 @@
 - [x] **T5. Shell and Home.** FR-23, FR-24, FR-25, FR-27
   - Install `@phosphor-icons/react` (ADR-15 in `docs/architecture.md`); `(app)` route group with layout, sidebar (brand, nav, footer with the theme control), nav item with active state; Home with the exact texts and empty state; delete `src/app/page.tsx`.
   - Done when: `/` shows Home inside the shell with "Inicio" active, the exact Spanish texts, no figures, and the theme control at the bottom of the sidebar.
-- [ ] **T6. Not-found inside the shell.** FR-14
+- [x] **T6. Not-found inside the shell.** FR-14
   - Catch-all `(app)/[...missing]` calling `notFound()` and `(app)/not-found.tsx`.
   - Done when: `/cualquier-cosa` shows "Página no encontrada" with the sidebar visible, returns status 404, and "Volver a Inicio" goes to `/`.
 - [ ] **T7. Security policy with nonce.** NFR security
