@@ -18,7 +18,7 @@
 - [x] **T6. Not-found inside the shell.** FR-14
   - Catch-all `(app)/[...missing]` calling `notFound()` and `(app)/not-found.tsx`.
   - Done when: `/cualquier-cosa` shows "Página no encontrada" with the sidebar visible, returns status 404, and "Volver a Inicio" goes to `/`.
-- [ ] **T7. Security policy with nonce.** NFR security
+- [x] **T7. Security policy with nonce.** NFR security
   - `buildContentSecurityPolicy` with unit tests; `src/proxy.ts` with nonce and CSP (matcher from the Next guide); static headers in `next.config.ts`; ADR-16 (theme cookie) in `docs/architecture.md`.
   - Done when: unit tests green; every page response carries the CSP with a fresh nonce; Home and not-found load with zero CSP violations in the console, in `npm run dev` and in `npm run build && npm start`.
 - [ ] **T8. Browser tests and visual check.** FR-14, FR-23 to FR-25, FR-27 to FR-32, NFR security and accessibility
