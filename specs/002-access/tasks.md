@@ -2,7 +2,7 @@
 
 Requires `001-app-shell` merged into `main`.
 
-- [ ] **T1. Sign-in rules.** FR-3, FR-4, FR-5, FR-9, edge cases
+- [x] **T1. Sign-in rules.** FR-3, FR-4, FR-5, FR-9, edge cases
   - `normalizeEmail`, `validateSignIn`, `signInErrorMessage` with unit tests.
   - Done when: unit tests green, covering spaces and capitals in the email, a password of spaces counted as not empty, and the exact Spanish messages.
 - [ ] **T2. Access rules.** FR-10, FR-11, FR-13, FR-15, FR-16

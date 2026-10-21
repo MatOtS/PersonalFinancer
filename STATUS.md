@@ -4,8 +4,8 @@ Last updated: 2026-10-21
 
 ## Status
 - Project phase: development
-- Active spec: 001-app-shell
-- Next step: open the PR for 001-app-shell; after it is merged, `/sdd-implement 002` (owner, with the learn-* commands)
+- Active spec: 002-access
+- Next step: `/sdd-implement 002` (T2)
 
 ## Workflow
 - Ownership: own
@@ -17,7 +17,7 @@ Last updated: 2026-10-21
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
 | 001 | app-shell | implemented | 8/8 |
-| 002 | access | approved | 0/8 (owner implements it with the learn-* commands) |
+| 002 | access | approved | 1/8 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
@@ -50,6 +50,7 @@ Last updated: 2026-10-21
 - 2026-10-20 001 T7 implemented with `/sdd-implement` (learn-assist): `src/proxy.ts` sets a per-request nonce and the Content-Security-Policy built by `src/lib/security-headers.ts`; `next.config.ts` adds Referrer-Policy, X-Content-Type-Options and Permissions-Policy; ADR-16 documents the theme cookie. Next's dev tools insert `<style>` elements without a nonce, so development (only) also allows `style-src-elem 'self' 'unsafe-inline'`; production is strict and showed zero violations on Home and the 404 (checked on a copy of the project built outside the repo).
 - 2026-10-21 001 T8 implemented with `/sdd-implement` (learn-assist): `@playwright/test` (ADR-08), `playwright.config.ts`, `npm run test:e2e` and 20 browser tests in `tests/e2e/` (shell, theme, security). Locally they run against the dev server (reused if running) and can use an installed Chromium-based browser through `PLAYWRIGHT_BROWSER_PATH` in `.env.local` instead of downloading one; CI builds and tests production. Next's dev indicator covers the theme control in development, so the theme tests hide it. Visual check of Home and not-found in light and dark at 1280 px: no deviations.
 - 2026-10-21 001 validated: gate green (44 unit, 20 e2e), every FR covered. One finding accepted by the owner and sent to backlog #23 (AA contrast of the active sidebar item in the light theme, 4.4:1). The console criterion of the spec now excepts the 4xx a requirement asks for (the 404 of FR-14). Spec marked `implemented`.
+- 2026-10-21 Spec 002 is implemented with `/sdd-implement` in learn-assist mode, like the last tasks of 001 (not by the owner with the learn-* commands). Branch `feat/002-access-sign-in`. T1 done: `normalizeEmail`, `validateSignIn` and `signInErrorMessage` in `src/domain/auth/`.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.
