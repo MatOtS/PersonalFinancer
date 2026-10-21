@@ -21,7 +21,7 @@
 - [x] **T7. Security policy with nonce.** NFR security
   - `buildContentSecurityPolicy` with unit tests; `src/proxy.ts` with nonce and CSP (matcher from the Next guide); static headers in `next.config.ts`; ADR-16 (theme cookie) in `docs/architecture.md`.
   - Done when: unit tests green; every page response carries the CSP with a fresh nonce; Home and not-found load with zero CSP violations in the console, in `npm run dev` and in `npm run build && npm start`.
-- [ ] **T8. Browser tests and visual check.** FR-14, FR-23 to FR-25, FR-27 to FR-32, NFR security and accessibility
+- [x] **T8. Browser tests and visual check.** FR-14, FR-23 to FR-25, FR-27 to FR-32, NFR security and accessibility
   - Install `@playwright/test`, `playwright.config.ts`, `test:e2e` script; `tests/e2e/shell.spec.ts` and `tests/e2e/theme.spec.ts` as listed in the plan; visual check with the Chrome DevTools MCP at 1280 px in light and dark.
   - Done when: `npm run test:e2e` green, `npm run check` green, and the visual check of Home and not-found in both themes shows no deviations from `docs/design.md`.
 

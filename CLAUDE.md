@@ -9,7 +9,7 @@ Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middlewa
 
 ## Commands
 - Development: `npm run db:start` (minimal local stack: db, kong, auth, rest; needs Docker running), then `npm run dev`. `npm run db:studio` adds the Studio web UI (needs the repo path shared in Docker Desktop: Settings → Resources → File sharing)
-- Tests: `npm run check` (lint, typecheck, format, unit tests); `npm run test:db` (pgTAP, needs the local database); `npm run test:e2e` once Playwright is added
+- Tests: `npm run check` (lint, typecheck, format, unit tests); `npm run test:db` (pgTAP, needs the local database); `npm run test:e2e` (Playwright; set `PLAYWRIGHT_BROWSER_PATH` in `.env.local` to use an installed Chromium instead of downloading one)
 - Linter: `npm run lint`, `npm run format` (Prettier, code only: Markdown is excluded)
 - Build: `npm run build`
 - Database: `npm run db:reset` (reapply migrations and seed), `npm run db:types` (regenerate types after every migration)
