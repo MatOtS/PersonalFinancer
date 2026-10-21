@@ -1,6 +1,6 @@
 # Spec 001: App shell and theme
 
-Status: approved
+Status: implemented
 
 Split from the original spec "001 Access and app shell" (approved 2026-10-07). Requirement numbers are kept from the original spec, so they have gaps; the rest are in `specs/002-access/spec.md`.
 
@@ -56,7 +56,7 @@ FR-32 ("apply the theme to the sign-in page as well") is fulfilled by applying t
 
 ## Done criteria
 - Every FR covered by an automated test or, for visual ones, verified in the browser at 1280 px in light and dark.
-- Zero errors and zero security policy violations in the browser console.
+- Zero errors and zero security policy violations in the browser console, except the "Failed to load resource" line the browser itself logs when a page answers an HTTP 4xx status that a requirement asks for (here, the 404 of FR-14). Any 5xx, or a 4xx nobody asked for, still counts as an error.
 - `npm run check` green.
 
 ## Open questions
