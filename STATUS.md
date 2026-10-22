@@ -12,6 +12,7 @@ Last updated: 2026-10-22
 - Mode: manual
 - SDD files: tracked
 - Learning: assist
+- Framework: Artificer v0.1
 
 ## Specs
 | NNN | Name | Status | Tasks |
