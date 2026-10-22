@@ -8,7 +8,7 @@ Requires `001-app-shell` merged into `main`.
 - [x] **T2. Access rules.** FR-10, FR-11, FR-13, FR-15, FR-16
   - `safeReturnPath` and `decideAccess` with unit tests.
   - Done when: unit tests green for the full matrix (sign-in page, protected page, unknown page × with and without session) and for malicious return paths (`//evil.com`, `/\evil.com`, `https://evil.com`, `/login`).
-- [ ] **T3. Supabase clients and auth data layer.** FR-2 to FR-5, FR-17, FR-20, FR-21
+- [x] **T3. Supabase clients and auth data layer.** FR-2 to FR-5, FR-17, FR-20, FR-21
   - `src/lib/env.ts`, `src/lib/supabase/server.ts` and `proxy.ts` (15 s timeout), `src/data/auth.ts` (`signIn`, `signOut`, `getSignedInUser`, error mapping); `.env.local` from the local stack.
   - Done when: unit tests of the error mapping green (invalid credentials, 429, network error, timeout with an injected fetch); `getSignedInUser` returns null without a session against the local stack.
 - [ ] **T4. Session gate.** FR-10, FR-11, FR-13, FR-15, FR-17, FR-22, NFR security
