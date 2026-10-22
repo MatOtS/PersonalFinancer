@@ -11,7 +11,7 @@ Requires `001-app-shell` merged into `main`.
 - [x] **T3. Supabase clients and auth data layer.** FR-2 to FR-5, FR-17, FR-20, FR-21
   - `src/lib/env.ts`, `src/lib/supabase/server.ts` and `proxy.ts` (15 s timeout), `src/data/auth.ts` (`signIn`, `signOut`, `getSignedInUser`, error mapping); `.env.local` from the local stack.
   - Done when: unit tests of the error mapping green (invalid credentials, 429, network error, timeout with an injected fetch); `getSignedInUser` returns null without a session against the local stack.
-- [ ] **T4. Session gate.** FR-10, FR-11, FR-13, FR-15, FR-17, FR-22, NFR security
+- [x] **T4. Session gate.** FR-10, FR-11, FR-13, FR-15, FR-17, FR-22, NFR security
   - Session refresh and `decideAccess` in `src/proxy.ts`, `Cache-Control: no-store` on protected pages, second check in the `(app)` layout.
   - Done when: without a session, `/` and `/cualquier-cosa` redirect to `/login?next=…`; responses of protected pages carry `no-store`; the CSP from 001 is still present.
 - [ ] **T5. Sign-in page and action.** FR-1 to FR-9, FR-12, FR-16

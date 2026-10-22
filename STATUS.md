@@ -5,7 +5,7 @@ Last updated: 2026-10-22
 ## Status
 - Project phase: development
 - Active spec: 002-access
-- Next step: `/sdd-implement 002` (T4)
+- Next step: `/sdd-implement 002` (T5)
 
 ## Workflow
 - Ownership: own
@@ -18,7 +18,7 @@ Last updated: 2026-10-22
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
 | 001 | app-shell | implemented | 8/8 |
-| 002 | access | approved | 3/8 |
+| 002 | access | approved | 4/8 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
@@ -54,6 +54,7 @@ Last updated: 2026-10-22
 - 2026-10-21 Spec 002 is implemented with `/sdd-implement` in learn-assist mode, like the last tasks of 001 (not by the owner with the learn-* commands). Branch `feat/002-access-sign-in`. T1 done: `normalizeEmail`, `validateSignIn` and `signInErrorMessage` in `src/domain/auth/`.
 - 2026-10-21 002 T2 done: `safeReturnPath` and `decideAccess` in `src/domain/auth/`. `safeReturnPath` also rejects control characters (browsers drop tabs and line breaks inside addresses, so `/\t/evil.com` would become `//evil.com`); not in the plan, added as a security hardening of FR-16.
 - 2026-10-22 002 T3 done: `src/lib/env.ts`, `src/lib/supabase/{fetch-with-timeout,server,proxy}.ts` (15 s limit) and `src/data/auth.ts` (`signIn`, `signOut`, `getSignedInUser`). Any Supabase failure that is not a clear rejection (429 or 4xx) counts as "unreachable", and `signOut` ends only this browser's session (`scope: "local"`). Vitest gets the same `@/` alias as tsconfig. Fix in `supabase/config.toml`: `[auth.email] enable_signup` switches the whole email provider, so with `false` nobody could sign in (`422 email_provider_disabled`); it is now `true`, and sign-up stays closed through `[auth] enable_signup = false` (checked: sign-up answers `signup_disabled`, sign-in and wrong password behave as expected). `.env.local` holds the local URL and key.
+- 2026-10-22 002 T4 done: `src/proxy.ts` now checks the session with `getClaims()`, applies `decideAccess`, redirects to `/login?next=...`, sets `Cache-Control: no-store` on every page except `/login` and keeps the 001 nonce and CSP on all answers (redirects included). If the authentication service cannot be reached the proxy treats the user as signed out (fail closed). `createProxyClient(request)` now returns `{ supabase, applyTo }` so renewed cookies reach the page that renders next and the response (changed from T3). The `(app)` layout re-checks the session with `getSignedInUser()`. `/login` loops to itself until T5 adds the page (it falls into the `(app)` catch-all and the layout redirects), expected.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.

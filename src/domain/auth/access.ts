@@ -7,7 +7,7 @@ export type AccessRequest = {
 export type AccessDecision =
   { kind: "continue" } | { kind: "redirect"; to: string };
 
-const SIGN_IN_PATH = "/login";
+export const SIGN_IN_PATH = "/login";
 
 // What to do with a request, knowing only where it goes and whether there is a
 // valid session. Any address except the sign-in page counts as protected, even
