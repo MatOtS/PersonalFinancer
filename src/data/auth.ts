@@ -1,5 +1,7 @@
 import { isAuthApiError, type SupabaseClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
 import type { SignInFailure } from "@/domain/auth/sign-in-error";
+import { isSessionCookie } from "@/lib/supabase/session-cookies";
 import { createClient } from "@/lib/supabase/server";
 
 export type SignInResult = { ok: true } | { ok: false; failure: SignInFailure };
@@ -43,15 +45,21 @@ export async function signIn(
 }
 
 // Ends only this browser's session ("local"), not the user's sessions on other
-// devices. If the service cannot be reached the error is ignored: the caller
-// removes the cookies anyway (FR-21).
+// devices. If the service cannot be reached the error is ignored, and the
+// session cookies are removed anyway so nothing protected stays on this browser
+// (FR-21).
 export async function signOut(): Promise<void> {
   try {
     const supabase = await createClient();
     await supabase.auth.signOut({ scope: "local" });
   } catch {
-    // See above.
+    // The cookies are removed below either way.
   }
+  const cookieStore = await cookies();
+  cookieStore
+    .getAll()
+    .filter(({ name }) => isSessionCookie(name))
+    .forEach(({ name }) => cookieStore.delete(name));
 }
 
 // The signed-in user, or null. getClaims checks the signature and expiry of

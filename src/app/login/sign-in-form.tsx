@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { TextField } from "@/components/ui/text-field";
+import { consumeSessionMark } from "@/domain/auth/session-mark";
 import {
   validateSignIn,
   type SignInErrors,
@@ -18,6 +19,18 @@ export function SignInForm({ next }: { next: string }) {
     initialState,
   );
   const [clientErrors, setClientErrors] = useState<SignInErrors>({});
+  const [expired, setExpired] = useState(false);
+
+  // A tab that showed a protected page and now lands here had its session end
+  // (FR-18). A new tab, or one where the user signed out, shows nothing.
+  useEffect(() => {
+    // sessionStorage only exists in the browser, so it cannot be read while
+    // rendering on the server without the two renders disagreeing.
+    // In development React runs this twice: the second time the mark is
+    // already consumed, so the result may only turn the message on, never off.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (consumeSessionMark(window.sessionStorage)) setExpired(true);
+  }, []);
   const errors =
     clientErrors.email || clientErrors.password ? clientErrors : state.errors;
 
@@ -70,7 +83,12 @@ export function SignInForm({ next }: { next: string }) {
         error={errors.password}
       />
 
-      <div aria-live="polite">
+      <div aria-live="polite" className="flex flex-col gap-2">
+        {expired && !pending && (
+          <p className="text-small text-warning">
+            Tu sesión ha terminado. Inicia sesión de nuevo
+          </p>
+        )}
         {pending ? (
           <span className="sr-only">Iniciando sesión</span>
         ) : (

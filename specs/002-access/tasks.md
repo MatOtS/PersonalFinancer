@@ -17,7 +17,7 @@ Requires `001-app-shell` merged into `main`.
 - [x] **T5. Sign-in page and action.** FR-1 to FR-9, FR-12, FR-16
   - Text field and progress bar components; `/login` page, sign-in form (client validation, pending state, `aria-live`), `signInAction`.
   - Done when: a local test user can sign in and lands on Home or on the `next` page; wrong credentials, empty fields and pending state behave as the FRs say; a stale form submitted with a session lands on Home.
-- [ ] **T6. Sign out and expired-session message.** FR-18 to FR-21, FR-26
+- [x] **T6. Sign out and expired-session message.** FR-18 to FR-21, FR-26
   - `signOutAction` (cookies always removed), sign-out button, per-tab session marker and expired message (ADR-17 in `docs/architecture.md`), email in the sidebar footer.
   - Done when: signing out lands on the sign-in page and the back button does not show Home; signing out in one tab shows the expired message in the other on its next action and not in the tab that signed out; the sidebar shows the email cut with "…" and full in `title`.
 - [ ] **T7. Test users and access browser tests.** FR-1 to FR-13, FR-15 to FR-22, FR-26
