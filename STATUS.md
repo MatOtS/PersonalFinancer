@@ -5,20 +5,20 @@ Last updated: 2026-10-22
 ## Status
 - Project phase: development
 - Active spec: 002-access
-- Next step: `/sdd-implement 002` (T5)
+- Next step: `/sdd-implement 002` (T6)
 
 ## Workflow
 - Ownership: own
 - Mode: manual
 - SDD files: tracked
-- Learning: assist
+- Learning: off
 - Framework: Artificer v0.1
 
 ## Specs
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
 | 001 | app-shell | implemented | 8/8 |
-| 002 | access | approved | 4/8 |
+| 002 | access | approved | 5/8 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
@@ -55,6 +55,7 @@ Last updated: 2026-10-22
 - 2026-10-21 002 T2 done: `safeReturnPath` and `decideAccess` in `src/domain/auth/`. `safeReturnPath` also rejects control characters (browsers drop tabs and line breaks inside addresses, so `/\t/evil.com` would become `//evil.com`); not in the plan, added as a security hardening of FR-16.
 - 2026-10-22 002 T3 done: `src/lib/env.ts`, `src/lib/supabase/{fetch-with-timeout,server,proxy}.ts` (15 s limit) and `src/data/auth.ts` (`signIn`, `signOut`, `getSignedInUser`). Any Supabase failure that is not a clear rejection (429 or 4xx) counts as "unreachable", and `signOut` ends only this browser's session (`scope: "local"`). Vitest gets the same `@/` alias as tsconfig. Fix in `supabase/config.toml`: `[auth.email] enable_signup` switches the whole email provider, so with `false` nobody could sign in (`422 email_provider_disabled`); it is now `true`, and sign-up stays closed through `[auth] enable_signup = false` (checked: sign-up answers `signup_disabled`, sign-in and wrong password behave as expected). `.env.local` holds the local URL and key.
 - 2026-10-22 002 T4 done: `src/proxy.ts` now checks the session with `getClaims()`, applies `decideAccess`, redirects to `/login?next=...`, sets `Cache-Control: no-store` on every page except `/login` and keeps the 001 nonce and CSP on all answers (redirects included). If the authentication service cannot be reached the proxy treats the user as signed out (fail closed). `createProxyClient(request)` now returns `{ supabase, applyTo }` so renewed cookies reach the page that renders next and the response (changed from T3). The `(app)` layout re-checks the session with `getSignedInUser()`. `/login` loops to itself until T5 adds the page (it falls into the `(app)` catch-all and the layout redirects), expected.
+- 2026-10-23 002 T5 done at Learning `off` (switched from `assist` to try it): `/login` page, `signInAction`, sign-in form (client validation with focus on the first empty field, pending state, `aria-live`), `TextField` and `ProgressBar` (with an `indeterminate` animation in `globals.css`). No automated tests for the flows yet (the plan puts them in T7); checked by hand in the browser with a temporary local user: empty fields, wrong credentials (email kept, password cleared), sign in landing on the `next` page, `/login` with a session going Home, pending state, and a stale form submitted after signing in (FR-12). The last one found a bug: the proxy redirected the form's POST to Home, where the action does not exist, so the page failed; the proxy now lets a Server Action posted to `/login` through (header `next-action`) and the action sends the user Home. Note for T7: cover this with a browser test. The session cookie is now HttpOnly (`src/lib/supabase/cookie-options.ts`, used by both server clients): `@supabase/ssr` leaves it readable by JavaScript by default because its browser client needs that, but this app only signs in and out through server actions, so a script injected into the page can no longer read it (owner approved doing it inside 002; tests in `src/lib/supabase/cookies.test.ts`). Revisit it if a Supabase browser client is ever added.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.

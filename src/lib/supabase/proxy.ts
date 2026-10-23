@@ -1,6 +1,7 @@
 import { createServerClient, type SetAllCookies } from "@supabase/ssr";
 import type { NextRequest, NextResponse } from "next/server";
 import { getSupabaseEnv } from "@/lib/env";
+import { sessionCookieOptions } from "./cookie-options";
 import { AUTH_TIMEOUT_MS, createFetchWithTimeout } from "./fetch-with-timeout";
 
 type Refreshed = {
@@ -18,6 +19,7 @@ export function createProxyClient(request: NextRequest) {
 
   const supabase = createServerClient(url, publishableKey, {
     global: { fetch: createFetchWithTimeout(AUTH_TIMEOUT_MS) },
+    cookieOptions: sessionCookieOptions,
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (cookies, headers) => {

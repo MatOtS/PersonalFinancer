@@ -14,7 +14,7 @@ Requires `001-app-shell` merged into `main`.
 - [x] **T4. Session gate.** FR-10, FR-11, FR-13, FR-15, FR-17, FR-22, NFR security
   - Session refresh and `decideAccess` in `src/proxy.ts`, `Cache-Control: no-store` on protected pages, second check in the `(app)` layout.
   - Done when: without a session, `/` and `/cualquier-cosa` redirect to `/login?next=…`; responses of protected pages carry `no-store`; the CSP from 001 is still present.
-- [ ] **T5. Sign-in page and action.** FR-1 to FR-9, FR-12, FR-16
+- [x] **T5. Sign-in page and action.** FR-1 to FR-9, FR-12, FR-16
   - Text field and progress bar components; `/login` page, sign-in form (client validation, pending state, `aria-live`), `signInAction`.
   - Done when: a local test user can sign in and lands on Home or on the `next` page; wrong credentials, empty fields and pending state behave as the FRs say; a stale form submitted with a session lands on Home.
 - [ ] **T6. Sign out and expired-session message.** FR-18 to FR-21, FR-26

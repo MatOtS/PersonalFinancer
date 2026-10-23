@@ -1,5 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { decideAccess, SIGN_IN_PATH } from "@/domain/auth/access";
+import {
+  decideAccess,
+  SIGN_IN_PATH,
+  type AccessDecision,
+} from "@/domain/auth/access";
 import { buildContentSecurityPolicy } from "@/lib/security-headers";
 import { createProxyClient } from "@/lib/supabase/proxy";
 
@@ -28,7 +32,15 @@ export async function proxy(request: NextRequest) {
     process.env.NODE_ENV === "development",
   );
 
-  const decision = decideAccess({ pathname, search, hasValidSession });
+  // A sign-in form posted from a page that was already open reaches the
+  // sign-in action even if the user has since signed in. The action itself
+  // sends the user Home (FR-12); redirecting the POST here would replay it
+  // against Home, where that action does not exist, and the page would fail.
+  const isSignInAction =
+    pathname === SIGN_IN_PATH && request.headers.has("next-action");
+  const decision: AccessDecision = isSignInAction
+    ? { kind: "continue" }
+    : decideAccess({ pathname, search, hasValidSession });
   let response: NextResponse;
   if (decision.kind === "redirect") {
     response = NextResponse.redirect(new URL(decision.to, request.url));
