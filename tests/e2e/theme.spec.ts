@@ -7,18 +7,6 @@ const DARK_BG = "rgb(14, 17, 19)";
 const backgroundOf = (page: Page) =>
   page.evaluate(() => getComputedStyle(document.body).backgroundColor);
 
-// Next's dev indicator sits over the bottom-left corner, where the theme
-// control is, and intercepts clicks. It does not exist in production.
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    const style = document.createElement("style");
-    style.textContent = "nextjs-portal { display: none !important; }";
-    document.addEventListener("DOMContentLoaded", () =>
-      document.head.append(style),
-    );
-  });
-});
-
 const choose = (page: Page, label: "Sistema" | "Claro" | "Oscuro") =>
   page.getByText(label, { exact: true }).click();
 
