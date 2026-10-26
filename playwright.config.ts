@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import { existsSync } from "node:fs";
+import { userAStatePath } from "./tests/e2e/support/users";
 
 // Playwright does not read .env files by itself (Next does, Playwright does not).
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
@@ -9,6 +10,12 @@ const isCI = Boolean(process.env.CI);
 
 // Optional: path of an installed Chromium-based browser, so none is downloaded.
 const executablePath = process.env.PLAYWRIGHT_BROWSER_PATH;
+
+const browserUse = {
+  ...devices["Desktop Chrome"],
+  viewport: { width: 1280, height: 800 },
+  launchOptions: executablePath ? { executablePath } : {},
+};
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -23,13 +30,14 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   projects: [
+    // Signs in once and saves the session for the other tests.
+    { name: "setup", testMatch: /.*\.setup\.ts/, use: browserUse },
     {
       name: "chromium",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1280, height: 800 },
-        launchOptions: executablePath ? { executablePath } : {},
-      },
+      dependencies: ["setup"],
+      // Tests start signed in as userA. Tests of the signed-out state say so
+      // with test.use({ storageState: { cookies: [], origins: [] } }).
+      use: { ...browserUse, storageState: userAStatePath },
     },
   ],
   webServer: {

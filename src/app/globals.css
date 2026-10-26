@@ -76,6 +76,17 @@
   --radius-md: 12px;
   --radius-lg: 16px;
 
+  /* Indeterminate progress bar: the fill slides across its track. */
+  --animate-indeterminate: indeterminate 1.2s ease-in-out infinite;
+  @keyframes indeterminate {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
+
   /* Shadows: only visible in light; dark separates surfaces by color. */
   --shadow-card: 0 1px 2px light-dark(rgb(16 24 32 / 6%), transparent);
   --shadow-raised: 0 8px 24px light-dark(rgb(16 24 32 / 12%), rgb(0 0 0 / 40%));
