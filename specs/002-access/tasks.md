@@ -23,7 +23,7 @@ Requires `001-app-shell` merged into `main`.
 - [x] **T7. Test users and access browser tests.** FR-1 to FR-13, FR-15 to FR-22, FR-26
   - Two fake users in `supabase/seed.sql`; `tests/e2e/access.spec.ts` as listed in the plan.
   - Done when: `npm run db:reset` creates the users and `npm run test:e2e` is green for every access flow.
-- [ ] **T8. Security and accessibility tests, visual check.** NFR security, NFR accessibility, FR-1, FR-7, FR-26
+- [x] **T8. Security and accessibility tests, visual check.** NFR security, NFR accessibility, FR-1, FR-7, FR-26
   - `tests/e2e/security.spec.ts` (no cookie, tampered cookie, expired cookie, CSP on the sign-in page), keyboard-only flow; visual check with the Chrome DevTools MCP at 1280 px in light and dark.
   - Done when: all tests green, zero console errors and CSP violations, and the sign-in page in all its states plus the sidebar footer match `docs/design.md` in both themes.
 
