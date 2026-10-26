@@ -19,8 +19,8 @@ Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middlewa
 - Visual changes: verify with the Chrome DevTools MCP at 1280 px, light and dark, and check the console. 375 px from phase 2.
 
 ## Rules
-- Read `STATUS.md`, `docs/constitution.md` and the active spec before touching code.
-- Follow the `sdd` skill.
+- Read `STATUS.md`, `docs/principles.md` and the active work item in `work/` before touching code.
+- Follow the `artificer` skill.
 - `legacy/` is the previous app, kept as read-only reference. Never modify it, and never copy code from it unless an approved spec or plan says so.
 - `legacy/SESSION-CONTEXT.md` is the export of the session that built the previous app: decisions, security fixes and pitfalls. Read it, together with the relevant `legacy/` code, when writing each spec and plan.
 - The repository is public: follow the collaboration rules in `docs/architecture.md`. Never commit real financial data, credentials or personal data.
