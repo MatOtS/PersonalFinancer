@@ -86,13 +86,13 @@ test.describe("sign-in page", () => {
     await expect(page.getByLabel("Email")).toHaveValue(userA.email);
     await expect(page.getByLabel("Contraseña")).toHaveValue("");
     await page.goto("/login");
-    await page.getByLabel("Email").fill("wrongemail@gmail.com");
+    await page.getByLabel("Email").fill("nadie@example.test");
     await page.getByLabel("Contraseña").fill(userA.password);
     await page.getByRole("button", { name: "Iniciar sesión" }).click();
     await expect(
       page.getByText("Email o contraseña incorrectos"),
     ).toBeVisible();
-    await expect(page.getByLabel("Email")).toHaveValue("wrongemail@gmail.com");
+    await expect(page.getByLabel("Email")).toHaveValue("nadie@example.test");
     await expect(page.getByLabel("Contraseña")).toHaveValue("");
   });
 

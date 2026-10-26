@@ -1,6 +1,6 @@
 # Spec 002: Access and session
 
-Status: approved
+Status: implemented
 
 Split from the original spec "001 Access and app shell" (approved 2026-10-07). Requirement numbers are kept from the original spec, so they have gaps; the shell and theme requirements are in `specs/001-app-shell/spec.md`, which this spec builds on.
 
