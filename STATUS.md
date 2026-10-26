@@ -1,24 +1,24 @@
 # Project status
 
-Last updated: 2026-10-22
+Last updated: 2026-10-27
 
 ## Status
-- Project phase: development
-- Active spec: 002-access
-- Next step: push the branch, open the PR for 002-access and merge it from GitHub; then choose the next spec from `docs/backlog.md`
+- Project phase: building
+- Active work: none (001-app-shell and 002-access are done)
+- Next step: `/artificer-spec` for the next work item (backlog #2, accounts and categories)
 
 ## Workflow
 - Ownership: own
 - Mode: manual
-- SDD files: tracked
+- Artificer files: tracked
 - Learning: assist
-- Framework: Artificer v0.1
+- Framework: Artificer v0.2
 
-## Specs
-| NNN | Name | Status | Tasks |
-|---|---|---|---|
-| 001 | app-shell | implemented | 8/8 |
-| 002 | access | implemented | 8/8 |
+## Work items
+| NNN | Name | Size | Status | Slices |
+|---|---|---|---|---|
+| 001 | app-shell | feature | done | 8/8 |
+| 002 | access | feature | done | 8/8 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).

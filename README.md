@@ -32,9 +32,9 @@ It uses fake data only. `npm run db:stop` stops it.
 | `npm run build` | Production build |
 
 ## Documentation
-The project follows Spec-Driven Development: nothing is built unless it is in an approved spec.
-- `docs/`: discovery, constitution, design, architecture (with its decision records) and backlog.
-- `specs/`: one folder per feature with its spec, plan and tasks.
+The project follows the Artificer Method: nothing is built unless it is in an approved work item.
+- `docs/`: product, principles, design, architecture (with its decision records) and backlog.
+- `work/`: one folder per work item with its spec (examples) and change map.
 - `STATUS.md`: where the project is and the next step.
 - `legacy/`: the previous version of the app, kept as read-only reference.
 

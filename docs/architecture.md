@@ -53,7 +53,7 @@ Versions checked against the npm registry on 2026-10-05. Context7 was not availa
 │   ├── tests/                pgTAP tests: RLS isolation per table
 │   └── seed.sql              Fake development data only
 ├── tests/e2e/                Playwright browser tests
-├── docs/  specs/  prototype/ SDD documents and the design prototype
+├── docs/  work/  prototype/  Artificer documents and the design prototype
 └── legacy/                   Previous app, read-only reference (excluded from lint, types and build)
 ```
 
