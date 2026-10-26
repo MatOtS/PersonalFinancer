@@ -5,20 +5,20 @@ Last updated: 2026-10-22
 ## Status
 - Project phase: development
 - Active spec: 002-access
-- Next step: `/sdd-implement 002` (T7)
+- Next step: `/sdd-implement 002` (T8)
 
 ## Workflow
 - Ownership: own
 - Mode: manual
 - SDD files: tracked
-- Learning: off
+- Learning: assist
 - Framework: Artificer v0.1
 
 ## Specs
 | NNN | Name | Status | Tasks |
 |---|---|---|---|
 | 001 | app-shell | implemented | 8/8 |
-| 002 | access | approved | 6/8 |
+| 002 | access | approved | 7/8 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
@@ -57,6 +57,7 @@ Last updated: 2026-10-22
 - 2026-10-22 002 T4 done: `src/proxy.ts` now checks the session with `getClaims()`, applies `decideAccess`, redirects to `/login?next=...`, sets `Cache-Control: no-store` on every page except `/login` and keeps the 001 nonce and CSP on all answers (redirects included). If the authentication service cannot be reached the proxy treats the user as signed out (fail closed). `createProxyClient(request)` now returns `{ supabase, applyTo }` so renewed cookies reach the page that renders next and the response (changed from T3). The `(app)` layout re-checks the session with `getSignedInUser()`. `/login` loops to itself until T5 adds the page (it falls into the `(app)` catch-all and the layout redirects), expected.
 - 2026-10-23 002 T5 done at Learning `off` (switched from `assist` to try it): `/login` page, `signInAction`, sign-in form (client validation with focus on the first empty field, pending state, `aria-live`), `TextField` and `ProgressBar` (with an `indeterminate` animation in `globals.css`). No automated tests for the flows yet (the plan puts them in T7); checked by hand in the browser with a temporary local user: empty fields, wrong credentials (email kept, password cleared), sign in landing on the `next` page, `/login` with a session going Home, pending state, and a stale form submitted after signing in (FR-12). The last one found a bug: the proxy redirected the form's POST to Home, where the action does not exist, so the page failed; the proxy now lets a Server Action posted to `/login` through (header `next-action`) and the action sends the user Home. Note for T7: cover this with a browser test. The session cookie is now HttpOnly (`src/lib/supabase/cookie-options.ts`, used by both server clients): `@supabase/ssr` leaves it readable by JavaScript by default because its browser client needs that, but this app only signs in and out through server actions, so a script injected into the page can no longer read it (owner approved doing it inside 002; tests in `src/lib/supabase/cookies.test.ts`). Revisit it if a Supabase browser client is ever added.
 - 2026-10-23 002 T6 done (Learning `off`): `signOutAction` in `src/app/(app)/actions.ts`; `signOut()` in `src/data/auth.ts` now always removes the Supabase session cookies (`isSessionCookie`, `src/lib/supabase/session-cookies.ts`) even if the service cannot be reached (FR-21); sidebar footer with the email (cut with ellipsis, full in `title`), the theme control and the "Cerrar sesión" button; per-tab session mark (`src/domain/auth/session-mark.ts`, `SessionMarker`, ADR-17) so the sign-in form shows "Tu sesión ha terminado. Inicia sesión de nuevo" only in a tab whose session ended. Checked by hand with two tabs: the tab that signs out shows no message, the other shows it on its next navigation, and the back button after signing out shows the sign-in page. Found and fixed: in development React runs the mount effect twice, so the sign-in form may only turn the message on, never off. One lint exception (`react-hooks/set-state-in-effect`) is justified in `sign-in-form.tsx`: sessionStorage cannot be read while rendering on the server. The `ghost` button variant got its hover (`accent-soft`, closes backlog #19) and a new `ghost-destructive` variant (red on hover) is used by "Cerrar sesión"; both documented in `docs/design.md`. The sidebar footer order is theme control, email, sign-out (owner's requests after seeing it). `next.config.ts` hides the dev server's "N" badge (`devIndicators: false`), so the theme tests no longer need to hide it. Heads up: the 001 browser tests (`shell`, `theme`) now fail because `/` redirects to the sign-in page without a session (since T4); `npm run check` does not run them. T7 must sign in first in those tests. For T7: cover the two-tab flow and the back button with browser tests.
+- 2026-10-26 002 T7 done. Started at Learning `core` (the owner wrote `src/app/(app)/actions.test.ts` and five tests of `tests/e2e/access.spec.ts`) and finished at `assist` (Claude wrote the other 13 tests) because the owner needed to speed up. `supabase/seed.sql` creates two fake users (`a@example.test`, `b@example.test`); `auth.setup.ts` and a `setup` project sign in once as userA and save the session (`tests/e2e/.auth/`, git-ignored) because the local auth allows 30 sign-ins per 5 minutes per IP; tests that sign out use userB in their own context. `npm run db:reset` removes users created by hand (`test@gmail.com`, owner's local-only user, was recreated). Plan change approved by the owner: FR-21 is covered by unit tests (`src/data/sign-out.test.ts`, `src/app/(app)/actions.test.ts`), not by a browser test, because the Next server calls Supabase and Playwright cannot block it. The `no-store` browser test only runs in CI (production build): the dev server replaces `Cache-Control` with `no-cache, must-revalidate` (checked on a production copy outside the repo). Found while testing: `next` is cleaned twice (page and action), so a test that goes through the page cannot see the action's cleaning break; a test that changes the hidden field by hand covers it. Checked by breaking the code on purpose: `next` not cleaned in the action, no `preventDefault` in the empty-field check, and no expired-session message are all caught. `next.config.ts` has `devIndicators: false`. Also approved: `Learning` back to `assist`.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.

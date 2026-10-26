@@ -48,7 +48,6 @@ test.describe("theme control", () => {
 
   test("a reload keeps the choice and the server HTML already carries it", async ({
     page,
-    request,
   }) => {
     await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
@@ -60,13 +59,9 @@ test.describe("theme control", () => {
     expect(await backgroundOf(page)).toBe(DARK_BG);
     await expect(page.getByRole("radio", { name: "Oscuro" })).toBeChecked();
 
-    // Without JavaScript running: the raw server response, so no flash on first paint.
-    const cookie = await themeCookie(page);
-    const html = await (
-      await request.get("/", {
-        headers: { cookie: `theme=${cookie?.value}` },
-      })
-    ).text();
+    // Without JavaScript running: the raw server response, so no flash on first
+    // paint. page.request shares the cookies of the browser (session and theme).
+    const html = await (await page.request.get("/")).text();
     expect(html).toMatch(/<html[^>]*data-theme="dark"/);
   });
 

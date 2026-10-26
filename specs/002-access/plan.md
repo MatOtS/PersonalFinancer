@@ -116,12 +116,14 @@ Expired-session message (FR-10 vs FR-18): a tab that has shown a protected page 
 | Session survives a new browser context with the stored cookies | e2e | FR-17 |
 | Sign out in tab A, action in tab B → login with the expired message; tab A shows no message | e2e | FR-18, FR-10 |
 | Sign out: lands on login; back button shows login; protected responses carry `no-store` | e2e | FR-19, FR-20, FR-22 |
-| Sign out with the auth service blocked still lands on login with cookies removed | e2e | FR-21 |
+| Sign out with the auth service unreachable still removes the session cookies (`src/data/sign-out.test.ts`) and `signOutAction` ends the session and then redirects to the sign-in page (`src/app/(app)/actions.test.ts`) | unit | FR-21 |
 | Sidebar footer: email with full `title`, sign-out button | e2e + visual | FR-26 |
 | Protected page requested with no cookie, tampered cookie and expired cookie → redirect to login, body without protected content | e2e (request API) | NFR security |
 | Zero CSP violations in the console on the sign-in page in all its states | e2e | NFR security |
 | Keyboard-only flow: sign in, navigate, sign out | e2e | NFR accessibility |
 | Visual check at 1280 px, light and dark: login (all states), sidebar footer | visual (Chrome DevTools MCP) | FR-1, FR-7, FR-26 |
+
+FR-21 is not an e2e test (decided in T7, 2026-10-23): the call to the authentication service is made by the Next server, so Playwright cannot block it. The browser tests start signed in as userA with one saved session (`tests/e2e/auth.setup.ts`) because the local authentication service allows 30 sign-ins every 5 minutes per IP; tests that sign out use userB in their own context so they do not end the shared session.
 
 FR-4 is covered by the unit tests of the mapping; reproducing the real rate limit in the browser test would make it slow and flaky.
 
