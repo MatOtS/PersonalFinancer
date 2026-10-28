@@ -12,7 +12,7 @@ Last updated: 2026-10-27
 - Mode: manual
 - Artificer files: tracked
 - Learning: assist
-- Framework: Artificer v0.2
+- Framework: Artificer v0.2.1
 
 ## Work items
 | NNN | Name | Size | Status | Slices |
