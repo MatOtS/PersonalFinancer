@@ -5,21 +5,21 @@ Last updated: 2026-10-27
 ## Status
 - Project phase: building
 - Active work: 003-accounts-categories (map approved, data model change approved)
-- Next step: `/artificer-build 003 S3`
+- Next step: `/artificer-build 003 S4`
 
 ## Workflow
 - Ownership: own
 - Mode: manual
 - Artificer files: tracked
 - Learning: assist
-- Framework: Artificer v0.2.1
+- Framework: Artificer v0.2.2
 
 ## Work items
 | NNN | Name | Size | Status | Slices |
 |---|---|---|---|---|
 | 001 | app-shell | feature | done | 8/8 |
 | 002 | access | feature | done | 8/8 |
-| 003 | accounts-categories | feature | building | 2/10 |
+| 003 | accounts-categories | feature | building | 3/10 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).

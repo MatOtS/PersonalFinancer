@@ -20,7 +20,7 @@
     "db:start": "supabase start -x studio,postgres-meta",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
-    "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts",
+    "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts",
     "db:studio": "supabase start",
     "test:db": "supabase test db"
   },

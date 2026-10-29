@@ -53,10 +53,10 @@ Done in dependency order. Estimates are changed lines including tests; if a slic
   - Done when: unit tests green for 0, 1, 50, 51 characters, only spaces, accents, capitals, `ñ` kept different from `n` ("año" is not "ano"), ordering, and the default list has 11 expense categories with 26 subcategories and 4 income categories.
 - [x] **S2. Amount rules (domain).** About 130 lines (147 in the end). Scenarios: The opening balance must be a valid amount; An empty opening balance counts as zero; The opening balance can be negative. Files: `money.ts` (+ test).
   - Done when: unit tests green for `1.250,00`, `1250,5`, `-350`, empty, `abc`, `12,345`, `0`, a huge number, and `formatCents` gives `1.250,00 €`, `-350,00 €`, `0,00 €`.
-- [ ] **S3. Tables and security (migration).** About 120 lines of SQL. Scenarios: the schema side of One user cannot see / change another user's data, Two accounts cannot have the same name. Files: the migration, `database.types.ts` (generated), `server.ts`.
+- [x] **S3. Tables and security (migration).** About 120 lines of SQL (66 written, plus the generated types). Scenarios: the schema side of One user cannot see / change another user's data, Two accounts cannot have the same name. Files: the migration, `database.types.ts` (generated), `server.ts`.
   - Done when: `npm run db:reset` applies it, `npm run db:types` regenerates the types, `npm run typecheck` passes, every table has RLS enabled with `using` and `with check`.
 - [ ] **S4. Isolation test (pgTAP).** About 130 lines. Scenarios: One user cannot see another user's data; One user cannot change another user's data. Files: `supabase/tests/database/isolation.test.sql`.
-  - Done when: `npm run test:db` is green, and breaking a policy on purpose (removing a `with check`) turns it red.
+  - Done when: `npm run test:db` is green, and breaking a policy on purpose (changing its `with check` to `with check (true)`) turns it red. Simply removing the `with check` does not: Postgres then reuses `using` for writes.
 - [ ] **S5. Accounts data layer.** About 170 lines. Scenarios: the account scenarios at data level; Changing something that no longer exists (accounts). Files: `src/data/accounts.ts` (+ test).
   - Done when: unit tests green with a fake client (create, rename, correct balance, delete, duplicate gives the message, zero rows gives "ya no existe"); listing comes back in `compareNames` order.
 - [ ] **S6. Confirmation dialog and account actions.** About 180 lines. Scenarios: Cancelling a deletion keeps everything; The user deletes an account. Files: `confirm-dialog.tsx`, `text-field.tsx`, `ajustes/actions.ts` (account actions).
@@ -97,4 +97,4 @@ Money is in cents (ADR-06). Nothing existing changes; no data to migrate (the lo
 - **A huge opening balance.** The spec gives no limit; the parser rejects amounts beyond the safe integer range with "Introduce un importe válido". Flag to the owner in Verify.
 - **Duplicate-category messages are not fixed by the spec.** Proposed copy: "Ya tienes una categoría con ese nombre" and "Ya tienes una subcategoría con ese nombre en esta categoría". Confirm in S9.
 - **Parallel browser tests share user A.** Mitigation: every test creates and removes its own uniquely named rows; tests that need an empty or fresh state use the third user, in series.
-- **Isolation could be broken by one forgotten policy or `with check`.** Mitigation: S4 is a gate, and its mutation check (remove a `with check`, see it fail) is part of "Done when".
+- **Isolation could be broken by one forgotten policy or `with check`.** Mitigation: S4 is a gate, and its mutation check (change a `with check` to `with check (true)`, see it fail; removing it is not enough, Postgres reuses `using`) is part of "Done when".

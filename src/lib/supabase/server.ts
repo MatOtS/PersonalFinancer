@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { getSupabaseEnv } from "@/lib/env";
 import { sessionCookieOptions } from "./cookie-options";
+import type { Database } from "./database.types";
 import { AUTH_TIMEOUT_MS, createFetchWithTimeout } from "./fetch-with-timeout";
 
 // Supabase client for Server Components and Server Actions. The session lives
@@ -11,7 +12,7 @@ export async function createClient() {
   const cookieStore = await cookies();
   const { url, publishableKey } = getSupabaseEnv();
 
-  return createServerClient(url, publishableKey, {
+  return createServerClient<Database>(url, publishableKey, {
     global: { fetch: createFetchWithTimeout(AUTH_TIMEOUT_MS) },
     cookieOptions: sessionCookieOptions,
     cookies: {
