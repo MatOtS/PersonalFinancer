@@ -36,6 +36,7 @@ All text pairs meet WCAG AA (4.5:1 normal text, 3:1 large text and UI parts) aga
 | `accent` | Primary action, active item, focus ring | `#2EE6A0` | `#087F5B` |
 | `on-accent` | Text on an accent fill | `#06281B` | `#FFFFFF` |
 | `accent-soft` | Badge and selected backgrounds | `accent` at 12% | `accent` at 10% |
+| `scrim` | Dimmed page behind a modal | black at 60% | `#101820` at 40% |
 | `positive` | Income, positive deltas | `#2EE6A0` | `#087F5B` |
 | `negative` | Expenses, negative deltas, destructive actions | `#F87171` | `#C2362F` |
 | `info` | Second data series, neutral highlights | `#5CC8F2` | `#1A6FA0` |
@@ -90,7 +91,7 @@ Base 4 px. Scale: `4, 8, 12, 16, 24, 32, 48, 64`.
 - **Progress bar**: 8 px pill track in `border`, fill in `accent` (or `info` / `warning` when it means something else).
 - **Tables**: no vertical lines, row dividers in `border`, amounts right aligned. Below 640 px they become stacked cards.
 - **Navigation**: see below.
-- **Modals and sheets**: `raised`, `lg` radius; on mobile they open as bottom sheets. Close with Esc, the close button and the backdrop; focus is trapped inside.
+- **Modals and sheets**: `raised`, `lg` radius, the page behind dimmed with `scrim`; on mobile they open as bottom sheets. Close with Esc, the close button and the backdrop; focus is trapped inside.
 - **Feedback**: toasts for the result of an action (bottom on mobile, bottom right on desktop, 5 s, pausable). Inline messages for validation. Destructive actions ask for confirmation in a modal.
 - **Icons**: one outline icon set, 20 px (16 px in dense rows). The set is chosen in architecture.
 
