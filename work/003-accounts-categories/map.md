@@ -57,7 +57,7 @@ Done in dependency order. Estimates are changed lines including tests; if a slic
   - Done when: `npm run db:reset` applies it, `npm run db:types` regenerates the types, `npm run typecheck` passes, every table has RLS enabled with `using` and `with check`.
 - [x] **S4. Isolation test (pgTAP).** About 130 lines. Scenarios: One user cannot see another user's data; One user cannot change another user's data. Files: `supabase/tests/database/isolation.test.sql`.
   - Done when: `npm run test:db` is green, and breaking a policy on purpose (changing its `with check` to `with check (true)`) turns it red. Simply removing the `with check` does not: Postgres then reuses `using` for writes.
-- [ ] **S5. Accounts data layer.** About 170 lines. Scenarios: the account scenarios at data level; Changing something that no longer exists (accounts). Files: `src/data/accounts.ts` (+ test).
+- [x] **S5. Accounts data layer.** About 170 lines. Scenarios: the account scenarios at data level; Changing something that no longer exists (accounts). Files: `src/data/accounts.ts` (+ test).
   - Done when: unit tests green with a fake client (create, rename, correct balance, delete, duplicate gives the message, zero rows gives "ya no existe"); listing comes back in `compareNames` order.
 - [ ] **S6. Confirmation dialog and account actions.** About 180 lines. Scenarios: Cancelling a deletion keeps everything; The user deletes an account. Files: `confirm-dialog.tsx`, `text-field.tsx`, `ajustes/actions.ts` (account actions).
   - Done when: the dialog opens with focus on "Cancelar", Escape and "Cancelar" close it without deleting, the focus goes back to the button that opened it, and the actions return the exact Spanish messages.
