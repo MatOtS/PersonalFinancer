@@ -1,7 +1,12 @@
 import { ChartLineUpIcon } from "@phosphor-icons/react/ssr";
+import Link from "next/link";
+import { buttonClassName } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { listAccounts } from "@/data/accounts";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const accounts = await listAccounts();
+
   return (
     <>
       <h1 className="text-h1 font-bold">Inicio</h1>
@@ -9,12 +14,20 @@ export default function HomePage() {
         Bienvenido a PersonalFinancer
       </p>
 
-      {/* Temporary exception to design.md: no action yet, accounts arrive in
-          a later spec (see spec 001-app-shell, FR-27). */}
       <div className="mt-6 rounded-lg border border-border bg-surface shadow-card">
         <EmptyState
           icon={<ChartLineUpIcon size={20} />}
           text="Aún no hay datos. El resumen aparecerá aquí cuando añadas tus cuentas y movimientos."
+          action={
+            accounts.length === 0 ? (
+              <Link
+                href="/ajustes#cuentas"
+                className={buttonClassName("primary")}
+              >
+                Añadir cuenta
+              </Link>
+            ) : undefined
+          }
         />
       </div>
     </>
