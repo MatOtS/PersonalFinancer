@@ -24,6 +24,7 @@ Next.js 16 has breaking changes (for example `src/proxy.ts` instead of `middlewa
 - `legacy/` is the previous app, kept as read-only reference. Never modify it, and never copy code from it unless an approved spec or plan says so.
 - `legacy/SESSION-CONTEXT.md` is the export of the session that built the previous app: decisions, security fixes and pitfalls. Read it, together with the relevant `legacy/` code, when writing each spec and plan.
 - The repository is public: follow the collaboration rules in `docs/architecture.md`. Never commit real financial data, credentials or personal data.
+- The human decides what is built and how: Claude asks design decisions, never answers them (options only on request, shuffled, no recommendation) and stops on anything undecided.
 
 ## Conventions
 - Folders: `src/app` routes only; `src/domain` pure business rules with tests next to them; `src/data` the only code that talks to the database; `src/components/ui` design system. `domain` imports nothing from the other folders.

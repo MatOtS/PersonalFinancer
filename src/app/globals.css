@@ -20,6 +20,7 @@
   --accent: light-dark(#087f5b, #2ee6a0);
   --on-accent: light-dark(#ffffff, #06281b);
   --accent-soft: light-dark(rgb(8 127 91 / 10%), rgb(46 230 160 / 12%));
+  --scrim: light-dark(rgb(16 24 32 / 40%), rgb(0 0 0 / 60%));
   --positive: light-dark(#087f5b, #2ee6a0);
   --negative: light-dark(#c2362f, #f87171);
   --info: light-dark(#1a6fa0, #5cc8f2);
@@ -46,6 +47,7 @@
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
   --color-accent-soft: var(--accent-soft);
+  --color-scrim: var(--scrim);
   --color-positive: var(--positive);
   --color-negative: var(--negative);
   --color-info: var(--info);

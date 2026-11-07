@@ -1,9 +1,11 @@
 -- Fake development data only. Never real financial data (constitution 5).
 
--- Two fake users for the browser tests (tests/e2e/support/users.ts has their
--- emails and passwords). They exist only in the local database: `db:reset`
--- creates them. A second user is needed so a later spec can prove that one user
--- cannot see another user's data.
+-- Three fake users for the browser tests (tests/e2e/support/users.ts has the
+-- emails and passwords of the first two). They exist only in the local
+-- database: `db:reset` creates them. A second user is needed so a later spec can
+-- prove that one user cannot see another user's data. The third one is kept
+-- untouched: the default categories are given once per user, so the "new user"
+-- scenarios need a user who never signed in before.
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
   raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
@@ -24,6 +26,14 @@ insert into auth.users (
     crypt('test-password-b', gen_salt('bf')), now(),
     '{"provider":"email","providers":["email"]}', '{}', now(), now(),
     '', '', '', ''
+  ),
+  (
+    '00000000-0000-0000-0000-000000000000',
+    '33333333-3333-3333-3333-333333333333',
+    'authenticated', 'authenticated', 'c@example.test',
+    crypt('test-password-c', gen_salt('bf')), now(),
+    '{"provider":"email","providers":["email"]}', '{}', now(), now(),
+    '', '', '', ''
   );
 
 insert into auth.identities (
@@ -40,5 +50,11 @@ insert into auth.identities (
     '22222222-2222-2222-2222-222222222222', 'b@example.test',
     '22222222-2222-2222-2222-222222222222',
     '{"sub":"22222222-2222-2222-2222-222222222222","email":"b@example.test","email_verified":true}',
+    'email', now(), now(), now()
+  ),
+  (
+    '33333333-3333-3333-3333-333333333333', 'c@example.test',
+    '33333333-3333-3333-3333-333333333333',
+    '{"sub":"33333333-3333-3333-3333-333333333333","email":"c@example.test","email_verified":true}',
     'email', now(), now(), now()
   );

@@ -3,7 +3,7 @@
 Ordered by build order (dependencies first, then value). Approved by the owner on 2026-10-06.
 
 1. 2026-10-05 | Access and authentication (login, session, app shell: layout, navigation, design tokens, light and dark theme) | Impact: high | Spec: 001-app-shell, 002-access
-2. 2026-10-05 | Accounts and categories | Impact: high | Spec: none
+2. 2026-10-05 | Accounts and categories | Impact: high | Spec: 003-accounts-categories
 3. 2026-10-05 | Quick movement entry | Impact: high | Spec: none
 4. 2026-10-05 | Bank statement import | Impact: high | Spec: none
 5. 2026-10-05 | Unified dashboard | Impact: high | Spec: none

@@ -1,24 +1,25 @@
 # Project status
 
-Last updated: 2026-10-27
+Last updated: 2026-11-06
 
 ## Status
 - Project phase: building
-- Active work: none (001-app-shell and 002-access are done)
-- Next step: `/artificer-spec` for the next work item (backlog #2, accounts and categories)
+- Active work: 003-accounts-categories (map approved, data model change approved)
+- Next step: `/artificer-verify 003`
 
 ## Workflow
 - Ownership: own
-- Mode: manual
+- Mode: automatic
 - Artificer files: tracked
-- Learning: assist
-- Framework: Artificer v0.2
+- Learning: off
+- Framework: Artificer v0.3
 
 ## Work items
 | NNN | Name | Size | Status | Slices |
 |---|---|---|---|---|
 | 001 | app-shell | feature | done | 8/8 |
 | 002 | access | feature | done | 8/8 |
+| 003 | accounts-categories | feature | building | 11/11 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).

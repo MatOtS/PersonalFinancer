@@ -24,6 +24,8 @@ test("sign in, move around the app and sign out using only the keyboard", async 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Inicio" })).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Ajustes" })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(page.getByRole("radio", { name: "Sistema" })).toBeFocused();
   await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("radio", { name: "Claro" })).toBeChecked();
