@@ -45,6 +45,8 @@ First work item that stores user data. It needs three things that do not exist y
 | `src/app/(app)/page.tsx` | modify | "Añadir cuenta" action when there are no accounts | Home points to the first account |
 | `supabase/seed.sql` | modify | third fake user (never signed in elsewhere) | (tests) |
 | `tests/e2e/settings.spec.ts`, `isolation.spec.ts`, `support/users.ts` | create / modify | browser tests | all |
+| `tests/e2e/support/{names,console-errors,session-cookies}.ts`, `shell.spec.ts`, `keyboard.spec.ts`, `package.json` (`test:e2e` resets the database first) | create / modify | helpers; the two older specs updated to the new menu (Inicio and Ajustes) | (tests) |
+| `src/app/favicon.ico` | create | a placeholder icon: without it the browser's request to `/favicon.ico` answered 404 and wrote an error in every page's console (owner: "A, mete un favicon cualquiera, después lo cambio") | Console: zero errors |
 | `docs/architecture.md` | modify | ADR-18 (native dialog), ADR-19 (name key and default categories), data model table | - |
 
 ## Slices
@@ -69,7 +71,7 @@ Done in dependency order. Estimates are changed lines including tests; if a slic
   - Done when: unit tests green (defaults idempotent, the marker written last, a failure is logged and does not block the sign-in); a fresh local user signing in gets the list of the spec and signing in again adds nothing.
 - [x] **S9. Categories in the settings page.** About 200 lines (about 990 in the end, built as one slice by the owner's decision: "todo en uno"). Scenarios: the category scenarios; The type of a category cannot be changed; Changing something that no longer exists (categories). Files: `ajustes/actions.ts` (category actions), `categories-section.tsx` + forms.
   - Done when: categories and subcategories can be added, renamed and deleted from the page; the type is chosen only when adding; deleting a category with subcategories says how many go with it.
-- [ ] **S10. Browser tests, security, accessibility and visual check.** About 200 lines. Scenarios: all, including One user cannot change another user's data from the API. Files: `tests/e2e/settings.spec.ts`, `isolation.spec.ts`, `support/users.ts`.
+- [x] **S10. Browser tests, security, accessibility and visual check.** About 200 lines (about 1.100 in the end, built whole by the owner's decision). Scenarios: all, including One user cannot change another user's data from the API. Files: `tests/e2e/settings.spec.ts`, `isolation.spec.ts`, `support/users.ts`.
   - Done when: `npm run test:e2e` green, `npm run test:db` green, `npm run check` green, keyboard-only flow works, zero console errors and policy violations, and `/ajustes` matches `docs/design.md` in light and dark at 1280 px.
 
 ## Data
@@ -107,6 +109,12 @@ Money is in cents (ADR-06). Nothing existing changes; no data to migrate (the lo
 | (S9, one-way) Actions: `addCategoryAction` and `addSubcategoryAction` separate; `renameCategoryAction` and `deleteCategoryAction` shared by categories and subcategories (hidden `id` and `parentId`, empty `parentId` means a category); `countSubcategoriesAction` read-only for the confirmation | One add action with `parentId`; six actions | Owner: "Vamos con Q". |
 | (S9, reversible) Every category and subcategory field keeps its visible label (`TextField` as is) and the placeholder is only an extra hint, so the spec's "every field has a visible label" holds | Placeholder only with a hidden `aria-label` (needs an exception in the spec) | Owner: "B". |
 | (S9, reversible) The whole S9 is built as one slice, whatever its size | Split before building | Owner: "no, todo en uno". |
+| (S10, reversible) The third user is made "new" again by resetting the local database automatically at the start of every `npm run test:e2e` (the script runs `npm run db:reset` before Playwright) | The test deletes C's data with the service key; the owner resets by hand | Owner: "A, pero que sea automático, yo no lo voy a hacer". |
+| (S10, reversible) Tests do not clean up what they create (the reset does it); they use unique names so parallel tests do not collide. This replaces the Risks line "every test creates and removes its own rows" | Each test deletes its rows | Owner: "si a todas" to the suggestion. |
+| (S10, reversible) In the isolation test, B signs in through the form with the existing helper and its token is read from the session cookie, as `session-cookies.ts` does for A | B asks the auth service directly | Owner: "si a todas". |
+| (S10, reversible) The focus lost after deleting or cancelling an edit is not fixed in S10: the tests cover what works (Escape and "Cancelar" return the focus to the button) and the gap stays recorded | Fix it in the app and decide where the focus goes | Owner: "si a todas". |
+| (S10, reversible) A small helper in `tests/e2e/support/` collects console errors and the settings tests use it | One test that walks the whole page | Owner: "si a todas". |
+| (S10, reversible) S10 is built whole, whatever its size; the failing `countSubcategoriesAction` case (no message decided) stays out of S10 and pending for the end of 003 | Split S10; test that case now | Owner: "si a todas". |
 
 ## Risks
 - **Next 16 APIs differ from training data** (Server Actions, `revalidatePath`, cookies after sign-in). Mitigation: read the bundled guide before each file.
@@ -115,5 +123,5 @@ Money is in cents (ADR-06). Nothing existing changes; no data to migrate (the lo
 - **Removing accents must not remove the tilde of `ñ`.** Decomposing the text to strip accents would turn `ñ` into `n`; `nameKey` keeps the `ñ` (tested in S1).
 - **A huge opening balance.** The spec gives no limit; the parser rejects amounts beyond the safe integer range with "Introduce un importe válido". Flag to the owner in Verify.
 - **Duplicate-category messages are not fixed by the spec.** Proposed copy: "Ya tienes una categoría con ese nombre" and "Ya tienes una subcategoría con ese nombre en esta categoría". Confirm in S9.
-- **Parallel browser tests share user A.** Mitigation: every test creates and removes its own uniquely named rows; tests that need an empty or fresh state use the third user, in series.
+- **Parallel browser tests share user A.** Mitigation: every test uses its own uniquely named rows (the local database is reset at the start of every `npm run test:e2e`, so they are not removed); tests that need a fresh state use the third user, in series.
 - **Isolation could be broken by one forgotten policy or `with check`.** Mitigation: S4 is a gate, and its mutation check (change a `with check` to `with check (true)`, see it fail; removing it is not enough, Postgres reuses `using`) is part of "Done when".

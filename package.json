@@ -15,7 +15,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
+    "test:e2e": "npm run db:reset && playwright test",
     "check": "npm run lint && npm run typecheck && npm run format:check && npm run test",
     "db:start": "supabase start -x studio,postgres-meta",
     "db:stop": "supabase stop",

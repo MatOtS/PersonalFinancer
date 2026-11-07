@@ -5,7 +5,7 @@ Last updated: 2026-11-06
 ## Status
 - Project phase: building
 - Active work: 003-accounts-categories (map approved, data model change approved)
-- Next step: `/artificer-build 003 S10`
+- Next step: `/artificer-verify 003`
 
 ## Workflow
 - Ownership: own
@@ -19,7 +19,7 @@ Last updated: 2026-11-06
 |---|---|---|---|---|
 | 001 | app-shell | feature | done | 8/8 |
 | 002 | access | feature | done | 8/8 |
-| 003 | accounts-categories | feature | building | 10/11 |
+| 003 | accounts-categories | feature | building | 11/11 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).

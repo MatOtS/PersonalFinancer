@@ -2,15 +2,18 @@ import { expect, test } from "@playwright/test";
 
 // FR-23 to FR-25, FR-27: Home inside the shell.
 test.describe("Home", () => {
-  test("shows the shell with a single active item and the welcome empty state", async ({
+  test("shows the shell with Inicio as the only active item and the welcome empty state", async ({
     page,
   }) => {
     await page.goto("/");
 
     const nav = page.getByRole("navigation", { name: "Principal" });
-    await expect(nav.getByRole("link")).toHaveCount(1);
+    await expect(nav.getByRole("link")).toHaveCount(2);
     const home = nav.getByRole("link", { name: "Inicio" });
     await expect(home).toHaveAttribute("aria-current", "page");
+    await expect(
+      nav.getByRole("link", { name: "Ajustes" }),
+    ).not.toHaveAttribute("aria-current", "page");
 
     await expect(
       page.getByRole("heading", { level: 1, name: "Inicio" }),
@@ -66,6 +69,9 @@ test("keyboard only: reach the navigation and change the theme", async ({
 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Inicio" })).toBeFocused();
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Ajustes" })).toBeFocused();
 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("radio", { name: "Sistema" })).toBeFocused();
