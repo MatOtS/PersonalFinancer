@@ -1,6 +1,6 @@
 # 003: Accounts and categories
 
-Status: approved
+Status: done
 Size: feature
 
 ## Intent
