@@ -1,24 +1,25 @@
 # Project status
 
-Last updated: 2026-10-27
+Last updated: 2026-11-07
 
 ## Status
 - Project phase: building
-- Active work: none (001-app-shell and 002-access are done)
-- Next step: `/artificer-spec` for the next work item (backlog #2, accounts and categories)
+- Active work: 003-accounts-categories (map approved, data model change approved)
+- Next step: `/artificer-verify 003`
 
 ## Workflow
 - Ownership: own
-- Mode: manual
+- Mode: automatic
 - Artificer files: tracked
-- Learning: assist
-- Framework: Artificer v0.2
+- Learning: off
+- Framework: Artificer v0.3
 
 ## Work items
 | NNN | Name | Size | Status | Slices |
 |---|---|---|---|---|
 | 001 | app-shell | feature | done | 8/8 |
 | 002 | access | feature | done | 8/8 |
+| 003 | accounts-categories | feature | building | 11/11 (F1 dropped) |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
@@ -60,6 +61,7 @@ Last updated: 2026-10-27
 - 2026-10-26 002 T7 done. Started at Learning `core` (the owner wrote `src/app/(app)/actions.test.ts` and five tests of `tests/e2e/access.spec.ts`) and finished at `assist` (Claude wrote the other 13 tests) because the owner needed to speed up. `supabase/seed.sql` creates two fake users (`a@example.test`, `b@example.test`); `auth.setup.ts` and a `setup` project sign in once as userA and save the session (`tests/e2e/.auth/`, git-ignored) because the local auth allows 30 sign-ins per 5 minutes per IP; tests that sign out use userB in their own context. `npm run db:reset` removes users created by hand (`test@gmail.com`, owner's local-only user, was recreated). Plan change approved by the owner: FR-21 is covered by unit tests (`src/data/sign-out.test.ts`, `src/app/(app)/actions.test.ts`), not by a browser test, because the Next server calls Supabase and Playwright cannot block it. The `no-store` browser test only runs in CI (production build): the dev server replaces `Cache-Control` with `no-cache, must-revalidate` (checked on a production copy outside the repo). Found while testing: `next` is cleaned twice (page and action), so a test that goes through the page cannot see the action's cleaning break; a test that changes the hidden field by hand covers it. Checked by breaking the code on purpose: `next` not cleaned in the action, no `preventDefault` in the empty-field check, and no expired-session message are all caught. `next.config.ts` has `devIndicators: false`. Also approved: `Learning` back to `assist`.
 - 2026-10-26 002 T8 done (Learning `assist`): `tests/e2e/security.spec.ts` now also checks that a protected page asked for with no cookie, a tampered cookie or an expired cookie redirects to the sign-in page with nothing protected inside, and that `/login` carries the security headers and the browser reports no CSP violation in any of its states; `tests/e2e/keyboard.spec.ts` signs in, navigates and signs out with the keyboard only (visible focus on the sign-out button); `tests/e2e/support/session-cookies.ts` builds the fake cookies. Plan deviation, flagged: the plan said to sign the expired cookie with the local JWT secret, but the local stack signs with asymmetric keys (ES256) whose private key we do not have, so the "expired" cookie has a past expiry plus an invalid signature and refresh token; what is checked is the outcome (the server does not accept it). Breaking the code on purpose: no CSP header fails 5 tests, a sign-out button outside the tab order fails the keyboard test, and a proxy that accepts any cookie makes the app loop on redirects so badly that Playwright cannot start the server; note that the `(app)` layout check would also catch a subtler proxy mistake (two gates). Visual check at 1280 px, light and dark, with the built-in browser: sign-in page idle, field errors, wrong credentials, pending and the expired-session message, and the sidebar footer (checked in T6), no deviations from `docs/design.md`; zero console errors. Known: the AA contrast of the active sidebar item in the light theme (backlog #23). Noise to know: the dev server logs `AuthApiError: Refresh token is not valid` for the fake expired cookie.
 - 2026-10-26 002 validated: VERDICT APPROVED (137 unit and 51 browser tests green, 1 browser test skipped on purpose: `no-store`, checked in CI against the production build). Optional follow-ups noted: browser tests for an email with capitals and spaces and for a double click; the unknown-email test now uses `nadie@example.test`. Known and accepted: AA contrast of the active sidebar item in light (backlog #23). Spec marked `implemented`.
+- 2026-11-07 003: the verify found that an unexpected error in the settings actions shows no message. Fix slice F1 was built and then dropped by the owner before any commit (too big for the problem, 6 more review points); it stays as a bug in `docs/backlog.md` item 28 and the scenario was removed from the spec. A11y gaps (items 25, 26) and the missing ADR-18/19 (item 27) are also in the backlog.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.

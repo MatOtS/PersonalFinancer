@@ -65,6 +65,12 @@ describe("design tokens", () => {
     );
   });
 
+  it("defines scrim as ink at 40% (light) and black at 60% (dark)", () => {
+    expect(cssValueOf("scrim")).toBe(
+      "light-dark(rgb(16 24 32 / 40%), rgb(0 0 0 / 60%))",
+    );
+  });
+
   it("lets the data-theme attribute force each theme", () => {
     expect(css).toMatch(
       /:root\[data-theme="light"\]\s*\{\s*color-scheme:\s*light;/,

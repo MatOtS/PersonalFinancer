@@ -3,11 +3,18 @@ import { useId } from "react";
 type TextFieldProps = React.ComponentProps<"input"> & {
   label: string;
   error?: string;
+  // Amounts line up on the right so their digits stay under each other.
+  alignRight?: boolean;
 };
 
 // A labelled input. The label is always visible (never a placeholder) and an
 // error shows under the field and is linked to it for screen readers.
-export const TextField = ({ label, error, ...inputProps }: TextFieldProps) => {
+export const TextField = ({
+  label,
+  error,
+  alignRight,
+  ...inputProps
+}: TextFieldProps) => {
   const id = useId();
   const errorId = `${id}-error`;
 
@@ -22,7 +29,7 @@ export const TextField = ({ label, error, ...inputProps }: TextFieldProps) => {
         aria-describedby={error ? errorId : undefined}
         className={`h-10 rounded-sm border bg-surface px-3 text-body read-only:text-text-muted ${
           error ? "border-negative" : "border-control-border"
-        }`}
+        } ${alignRight ? "text-right" : ""}`}
         {...inputProps}
       />
       {error && (

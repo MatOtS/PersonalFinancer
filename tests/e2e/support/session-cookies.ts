@@ -21,6 +21,21 @@ const encode = (value: object) =>
 const decode = (value: string) =>
   JSON.parse(Buffer.from(value, "base64url").toString());
 
+// The session a signed-in browser holds, read from its cookies.
+export function sessionFromCookies(
+  cookies: { name: string; value: string }[],
+): SavedSession {
+  const cookie = cookies.find((c) => /^sb-.+-auth-token$/.test(c.name));
+  if (!cookie) throw new Error("There is no session cookie");
+  return decode(cookie.value.replace("base64-", ""));
+}
+
+// The session of userA that auth.setup.ts saved.
+export function savedUserASession(): SavedSession {
+  const state = JSON.parse(readFileSync(userAStatePath, "utf-8"));
+  return sessionFromCookies(state.cookies);
+}
+
 // Read when a test runs, not when the file loads: the saved session does not
 // exist until auth.setup.ts has run.
 function savedSessionCookie() {

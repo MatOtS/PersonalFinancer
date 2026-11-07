@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getSignedInUser, signIn } from "@/data/auth";
+import { ensureDefaultCategories } from "@/data/categories";
 import { normalizeEmail } from "@/domain/auth/normalize-email";
 import { safeReturnPath } from "@/domain/auth/safe-return-path";
 import { signInErrorMessage } from "@/domain/auth/sign-in-error";
@@ -47,6 +48,15 @@ export async function signInAction(
       errors: {},
       message: signInErrorMessage(result.failure),
     };
+  }
+
+  // A new user gets the default categories now. A failure never blocks the
+  // sign-in: it is logged, and the next sign-in tries again (the marker is
+  // only written once everything was saved).
+  try {
+    await ensureDefaultCategories();
+  } catch (error) {
+    console.error("Could not give the default categories", error);
   }
 
   // The return path comes from the address bar, so it is checked again here.

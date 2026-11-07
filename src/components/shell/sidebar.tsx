@@ -1,4 +1,4 @@
-import { HouseIcon, WalletIcon } from "@phosphor-icons/react/ssr";
+import { GearIcon, HouseIcon, WalletIcon } from "@phosphor-icons/react/ssr";
 import type { ThemePreference } from "@/domain/theme";
 import { NavItem } from "./nav-item";
 import { SignOutButton } from "./sign-out-button";
@@ -22,6 +22,11 @@ export const Sidebar = ({ email, themePreference }: SidebarProps) => {
 
       <nav aria-label="Principal" className="flex flex-col gap-1">
         <NavItem href="/" label="Inicio" icon={<HouseIcon size={20} />} />
+        <NavItem
+          href="/ajustes"
+          label="Ajustes"
+          icon={<GearIcon size={20} />}
+        />
       </nav>
 
       <div className="mt-auto flex flex-col gap-3 border-t border-border pt-4">
