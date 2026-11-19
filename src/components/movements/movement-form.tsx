@@ -17,6 +17,13 @@ import { categoryOptions, subcategoryOptions } from "./movement-form-options";
 type MovementFormProps = MovementFormData & {
   // Today's date as yyyy-mm-dd: the date the form starts with.
   today: string;
+  // Present when a saved movement is edited: what it starts with, the action
+  // that saves it and its id (sent with the form).
+  edit?: {
+    id: string;
+    initial: MovementInput;
+    action: typeof createMovementAction;
+  };
   onSaved: () => void;
   onCancel: () => void;
 };
@@ -37,20 +44,23 @@ export const MovementForm = ({
   accounts,
   categories,
   today,
+  edit,
   onSaved,
   onCancel,
 }: MovementFormProps) => {
-  const [values, setValues] = useState<MovementInput>({
-    kind: "",
-    amount: "",
-    date: today,
-    accountId: "",
-    workKind: "",
-    description: "",
-    categoryId: "",
-    subcategoryId: "",
-    isFixed: false,
-  });
+  const [values, setValues] = useState<MovementInput>(
+    edit?.initial ?? {
+      kind: "",
+      amount: "",
+      date: today,
+      accountId: "",
+      workKind: "",
+      description: "",
+      categoryId: "",
+      subcategoryId: "",
+      isFixed: false,
+    },
+  );
   const set = <K extends keyof MovementInput>(
     key: K,
     value: MovementInput[K],
@@ -58,7 +68,10 @@ export const MovementForm = ({
 
   const [state, formAction, pending] = useActionState(
     async (previous: MovementFormState, formData: FormData) => {
-      const next = await createMovementAction(previous, formData);
+      const next = await (edit?.action ?? createMovementAction)(
+        previous,
+        formData,
+      );
       if (next.saved) onSaved();
       else setValues(next.values);
       return next;
@@ -80,9 +93,10 @@ export const MovementForm = ({
         const data = new FormData(event.currentTarget);
         startTransition(() => formAction(data));
       }}
-      aria-label="Añadir movimiento"
+      aria-label={edit ? "Editar movimiento" : "Añadir movimiento"}
       className="mt-4 flex flex-col gap-4"
     >
+      {edit && <input type="hidden" name="id" value={edit.id} />}
       {state.message && (
         <p role="alert" className="text-small text-negative">
           {state.message}
