@@ -4,8 +4,8 @@ Last updated: 2026-11-19
 
 ## Status
 - Project phase: building
-- Active work: none (004-quick-movement-entry done, pending merge)
-- Next step: merge the 004 PR, then choose the next work item (see `docs/backlog.md`; bug 30, saving after the session ended, is open)
+- Active work: none. 005 to 012 are done (owner QA and green gate, 2026-11-19), uncommitted on `main`, going in as one PR per spec
+- Next step: the owner gives the git orders (one branch and PR per spec, order 006, 007, 008, 009, 010, 011, 012, 005); then deploy with `/artificer-deploy` once Vercel and Supabase are unpaused
 
 ## Workflow
 - Ownership: own
@@ -21,6 +21,14 @@ Last updated: 2026-11-19
 | 002 | access | feature | done | 8/8 |
 | 003 | accounts-categories | feature | done | 11/11 (F1 dropped) |
 | 004 | quick-movement-entry | feature | done | 8/8 |
+| 005 | statement-import | feature | done (owner QA) | 36/36 |
+| 006 | fixed-expenses | small | done (owner QA) | 4/4 |
+| 007 | clients | small | done (owner QA) | 4/4 |
+| 008 | invoice-issuing | feature | done (owner QA) | 6/6 |
+| 009 | invoice-pdf | small | done (owner QA) | 4/4 |
+| 010 | invoice-payment | small | done (owner QA) | 3/3 |
+| 011 | home-dashboard | feature | done (owner QA) | 10/10 |
+| 012 | freelance-dashboard | small | done (owner QA) | 4/4 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
