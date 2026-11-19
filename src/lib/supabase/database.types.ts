@@ -61,6 +61,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      bank_profiles: {
+        Row: {
+          account_id: string;
+          amount_column: string;
+          date_column: string;
+          description_column: string;
+          id: string;
+          sign_column: string | null;
+          user_id: string;
+        };
+        Insert: {
+          account_id: string;
+          amount_column: string;
+          date_column: string;
+          description_column: string;
+          id?: string;
+          sign_column?: string | null;
+          user_id?: string;
+        };
+        Update: {
+          account_id?: string;
+          amount_column?: string;
+          date_column?: string;
+          description_column?: string;
+          id?: string;
+          sign_column?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bank_profiles_account_fkey";
+            columns: ["account_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id", "user_id"];
+          },
+        ];
+      };
       categories: {
         Row: {
           created_at: string;
@@ -99,17 +137,224 @@ export type Database = {
           },
         ];
       };
+      category_keywords: {
+        Row: {
+          category_id: string;
+          created_at: string;
+          id: string;
+          keyword: string;
+          keyword_key: string;
+          user_id: string;
+        };
+        Insert: {
+          category_id: string;
+          created_at?: string;
+          id?: string;
+          keyword: string;
+          keyword_key: string;
+          user_id?: string;
+        };
+        Update: {
+          category_id?: string;
+          created_at?: string;
+          id?: string;
+          keyword?: string;
+          keyword_key?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "category_keywords_category_fkey";
+            columns: ["category_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id", "user_id"];
+          },
+        ];
+      };
+      clients: {
+        Row: {
+          address: string | null;
+          created_at: string;
+          email: string | null;
+          id: string;
+          name: string;
+          tax_id: string | null;
+          user_id: string;
+        };
+        Insert: {
+          address?: string | null;
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          name: string;
+          tax_id?: string | null;
+          user_id?: string;
+        };
+        Update: {
+          address?: string | null;
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          name?: string;
+          tax_id?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      fixed_expenses: {
+        Row: {
+          account_id: string | null;
+          active: boolean;
+          amount_cents: number;
+          category_id: string | null;
+          created_at: string;
+          frequency: string;
+          id: string;
+          name: string;
+          user_id: string;
+        };
+        Insert: {
+          account_id?: string | null;
+          active?: boolean;
+          amount_cents: number;
+          category_id?: string | null;
+          created_at?: string;
+          frequency: string;
+          id?: string;
+          name: string;
+          user_id?: string;
+        };
+        Update: {
+          account_id?: string | null;
+          active?: boolean;
+          amount_cents?: number;
+          category_id?: string | null;
+          created_at?: string;
+          frequency?: string;
+          id?: string;
+          name?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fixed_expenses_account_fkey";
+            columns: ["account_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id", "user_id"];
+          },
+          {
+            foreignKeyName: "fixed_expenses_category_fkey";
+            columns: ["category_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id", "user_id"];
+          },
+        ];
+      };
+      invoice_lines: {
+        Row: {
+          description: string;
+          id: string;
+          invoice_id: string;
+          position: number;
+          quantity_hundredths: number;
+          unit_price_cents: number;
+          user_id: string;
+        };
+        Insert: {
+          description: string;
+          id?: string;
+          invoice_id: string;
+          position?: number;
+          quantity_hundredths: number;
+          unit_price_cents: number;
+          user_id?: string;
+        };
+        Update: {
+          description?: string;
+          id?: string;
+          invoice_id?: string;
+          position?: number;
+          quantity_hundredths?: number;
+          unit_price_cents?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "invoice_lines_invoice_fkey";
+            columns: ["invoice_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "invoices";
+            referencedColumns: ["id", "user_id"];
+          },
+        ];
+      };
+      invoices: {
+        Row: {
+          client_id: string;
+          created_at: string;
+          due_date: string | null;
+          id: string;
+          invoice_number: string | null;
+          irpf_bp: number;
+          issue_date: string;
+          iva_bp: number;
+          paid_date: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          client_id: string;
+          created_at?: string;
+          due_date?: string | null;
+          id?: string;
+          invoice_number?: string | null;
+          irpf_bp?: number;
+          issue_date: string;
+          iva_bp?: number;
+          paid_date?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Update: {
+          client_id?: string;
+          created_at?: string;
+          due_date?: string | null;
+          id?: string;
+          invoice_number?: string | null;
+          irpf_bp?: number;
+          issue_date?: string;
+          iva_bp?: number;
+          paid_date?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "invoices_client_fkey";
+            columns: ["client_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "clients";
+            referencedColumns: ["id", "user_id"];
+          },
+        ];
+      };
       movements: {
         Row: {
           account_id: string;
           amount_cents: number;
           category_id: string | null;
+          client_id: string | null;
           created_at: string;
           date: string;
           description: string | null;
           id: string;
+          invoice_id: string | null;
           is_fixed: boolean;
           kind: string;
+          source: string;
           subcategory_id: string | null;
           user_id: string;
           work_kind: string;
@@ -118,12 +363,15 @@ export type Database = {
           account_id: string;
           amount_cents: number;
           category_id?: string | null;
+          client_id?: string | null;
           created_at?: string;
           date: string;
           description?: string | null;
           id?: string;
+          invoice_id?: string | null;
           is_fixed?: boolean;
           kind: string;
+          source?: string;
           subcategory_id?: string | null;
           user_id?: string;
           work_kind: string;
@@ -132,12 +380,15 @@ export type Database = {
           account_id?: string;
           amount_cents?: number;
           category_id?: string | null;
+          client_id?: string | null;
           created_at?: string;
           date?: string;
           description?: string | null;
           id?: string;
+          invoice_id?: string | null;
           is_fixed?: boolean;
           kind?: string;
+          source?: string;
           subcategory_id?: string | null;
           user_id?: string;
           work_kind?: string;
@@ -155,6 +406,20 @@ export type Database = {
             columns: ["category_id", "user_id"];
             isOneToOne: false;
             referencedRelation: "categories";
+            referencedColumns: ["id", "user_id"];
+          },
+          {
+            foreignKeyName: "movements_client_fkey";
+            columns: ["client_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "clients";
+            referencedColumns: ["id", "user_id"];
+          },
+          {
+            foreignKeyName: "movements_invoice_fkey";
+            columns: ["invoice_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "invoices";
             referencedColumns: ["id", "user_id"];
           },
           {
@@ -188,12 +453,67 @@ export type Database = {
         };
         Relationships: [];
       };
+      user_settings: {
+        Row: {
+          default_irpf_bp: number;
+          default_iva_bp: number;
+          due_days: number;
+          invoice_number_format: string;
+          invoice_number_next: number;
+          issuer_address: string | null;
+          issuer_email: string | null;
+          issuer_iban: string | null;
+          issuer_name: string | null;
+          issuer_phone: string | null;
+          issuer_tax_id: string | null;
+          logo_path: string | null;
+          user_id: string;
+        };
+        Insert: {
+          default_irpf_bp?: number;
+          default_iva_bp?: number;
+          due_days?: number;
+          invoice_number_format?: string;
+          invoice_number_next?: number;
+          issuer_address?: string | null;
+          issuer_email?: string | null;
+          issuer_iban?: string | null;
+          issuer_name?: string | null;
+          issuer_phone?: string | null;
+          issuer_tax_id?: string | null;
+          logo_path?: string | null;
+          user_id?: string;
+        };
+        Update: {
+          default_irpf_bp?: number;
+          default_iva_bp?: number;
+          due_days?: number;
+          invoice_number_format?: string;
+          invoice_number_next?: number;
+          issuer_address?: string | null;
+          issuer_email?: string | null;
+          issuer_iban?: string | null;
+          issuer_name?: string | null;
+          issuer_phone?: string | null;
+          issuer_tax_id?: string | null;
+          logo_path?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      issue_invoice: {
+        Args: { p_id: string; p_year: number };
+        Returns: string;
+      };
+      pay_invoice: {
+        Args: { p_amount_cents: number; p_date: string; p_id: string };
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

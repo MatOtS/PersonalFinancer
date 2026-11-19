@@ -5,9 +5,16 @@ import type { ValidMovement } from "@/domain/movements";
 import { createFetchWithTimeout } from "@/lib/supabase/fetch-with-timeout";
 import { ACCOUNT_GONE } from "./accounts";
 import { CATEGORY_GONE, SUBCATEGORY_GONE } from "./categories";
+import { recording } from "./fake-client";
 import {
   countMovementsWithClient,
+  createMovementsWithClient,
   createMovementWithClient,
+  deleteMovementsWithClient,
+  listMovementsWithClient,
+  MOVEMENT_GONE,
+  patchMovementsWithClient,
+  updateMovementWithClient,
 } from "./movements";
 
 // Same idea as categories.test.ts: the real Supabase client with a fake
@@ -309,5 +316,121 @@ describe("The account deletion says how many movements go with it (count)", () =
     await expect(
       countMovementsWithClient(clientWith(fetchImpl), ACCOUNT_ID),
     ).rejects.toThrow("Could not count the movements");
+  });
+});
+
+describe("Listing, editing and deleting saved movements", () => {
+  const row = (id: string) => ({
+    id,
+    kind: "expense",
+    amount_cents: 100,
+    date: "2026-11-10",
+    description: null,
+    account_id: ACCOUNT_ID,
+    category_id: null,
+    subcategory_id: null,
+    work_kind: "personal",
+    is_fixed: false,
+    client_id: null,
+    source: "manual",
+  });
+
+  it("lists the movements of the period, both dates included, page by page", async () => {
+    const calls: string[] = [];
+    const fetchImpl: typeof fetch = async (input) => {
+      const url = new URL(String(input));
+      calls.push(decodeURIComponent(url.search));
+      const first = url.searchParams.get("offset") === "0";
+      return json(
+        200,
+        first
+          ? Array.from({ length: 1000 }, (_, i) => row(`m${i}`))
+          : [row("last")],
+      );
+    };
+    const list = await listMovementsWithClient(clientWith(fetchImpl), {
+      from: "2026-11-01",
+      to: "2026-11-30",
+      workKind: "freelance",
+    });
+    expect(list).toHaveLength(1001);
+    expect(calls[0]).toContain("date=gte.2026-11-01");
+    expect(calls[0]).toContain("date=lte.2026-11-30");
+    expect(calls[0]).toContain("work_kind=eq.freelance");
+  });
+
+  it("changes only the fields of the patch, and clears the subcategory with a new category", async () => {
+    const { fetchImpl, requests } = recording(
+      () => new Response(null, { status: 204 }),
+    );
+    await patchMovementsWithClient(clientWith(fetchImpl), ["m1", "m2"], {
+      workKind: "freelance",
+      categoryId: "c9",
+    });
+    expect(requests[0]).toMatchObject({
+      method: "PATCH",
+      body: { work_kind: "freelance", category_id: "c9", subcategory_id: null },
+    });
+    expect(requests[0]?.query).toContain("id=in.(m1,m2)");
+  });
+
+  it("does nothing when there is nothing to change", async () => {
+    const { fetchImpl, requests } = recording(
+      () => new Response(null, { status: 204 }),
+    );
+    expect(
+      await patchMovementsWithClient(clientWith(fetchImpl), ["m1"], {}),
+    ).toEqual({ ok: true });
+    expect(
+      await patchMovementsWithClient(clientWith(fetchImpl), [], {
+        isFixed: true,
+      }),
+    ).toEqual({ ok: true });
+    expect(requests).toEqual([]);
+  });
+
+  it("says the movement is gone when an update finds no row", async () => {
+    const { fetchImpl } = recording((request) =>
+      request.method === "PATCH" ? json(200, []) : json(200, [{ id: "x" }]),
+    );
+    expect(
+      await updateMovementWithClient(clientWith(fetchImpl), "m1", {
+        ...MOVEMENT,
+        categoryId: null,
+        subcategoryId: null,
+      }),
+    ).toEqual({ ok: false, error: MOVEMENT_GONE });
+  });
+
+  it("tells how many were deleted", async () => {
+    const { fetchImpl } = recording(() =>
+      json(200, [{ id: "m1" }, { id: "m2" }]),
+    );
+    expect(
+      await deleteMovementsWithClient(clientWith(fetchImpl), [
+        "m1",
+        "m2",
+        "m3",
+      ]),
+    ).toBe(2);
+  });
+
+  it("saves many at once with the source, checking each different account once", async () => {
+    const { fetchImpl, requests } = recording((request) =>
+      request.method === "POST"
+        ? new Response(null, { status: 201 })
+        : json(200, [{ id: "x" }]),
+    );
+    const plain = { ...MOVEMENT, categoryId: null, subcategoryId: null };
+    const result = await createMovementsWithClient(
+      clientWith(fetchImpl),
+      [plain, plain, plain],
+      "import",
+    );
+    expect(result).toEqual({ ok: true });
+    expect(requests.filter((r) => r.table === "accounts")).toHaveLength(1);
+    const body = requests.find((r) => r.method === "POST")?.body as unknown[];
+    expect(body).toHaveLength(3);
+    expect(body[0]).toMatchObject({ source: "import", kind: "expense" });
   });
 });

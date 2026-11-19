@@ -8,6 +8,35 @@ import SettingsPage from "./page";
 vi.mock("@/data/accounts", () => ({ listAccounts: vi.fn() }));
 vi.mock("@/data/categories", () => ({ listCategories: vi.fn() }));
 vi.mock("@/data/movements", () => ({ countMovements: vi.fn() }));
+vi.mock("@/data/keywords", () => ({
+  listKeywords: vi.fn().mockResolvedValue([]),
+}));
+vi.mock("@/data/fixed-expenses", () => ({
+  listFixedExpenses: vi.fn().mockResolvedValue([]),
+}));
+vi.mock("@/data/clients", () => ({
+  listClients: vi.fn().mockResolvedValue([]),
+}));
+vi.mock("@/data/invoices", () => ({
+  getSettings: vi.fn().mockResolvedValue({
+    issuer: {
+      name: null,
+      taxId: null,
+      phone: null,
+      address: null,
+      email: null,
+      iban: null,
+    },
+    billing: {
+      irpfBp: 1500,
+      ivaBp: 2100,
+      numberFormat: "YYYY-NNN",
+      numberNext: 1,
+      dueDays: 30,
+    },
+  }),
+}));
+vi.mock("@/data/logo", () => ({ hasLogo: vi.fn().mockResolvedValue(false) }));
 
 beforeEach(() => {
   vi.mocked(listAccounts).mockReset();
@@ -79,13 +108,10 @@ describe("SettingsPage categories", () => {
     expect(html.indexOf("Alimentación")).toBeGreaterThan(expenses);
     expect(html.indexOf("Alimentación")).toBeLessThan(income);
     expect(html.indexOf("Nómina")).toBeGreaterThan(income);
-    expect(html.indexOf("Alimentación")).toBeLessThan(
-      html.indexOf("Restaurantes"),
-    );
-    expect(html.indexOf("Restaurantes")).toBeLessThan(
-      html.indexOf("Supermercado"),
-    );
-    expect(html.indexOf("Supermercado")).toBeLessThan(html.indexOf("Ocio"));
+    // The subcategories start folded: only their number shows.
+    expect(html).not.toContain("Restaurantes");
+    expect(html).toContain('aria-label="Subcategorías de Alimentación"');
+    expect(html).toContain('aria-expanded="false"');
   });
 
   it("has one add form per group, so the group gives the type", async () => {
@@ -102,8 +128,6 @@ describe("SettingsPage categories", () => {
     expect(html).toContain('aria-label="Editar Alimentación"');
     expect(html).toContain('aria-label="Eliminar Alimentación"');
     expect(html).toContain('aria-label="Añadir subcategoría a Alimentación"');
-    expect(html).toContain('aria-label="Editar Restaurantes"');
-    expect(html).toContain('aria-label="Eliminar Restaurantes"');
     // The add forms have a visible label (the placeholder is only a hint).
     expect(html).toMatch(/<label[^>]*>Nombre<\/label>/);
   });
@@ -113,5 +137,24 @@ describe("SettingsPage categories", () => {
     const html = renderToStaticMarkup(await SettingsPage());
     expect(html).not.toContain("<select");
     expect(html).not.toContain('type="radio"');
+  });
+});
+
+describe("SettingsPage billing and lists", () => {
+  it("has the sections of fixed expenses, clients and billing", async () => {
+    const html = renderToStaticMarkup(await SettingsPage());
+    expect(html).toMatch(/<h2[^>]*>Gastos fijos<\/h2>/);
+    expect(html).toMatch(/<h2[^>]*>Clientes<\/h2>/);
+    expect(html).toMatch(/<h2[^>]*>Tus datos de facturación<\/h2>/);
+    expect(html).toMatch(/<h2[^>]*>Facturación<\/h2>/);
+    expect(html).toContain("Sin gastos fijos configurados");
+    expect(html).toContain("Aún no tienes clientes.");
+  });
+
+  it("shows the billing defaults the user starts with", async () => {
+    const html = renderToStaticMarkup(await SettingsPage());
+    expect(html).toContain('value="YYYY-NNN"');
+    expect(html).toContain('value="15"');
+    expect(html).toContain('value="21"');
   });
 });

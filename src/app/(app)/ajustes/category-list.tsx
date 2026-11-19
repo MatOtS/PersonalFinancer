@@ -1,5 +1,6 @@
 "use client";
 
+import { CaretDownIcon } from "@phosphor-icons/react";
 import { useActionState, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -51,6 +52,8 @@ export const CategoryList = ({ groups }: { groups: CategoryGroups }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [addingTo, setAddingTo] = useState<string | null>(null);
   const [toDelete, setToDelete] = useState<ToDelete | null>(null);
+  // The categories whose subcategories are showing: all start folded.
+  const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
   const deleteForm = useRef<HTMLFormElement>(null);
 
   const [, deleteAction] = useActionState(
@@ -62,10 +65,22 @@ export const CategoryList = ({ groups }: { groups: CategoryGroups }) => {
     { message: null },
   );
 
-  const edit = (id: string) => {
+  const show = (categoryId: string) =>
+    setOpen((current) => new Set(current).add(categoryId));
+
+  const toggle = (categoryId: string) =>
+    setOpen((current) => {
+      const next = new Set(current);
+      if (!next.delete(categoryId)) next.add(categoryId);
+      return next;
+    });
+
+  // `categoryId` is the category to unfold when a subcategory is edited.
+  const edit = (id: string, categoryId?: string) => {
     setNotice(null);
     setAddingTo(null);
     setEditingId(id);
+    if (categoryId) show(categoryId);
   };
 
   // The number is asked now, not read from the list: with two tabs open the
@@ -89,7 +104,9 @@ export const CategoryList = ({ groups }: { groups: CategoryGroups }) => {
 
       {GROUPS.map(({ kind, title }) => (
         <div key={kind} className="mb-8 last:mb-0">
-          <h3 className="text-body font-semibold">{title}</h3>
+          <h3 className="border-b border-border pb-2 text-center text-figure font-bold text-accent">
+            {title}
+          </h3>
           <AddCategoryForm kind={kind} />
           <ul className="mt-2">
             {groups[kind].map((category) => (
@@ -107,7 +124,24 @@ export const CategoryList = ({ groups }: { groups: CategoryGroups }) => {
                   />
                 ) : (
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="font-semibold">{category.name}</span>
+                    <button
+                      type="button"
+                      aria-expanded={open.has(category.id)}
+                      aria-controls={`subcategories-${category.id}`}
+                      aria-label={`Subcategorías de ${category.name}`}
+                      onClick={() => toggle(category.id)}
+                      className="flex items-center gap-2 rounded-md font-semibold"
+                    >
+                      <CaretDownIcon
+                        size={16}
+                        aria-hidden="true"
+                        className={`transition-transform duration-150 ${open.has(category.id) ? "" : "-rotate-90"}`}
+                      />
+                      <span>{category.name}</span>
+                      <span className="text-small font-normal text-text-muted">
+                        ({category.subcategories.length})
+                      </span>
+                    </button>
                     <span className="ml-auto flex gap-1">
                       <Button
                         variant="ghost"
@@ -116,6 +150,7 @@ export const CategoryList = ({ groups }: { groups: CategoryGroups }) => {
                           setNotice(null);
                           setEditingId(null);
                           setAddingTo(category.id);
+                          show(category.id);
                         }}
                       >
                         Añadir subcategoría
@@ -140,8 +175,8 @@ export const CategoryList = ({ groups }: { groups: CategoryGroups }) => {
                   </div>
                 )}
 
-                {category.subcategories.length > 0 && (
-                  <ul className="mt-2 ml-6">
+                {open.has(category.id) && category.subcategories.length > 0 && (
+                  <ul id={`subcategories-${category.id}`} className="mt-2 ml-6">
                     {category.subcategories.map((sub) => (
                       <li key={sub.id} className="py-1.5">
                         {editingId === sub.id ? (
@@ -159,7 +194,7 @@ export const CategoryList = ({ groups }: { groups: CategoryGroups }) => {
                               <Button
                                 variant="ghost"
                                 aria-label={`Editar ${sub.name}`}
-                                onClick={() => edit(sub.id)}
+                                onClick={() => edit(sub.id, category.id)}
                               >
                                 Editar
                               </Button>

@@ -443,7 +443,7 @@ test.describe("categories", () => {
       await expect(categoryRow(page, `${prefix} ${suffix}`)).toBeVisible();
     }
     const names = await group(page, "Gastos")
-      .locator("li span.font-semibold")
+      .locator("li button[aria-expanded] > span:first-of-type")
       .allInnerTexts();
     expect(names.filter((n) => n.startsWith(prefix))).toEqual([
       `${prefix} Álamo`,
@@ -542,6 +542,9 @@ test.describe("changing something that no longer exists", () => {
       await addSubcategory(page, parent, sub);
       await expect(categoryRow(page, parent)).toContainText(sub);
       const other = await secondTab(context);
+      await other
+        .getByRole("button", { name: `Subcategorías de ${parent}` })
+        .click();
       await expect(categoryRow(other, parent)).toContainText(sub);
 
       await page.getByRole("button", { name: `Eliminar ${sub}` }).click();
@@ -647,10 +650,15 @@ test.describe("a new user", () => {
         .filter({ has: page.getByText(category, { exact: true }) })
         .first();
       await expect(row).toBeVisible();
+      await row
+        .getByRole("button", { name: `Subcategorías de ${category}` })
+        .click();
       for (const sub of subcategories) await expect(row).toContainText(sub);
     }
     await expect(
-      group(page, "Gastos").locator("li span.font-semibold"),
+      group(page, "Gastos").locator(
+        "li button[aria-expanded] > span:first-of-type",
+      ),
     ).toHaveCount(Object.keys(DEFAULTS).length);
     for (const category of INCOME) {
       await expect(

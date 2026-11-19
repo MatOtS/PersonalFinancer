@@ -74,7 +74,14 @@ export async function save(page: Page, dialog: Locator) {
   );
   await dialog.getByRole("button", { name: "Guardar" }).click();
   await answer;
-  await expect(dialog.getByRole("button", { name: "Guardar" })).toBeEnabled();
+  // Saved: the dialog closes. Not saved: it stays and the button is back.
+  await expect(async () => {
+    if (await dialog.isVisible()) {
+      await expect(dialog.getByRole("button", { name: "Guardar" })).toBeEnabled(
+        { timeout: 500 },
+      );
+    }
+  }).toPass();
 }
 
 // Fills what the form requires, with a valid movement of 10 euros.
@@ -123,7 +130,20 @@ export async function deleteInSettings(
   dialogTitle: string,
 ) {
   await page.goto("/ajustes");
-  await page.getByRole("button", { name: `Eliminar ${name}` }).click();
+  // The subcategories start folded: unfold every category (idempotent, and
+  // repeated until the page has hydrated and reacts to the clicks).
+  const target = page.getByRole("button", { name: `Eliminar ${name}` });
+  await expect(async () => {
+    await page.evaluate(() =>
+      document
+        .querySelectorAll<HTMLButtonElement>(
+          '#categorias button[aria-expanded="false"]',
+        )
+        .forEach((button) => button.click()),
+    );
+    await expect(target).toBeVisible({ timeout: 1000 });
+  }).toPass();
+  await target.click();
   await page
     .getByRole("dialog", { name: dialogTitle })
     .getByRole("button", { name: "Eliminar" })

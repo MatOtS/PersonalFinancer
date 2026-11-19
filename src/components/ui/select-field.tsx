@@ -3,6 +3,7 @@
 import { Select } from "@base-ui/react/select";
 import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { useId } from "react";
+import { useMounted } from "./use-mounted";
 
 export type SelectOption = { value: string; label: string };
 
@@ -33,6 +34,39 @@ export const SelectField = ({
   disabled,
 }: SelectFieldProps) => {
   const errorId = `${useId()}-error`;
+  const mounted = useMounted();
+
+  // The list writes inline styles that the policy blocks in the HTML of the
+  // server (see `useMounted`): until the browser takes over, a button that
+  // looks the same is shown, with the chosen text, the name and the error.
+  if (!mounted) {
+    const chosen = options.find((option) => option.value === value);
+    return (
+      <div className="flex flex-col gap-1.5">
+        <span className="text-small font-semibold">{label}</span>
+        <input type="hidden" name={name} value={value ?? ""} />
+        {/* Only the HTML of the server has this button; the real list (a
+            combobox, which does support aria-invalid) replaces it. */}
+        {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
+        <button
+          type="button"
+          disabled={disabled}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
+          className={`flex h-10 items-center justify-between gap-2 rounded-sm border bg-surface px-3 text-left text-body disabled:opacity-45 ${
+            error ? "border-negative" : "border-control-border"
+          }`}
+        >
+          <span>{chosen?.label ?? placeholder}</span>
+        </button>
+        {error && (
+          <p id={errorId} className="text-small text-negative">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-1.5">
