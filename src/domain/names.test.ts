@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { cleanName, compareNames, nameKey, validateName } from "./names";
+import {
+  cleanName,
+  compareCategoryNames,
+  compareNames,
+  nameKey,
+  validateName,
+} from "./names";
 
 const TOO_LONG = "El nombre es demasiado largo (máximo 50 caracteres)";
 const EMPTY = "Introduce un nombre";
@@ -88,5 +94,13 @@ describe("Lists are ordered alphabetically", () => {
 
   it("treats names that differ only in capitals as equal", () => {
     expect(compareNames("bbva", "BBVA")).toBe(0);
+  });
+});
+
+describe("Categories are ordered alphabetically with Otros last", () => {
+  it("puts Otros after every other name, ignoring capitals", () => {
+    expect(
+      ["Otros", "Zapatos", "Álamo", "otros"].sort(compareCategoryNames),
+    ).toEqual(["Álamo", "Zapatos", "Otros", "otros"]);
   });
 });

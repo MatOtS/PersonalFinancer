@@ -99,6 +99,80 @@ export type Database = {
           },
         ];
       };
+      movements: {
+        Row: {
+          account_id: string;
+          amount_cents: number;
+          category_id: string | null;
+          created_at: string;
+          date: string;
+          description: string | null;
+          id: string;
+          is_fixed: boolean;
+          kind: string;
+          subcategory_id: string | null;
+          user_id: string;
+          work_kind: string;
+        };
+        Insert: {
+          account_id: string;
+          amount_cents: number;
+          category_id?: string | null;
+          created_at?: string;
+          date: string;
+          description?: string | null;
+          id?: string;
+          is_fixed?: boolean;
+          kind: string;
+          subcategory_id?: string | null;
+          user_id?: string;
+          work_kind: string;
+        };
+        Update: {
+          account_id?: string;
+          amount_cents?: number;
+          category_id?: string | null;
+          created_at?: string;
+          date?: string;
+          description?: string | null;
+          id?: string;
+          is_fixed?: boolean;
+          kind?: string;
+          subcategory_id?: string | null;
+          user_id?: string;
+          work_kind?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "movements_account_fkey";
+            columns: ["account_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id", "user_id"];
+          },
+          {
+            foreignKeyName: "movements_category_fkey";
+            columns: ["category_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id", "user_id"];
+          },
+          {
+            foreignKeyName: "movements_subcategory_category_fkey";
+            columns: ["subcategory_id", "user_id", "category_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id", "user_id", "parent_id"];
+          },
+          {
+            foreignKeyName: "movements_subcategory_fkey";
+            columns: ["subcategory_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id", "user_id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           default_categories_added_at: string | null;

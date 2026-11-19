@@ -20,6 +20,7 @@ import {
   type CategoryRef,
   type Kind,
 } from "@/data/categories";
+import { countMovements } from "@/data/movements";
 import { parseAmount } from "@/domain/money";
 import { validateName } from "@/domain/names";
 
@@ -248,4 +249,10 @@ export async function countSubcategoriesAction(
   categoryId: string,
 ): Promise<number> {
   return countSubcategories(categoryId);
+}
+
+// Asked when the user presses "Eliminar" on an account, so the confirmation
+// says how many movements go with it as it is now.
+export async function countMovementsAction(accountId: string): Promise<number> {
+  return countMovements(accountId);
 }

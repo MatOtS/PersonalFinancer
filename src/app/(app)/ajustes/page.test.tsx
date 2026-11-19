@@ -7,6 +7,7 @@ import SettingsPage from "./page";
 // Same idea as page.test.tsx of Home: the page is rendered to HTML text.
 vi.mock("@/data/accounts", () => ({ listAccounts: vi.fn() }));
 vi.mock("@/data/categories", () => ({ listCategories: vi.fn() }));
+vi.mock("@/data/movements", () => ({ countMovements: vi.fn() }));
 
 beforeEach(() => {
   vi.mocked(listAccounts).mockReset();

@@ -1,11 +1,11 @@
 # Project status
 
-Last updated: 2026-11-07
+Last updated: 2026-11-19
 
 ## Status
 - Project phase: building
-- Active work: none (003-accounts-categories verified and done, waiting for the PR to be merged)
-- Next step: open the PR of `feat/003-accounts-categories` against `main`, then `/artificer-spec` for the next work item (backlog item 3, quick movement entry)
+- Active work: none (004-quick-movement-entry done, pending merge)
+- Next step: merge the 004 PR, then choose the next work item (see `docs/backlog.md`; bug 30, saving after the session ended, is open)
 
 ## Workflow
 - Ownership: own
@@ -20,6 +20,7 @@ Last updated: 2026-11-07
 | 001 | app-shell | feature | done | 8/8 |
 | 002 | access | feature | done | 8/8 |
 | 003 | accounts-categories | feature | done | 11/11 (F1 dropped) |
+| 004 | quick-movement-entry | feature | done | 8/8 |
 
 ## Key decisions
 - 2026-10-05 Rebuild from scratch in the same repo. Project phases are decided from zero, not documented from the old code (treated as a **new** project).
@@ -63,6 +64,7 @@ Last updated: 2026-11-07
 - 2026-10-26 002 validated: VERDICT APPROVED (137 unit and 51 browser tests green, 1 browser test skipped on purpose: `no-store`, checked in CI against the production build). Optional follow-ups noted: browser tests for an email with capitals and spaces and for a double click; the unknown-email test now uses `nadie@example.test`. Known and accepted: AA contrast of the active sidebar item in light (backlog #23). Spec marked `implemented`.
 - 2026-11-07 003: the verify found that an unexpected error in the settings actions shows no message. Fix slice F1 was built and then dropped by the owner before any commit (too big for the problem, 6 more review points); it stays as a bug in `docs/backlog.md` item 28 and the scenario was removed from the spec. A11y gaps (items 25, 26) and the missing ADR-18/19 (item 27) are also in the backlog.
 - 2026-11-07 003 verified: VERDICT APPROVED (295 unit, 17 pgTAP, 84 browser tests green, build green). Spec marked `done`.
+- 2026-11-17 003 merged into `main`. 004 quick-movement-entry spec approved by the owner (a button at the top right opens a form from any screen; all the data of the previous app; accessibility of the color-only error of personal or freelance sent to backlog item 29). Two details are left for the map: where the button and the confirmation pop-up go.
 
 ## Blockers
 - `gh` is not installed: PRs are opened by the owner from the GitHub compare link.

@@ -1,6 +1,7 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import { expectNoConsoleErrors, watchConsole } from "./support/console-errors";
 import { uniqueName } from "./support/names";
+import { movementDialog, openForm } from "./support/movement-form";
 import { signInThroughForm } from "./support/sign-in";
 import { userC } from "./support/users";
 
@@ -22,7 +23,20 @@ async function addAccount(page: Page, name: string, balance = "") {
   const form = page.getByRole("form", { name: "Añadir cuenta" });
   await form.getByLabel("Nombre").fill(name);
   await form.getByLabel("Saldo inicial").fill(balance);
+  // Wait until the attempt is over (the answer arrived and the button is back):
+  // a message left by the previous attempt is still on the page and would make
+  // a test go on while this one is pending, and its late result would then
+  // overwrite what the next call types.
+  const answer = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      response.url().includes("/ajustes"),
+  );
   await form.getByRole("button", { name: "Añadir cuenta" }).click();
+  await answer;
+  await expect(
+    form.getByRole("button", { name: "Añadir cuenta" }),
+  ).toBeEnabled();
 }
 
 const accountRow = (page: Page, name: string) =>
@@ -696,6 +710,18 @@ test.describe("a new user", () => {
     ).toHaveCount(0);
     await again.close();
   });
+
+  // Read only: nothing here changes what the other tests of C expect.
+  test("the movement form tells a user with no accounts to create one", async ({
+    page,
+  }) => {
+    await signInThroughForm(page, userC);
+    const dialog = await openForm(page);
+    await expect(dialog.getByText("Aún no tienes cuentas")).toBeVisible();
+    await dialog.getByRole("link", { name: "Añadir cuenta" }).click();
+    await expect(page).toHaveURL(/\/ajustes#cuentas/);
+    await expect(movementDialog(page)).toBeHidden();
+  });
 });
 
 // --------------------------------------------------------- keyboard only --
@@ -754,6 +780,8 @@ test("add, rename and delete an account using only the keyboard", async ({
   await expect(accountRow(page, `${name} 2`)).toBeVisible();
 
   await page.keyboard.press("Enter");
+  // The dialog opens after the movements are counted, so wait for it.
+  await expect(dialog.getByRole("button", { name: "Cancelar" })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(dialog.getByRole("button", { name: "Eliminar" })).toBeFocused();
   await page.keyboard.press("Enter");

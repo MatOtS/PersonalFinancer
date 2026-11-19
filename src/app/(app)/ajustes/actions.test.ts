@@ -13,10 +13,12 @@ import {
   deleteCategory,
   renameCategory,
 } from "@/data/categories";
+import { countMovements } from "@/data/movements";
 import {
   addAccountAction,
   addCategoryAction,
   addSubcategoryAction,
+  countMovementsAction,
   countSubcategoriesAction,
   deleteAccountAction,
   deleteCategoryAction,
@@ -44,6 +46,7 @@ vi.mock("@/data/categories", async (importOriginal) => ({
   deleteCategory: vi.fn(),
   countSubcategories: vi.fn(),
 }));
+vi.mock("@/data/movements", () => ({ countMovements: vi.fn() }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 const ID = "a0000000-0000-0000-0000-000000000001";
@@ -81,6 +84,7 @@ beforeEach(() => {
   vi.mocked(renameCategory).mockReset();
   vi.mocked(deleteCategory).mockReset();
   vi.mocked(countSubcategories).mockReset();
+  vi.mocked(countMovements).mockReset();
 });
 
 describe("addAccountAction", () => {
@@ -428,5 +432,13 @@ describe("countSubcategoriesAction", () => {
     vi.mocked(countSubcategories).mockResolvedValue(3);
     expect(await countSubcategoriesAction(CATEGORY_ID)).toBe(3);
     expect(countSubcategories).toHaveBeenCalledWith(CATEGORY_ID);
+  });
+});
+
+describe("countMovementsAction", () => {
+  it("gives the number of movements of the account, asked when the user presses Eliminar", async () => {
+    vi.mocked(countMovements).mockResolvedValue(4);
+    expect(await countMovementsAction(ID)).toBe(4);
+    expect(countMovements).toHaveBeenCalledWith(ID);
   });
 });

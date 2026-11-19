@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_CATEGORIES } from "@/domain/default-categories";
-import { cleanName, compareNames, nameKey } from "@/domain/names";
+import { cleanName, compareCategoryNames, nameKey } from "@/domain/names";
 
 type Client = SupabaseClient<Database>;
 
@@ -33,7 +33,7 @@ const goneMessage = (ref: CategoryRef) =>
   ref.parentId === null ? CATEGORY_GONE : SUBCATEGORY_GONE;
 
 const byName = (a: { name: string }, b: { name: string }) =>
-  compareNames(a.name, b.name);
+  compareCategoryNames(a.name, b.name);
 
 // Same layout as accounts.ts: the function with the client holds the logic and
 // is what the tests call; the plain one creates the real client.
