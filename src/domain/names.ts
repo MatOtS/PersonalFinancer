@@ -43,3 +43,12 @@ const collator = new Intl.Collator("es", { sensitivity: "base" });
 export function compareNames(a: string, b: string): number {
   return collator.compare(a, b);
 }
+
+// Categories and subcategories: alphabetical, but "Otros" always goes last
+// (owner's request, spec 004).
+export function compareCategoryNames(a: string, b: string): number {
+  const aLast = compareNames(a, "Otros") === 0;
+  const bLast = compareNames(b, "Otros") === 0;
+  if (aLast !== bLast) return aLast ? 1 : -1;
+  return compareNames(a, b);
+}

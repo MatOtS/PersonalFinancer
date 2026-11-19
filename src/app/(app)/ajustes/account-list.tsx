@@ -5,13 +5,34 @@ import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { Account } from "@/data/accounts";
 import { formatCents } from "@/domain/money";
-import { deleteAccountAction, type DeleteAccountState } from "./actions";
+import {
+  countMovementsAction,
+  deleteAccountAction,
+  type DeleteAccountState,
+} from "./actions";
 import { EditAccountForm } from "./edit-account-form";
+
+type ToDelete = { id: string; name: string; movements: number };
+
+const CANNOT_UNDO = "Esta acción no se puede deshacer.";
+
+// An account with movements takes them with it, so the confirmation says how
+// many; without movements it keeps the text it had.
+export const deleteAccountText = (name: string, movements: number) => {
+  const withMovements =
+    movements === 0
+      ? `"${name}"`
+      : `la cuenta "${name}" que contiene ${movements} ${movements === 1 ? "movimiento" : "movimientos"}`;
+  return {
+    title: "¿Eliminar la cuenta?",
+    description: `Se eliminará ${withMovements}. ${CANNOT_UNDO}`,
+  };
+};
 
 export const AccountList = ({ accounts }: { accounts: Account[] }) => {
   const [notice, setNotice] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [toDelete, setToDelete] = useState<Account | null>(null);
+  const [toDelete, setToDelete] = useState<ToDelete | null>(null);
   const deleteForm = useRef<HTMLFormElement>(null);
 
   const [, deleteAction] = useActionState(
@@ -22,6 +43,18 @@ export const AccountList = ({ accounts }: { accounts: Account[] }) => {
     },
     { message: null },
   );
+
+  // The number is asked now, not read from the page: another tab may have
+  // added movements.
+  const askToDelete = async (account: Account) => {
+    setNotice(null);
+    const movements = await countMovementsAction(account.id);
+    setToDelete({ id: account.id, name: account.name, movements });
+  };
+
+  const text = toDelete
+    ? deleteAccountText(toDelete.name, toDelete.movements)
+    : { title: "", description: "" };
 
   return (
     <div className="mt-6">
@@ -64,7 +97,7 @@ export const AccountList = ({ accounts }: { accounts: Account[] }) => {
                   <Button
                     variant="ghost-destructive"
                     aria-label={`Eliminar ${account.name}`}
-                    onClick={() => setToDelete(account)}
+                    onClick={() => askToDelete(account)}
                   >
                     Eliminar
                   </Button>
@@ -80,12 +113,8 @@ export const AccountList = ({ accounts }: { accounts: Account[] }) => {
       </form>
       <ConfirmDialog
         open={toDelete !== null}
-        title="¿Eliminar la cuenta?"
-        description={
-          toDelete
-            ? `Se eliminará "${toDelete.name}". Esta acción no se puede deshacer.`
-            : ""
-        }
+        title={text.title}
+        description={text.description}
         confirmLabel="Eliminar"
         onConfirm={() => {
           // The form reads the hidden id when it is submitted; the state change

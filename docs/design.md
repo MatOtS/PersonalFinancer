@@ -92,7 +92,7 @@ Base 4 px. Scale: `4, 8, 12, 16, 24, 32, 48, 64`.
 - **Tables**: no vertical lines, row dividers in `border`, amounts right aligned. Below 640 px they become stacked cards.
 - **Navigation**: see below.
 - **Modals and sheets**: `raised`, `lg` radius, the page behind dimmed with `scrim`; on mobile they open as bottom sheets. Close with Esc, the close button and the backdrop; focus is trapped inside.
-- **Feedback**: toasts for the result of an action (bottom on mobile, bottom right on desktop, 5 s, pausable). Inline messages for validation. Destructive actions ask for confirmation in a modal.
+- **Feedback**: toasts for the result of an action (bottom on mobile, bottom right on desktop, 3 s, pausable, green `positive` background). Inline messages for validation. Destructive actions ask for confirmation in a modal.
 - **Icons**: one outline icon set, 20 px (16 px in dense rows). The set is chosen in architecture.
 
 ## Navigation and layout
