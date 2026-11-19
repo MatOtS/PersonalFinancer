@@ -3,9 +3,9 @@
 Last updated: 2026-11-19
 
 ## Status
-- Project phase: building
-- Active work: none. 005 to 012 are done (owner QA and green gate, 2026-11-19), uncommitted on `main`, going in as one PR per spec
-- Next step: the owner gives the git orders (one branch and PR per spec, order 006, 007, 008, 009, 010, 011, 012, 005); then deploy with `/artificer-deploy` once Vercel and Supabase are unpaused
+- Project phase: in production (first deploy 2026-11-19, see `docs/deploy.md`)
+- Active work: none. 001 to 012 are done and merged; production runs on Vercel + Supabase
+- Next step: the owner chooses the next work from `docs/backlog.md` (open items: 25 to 33, 35, 36)
 
 ## Workflow
 - Ownership: own
