@@ -7,12 +7,21 @@ import {
   SUBCATEGORY_GONE,
   type CategoryGroups,
 } from "@/data/categories";
-import { createMovement } from "@/data/movements";
+import { revalidatePath } from "next/cache";
+import {
+  createMovement,
+  deleteMovements,
+  patchMovements,
+  updateMovement,
+  type MovementResult,
+} from "@/data/movements";
+import { buildPatch, type BulkInput } from "@/domain/bulk-edit";
 import {
   todayInMadrid,
   validateMovement,
   type MovementErrors,
   type MovementInput,
+  type ValidMovement,
 } from "@/domain/movements";
 
 export type MovementFormData = {
@@ -59,9 +68,9 @@ function readForm(formData: FormData): MovementInput {
 // Checks the movement the way the form does (the browser can be skipped) and
 // saves it. When something it points at is gone, the answer keeps everything
 // typed and clears only that choice, so the user can pick another.
-export async function createMovementAction(
-  _previousState: MovementFormState,
+async function submit(
   formData: FormData,
+  save: (movement: ValidMovement) => Promise<MovementResult>,
 ): Promise<MovementFormState> {
   const values = readForm(formData);
   const check = validateMovement(values, todayInMadrid());
@@ -69,8 +78,11 @@ export async function createMovementAction(
     return { values, errors: check.errors, message: null, saved: false };
   }
 
-  const result = await createMovement(check.movement);
+  const result = await save(check.movement);
   if (result.ok) {
+    // The dashboards show movements: they have to be read again.
+    revalidatePath("/");
+    revalidatePath("/freelance");
     return { values, errors: {}, message: null, saved: true };
   }
 
@@ -82,4 +94,41 @@ export async function createMovementAction(
   }
   if (result.error === SUBCATEGORY_GONE) cleared.subcategoryId = "";
   return { values: cleared, errors: {}, message: result.error, saved: false };
+}
+
+export async function createMovementAction(
+  _previousState: MovementFormState,
+  formData: FormData,
+): Promise<MovementFormState> {
+  return submit(formData, createMovement);
+}
+
+// The same rules as the quick entry, applied to a movement already saved.
+export async function updateMovementAction(
+  _previousState: MovementFormState,
+  formData: FormData,
+): Promise<MovementFormState> {
+  const id = text(formData.get("id"));
+  return submit(formData, (movement) => updateMovement(id, movement));
+}
+
+// Changes one field in every movement of `ids`. The rules of the change are
+// checked here again: the browser can be skipped.
+export async function patchMovementsAction(
+  ids: string[],
+  input: BulkInput,
+): Promise<string | null> {
+  const built = buildPatch(input);
+  if ("error" in built) return built.error;
+  const result = await patchMovements(ids, built.patch);
+  revalidatePath("/");
+  revalidatePath("/freelance");
+  return result.ok ? null : result.error;
+}
+
+export async function deleteMovementsAction(ids: string[]): Promise<number> {
+  const deleted = await deleteMovements(ids);
+  revalidatePath("/");
+  revalidatePath("/freelance");
+  return deleted;
 }

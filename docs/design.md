@@ -44,7 +44,7 @@ All text pairs meet WCAG AA (4.5:1 normal text, 3:1 large text and UI parts) aga
 
 - `positive` starts with the same value as `accent` but is a separate token, so they can diverge without touching components.
 - Surfaces in dark may carry a very subtle top-to-bottom gradient (`surface` to `bg`, under 4% lightness change). Never behind text that would lose contrast.
-- **Chart categorical palette**: pending. It is defined and validated for color-vision deficiency, against these surfaces, in the first spec that needs a chart. The legacy palette was validated against other surfaces and is not reused as is.
+- **Chart categorical palette** (`--cat-1` to `--cat-8`, light / dark): #2A78D6 / #3987E5, #EB6834 / #D95926, #1BAF7A / #199E70, #EDA100 / #C98500, #E87BA4 / #D55181, #008300 / #3FAE3F, #4A3AA7 / #9085E9, #E34948 / #E66767. Taken from the legacy palette (2026-11-19, spec 011), which was validated for color-vision deficiency against other surfaces: **not yet validated against these surfaces** (pending). Because of that no chart carries its information in color alone: every chart is accompanied by its figures as text, in the same order as the colors. Income and expense series use `positive` and `negative`. Fixed order, never cycled; more than eight slices fold into "Otros".
 
 ### Typography
 - Family: **Manrope** (geometric sans, close to the reference), with `tabular-nums` on every amount, table and series of figures. Fallback: system sans. Final loading strategy is decided in architecture.

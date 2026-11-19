@@ -6,10 +6,18 @@ import {
   listCategories,
   SUBCATEGORY_GONE,
 } from "@/data/categories";
-import { createMovement } from "@/data/movements";
+import {
+  createMovement,
+  deleteMovements,
+  patchMovements,
+  updateMovement,
+} from "@/data/movements";
 import {
   createMovementAction,
+  deleteMovementsAction,
   loadMovementFormAction,
+  patchMovementsAction,
+  updateMovementAction,
   type MovementFormState,
 } from "./movement-actions";
 
@@ -23,7 +31,13 @@ vi.mock("@/data/categories", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/data/categories")>()),
   listCategories: vi.fn(),
 }));
-vi.mock("@/data/movements", () => ({ createMovement: vi.fn() }));
+vi.mock("@/data/movements", () => ({
+  createMovement: vi.fn(),
+  updateMovement: vi.fn(),
+  patchMovements: vi.fn(),
+  deleteMovements: vi.fn(),
+}));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 const ACCOUNT = "a0000000-0000-0000-0000-000000000001";
 const CATEGORY = "c0000000-0000-0000-0000-000000000001";
@@ -199,5 +213,68 @@ describe("Saving with an account or a category that no longer exists", () => {
       categoryId: CATEGORY,
       subcategoryId: "",
     });
+  });
+});
+
+describe("Editing saved movements", () => {
+  const form = (fields: Record<string, string>) => {
+    const data = new FormData();
+    for (const [key, value] of Object.entries(fields)) data.set(key, value);
+    return data;
+  };
+
+  it("saves the changes of one movement with the rules of the quick entry", async () => {
+    vi.mocked(updateMovement).mockResolvedValue({ ok: true });
+    const state = await updateMovementAction(
+      EMPTY,
+      form({
+        id: "m1",
+        kind: "expense",
+        amount: "5,5",
+        accountId: ACCOUNT,
+        workKind: "personal",
+      }),
+    );
+    expect(state.saved).toBe(true);
+    expect(updateMovement).toHaveBeenCalledWith(
+      "m1",
+      expect.objectContaining({ amountCents: 550, kind: "expense" }),
+    );
+  });
+
+  it("refuses an invalid movement without saving", async () => {
+    vi.mocked(updateMovement).mockReset();
+    const state = await updateMovementAction(EMPTY, form({ id: "m1" }));
+    expect(state.errors.amount).toBe("El importe no puede estar vacío");
+    expect(updateMovement).not.toHaveBeenCalled();
+  });
+
+  it("checks a bulk change again on the server and applies it to the ids", async () => {
+    vi.mocked(patchMovements).mockResolvedValue({ ok: true });
+    expect(
+      await patchMovementsAction(["m1", "m2"], {
+        field: "workKind",
+        value: "freelance",
+        subcategory: "",
+      }),
+    ).toBeNull();
+    expect(patchMovements).toHaveBeenCalledWith(["m1", "m2"], {
+      workKind: "freelance",
+    });
+
+    vi.mocked(patchMovements).mockClear();
+    expect(
+      await patchMovementsAction(["m1"], {
+        field: "amount",
+        value: "-1",
+        subcategory: "",
+      }),
+    ).toBe("Introduce un importe válido");
+    expect(patchMovements).not.toHaveBeenCalled();
+  });
+
+  it("tells how many movements were deleted", async () => {
+    vi.mocked(deleteMovements).mockResolvedValue(2);
+    expect(await deleteMovementsAction(["m1", "m2"])).toBe(2);
   });
 });
